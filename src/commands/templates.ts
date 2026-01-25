@@ -330,7 +330,7 @@ def init_rigr_data(app: Sphinx) -> None:
         app.env.rigr_items = {}  # id -> {outgoing_links: {link_type: [ids]}}
 
 
-def collect_item_links(env, item_id: str, options: dict, config: Any) -> None:
+def collect_item_links(env, item_id: str, options: dict, config: Any, docname: str) -> None:
     """Collect outgoing links and values from an item for later resolution."""
     if not item_id:
         return
@@ -348,11 +348,12 @@ def collect_item_links(env, item_id: str, options: dict, config: Any) -> None:
             ids = [id.strip() for id in options[opt].split(',')]
             outgoing[opt] = ids
 
-    # Store the item data including value/term for references
+    # Store the item data including value/term for references and docname for cross-doc links
     env.rigr_items[item_id] = {
         'outgoing': outgoing,
         'value': options.get('value', None),
         'term': options.get('term', None),
+        'docname': docname,
     }
 
 
@@ -415,7 +416,12 @@ def resolve_paramval_refs(app: Sphinx, doctree: nodes.document, docname: str) ->
         if value:
             # Create a reference link to the parameter
             refnode = nodes.reference('', value, internal=True)
-            refnode['refuri'] = f'#req-{param_id}'
+            # Build cross-document URI if item is in a different document
+            target_docname = item_data.get('docname', docname)
+            if target_docname != docname:
+                refnode['refuri'] = app.builder.get_relative_uri(docname, target_docname) + f'#req-{param_id}'
+            else:
+                refnode['refuri'] = f'#req-{param_id}'
             refnode['classes'] = ['paramval-ref']
             node.replace_self(refnode)
         else:
@@ -457,7 +463,12 @@ def resolve_termref_nodes(app: Sphinx, doctree: nodes.document, docname: str) ->
         if term:
             # Create a reference link to the term definition
             refnode = nodes.reference('', term, internal=True)
-            refnode['refuri'] = f'#req-{term_id}'
+            # Build cross-document URI if item is in a different document
+            target_docname = item_data.get('docname', docname)
+            if target_docname != docname:
+                refnode['refuri'] = app.builder.get_relative_uri(docname, target_docname) + f'#req-{term_id}'
+            else:
+                refnode['refuri'] = f'#req-{term_id}'
             refnode['classes'] = ['termref']
             node.replace_self(refnode)
         else:
@@ -597,7 +608,7 @@ class ItemDirective(SphinxDirective):
         item_id = self.options.get('id', '')
 
         # Collect outgoing links for incoming link resolution
-        collect_item_links(env, item_id, self.options, config)
+        collect_item_links(env, item_id, self.options, config, env.docname)
 
         # Get options with defaults
         item_type = self.options.get('type', 'requirement')
@@ -807,7 +818,7 @@ class GraphicDirective(SphinxDirective):
         alt_text = self.options.get('alt', title or 'Graphic')
 
         # Collect outgoing links for incoming link resolution
-        collect_item_links(env, graphic_id, self.options, config)
+        collect_item_links(env, graphic_id, self.options, config, env.docname)
 
         # Create container
         container = nodes.container()
@@ -994,7 +1005,7 @@ class CodeDirective(SphinxDirective):
         language = self.options.get('language', 'text')
 
         # Collect outgoing links for incoming link resolution
-        collect_item_links(env, code_id, self.options, config)
+        collect_item_links(env, code_id, self.options, config, env.docname)
 
         # Create container
         container = nodes.container()

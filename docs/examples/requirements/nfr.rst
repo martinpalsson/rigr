@@ -20,7 +20,7 @@ Performance Requirements
    :level: system
    :status: approved
 
-   The extension SHALL activate within 2 seconds on a standard
+   The :termref:`00323` extension SHALL activate within 2 seconds on a standard
    development machine.
 
 .. item:: Initial index build time
