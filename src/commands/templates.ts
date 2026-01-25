@@ -320,6 +320,130 @@ from sphinx.util.nodes import nested_parse_with_titles
 from typing import Any, Dict, List
 
 
+def init_rigr_data(app: Sphinx) -> None:
+    """Initialize rigr data storage in the environment."""
+    if not hasattr(app.env, 'rigr_items'):
+        app.env.rigr_items = {}  # id -> {outgoing_links: {link_type: [ids]}}
+
+
+def collect_item_links(env, item_id: str, options: dict, config: Any) -> None:
+    """Collect outgoing links from an item for later incoming link resolution."""
+    if not item_id:
+        return
+
+    if not hasattr(env, 'rigr_items'):
+        env.rigr_items = {}
+
+    link_types = getattr(config, 'rigr_link_types', [])
+    link_options = [lt.get('option') for lt in link_types if lt.get('option')]
+
+    outgoing = {}
+    for opt in link_options:
+        if opt in options and options[opt]:
+            # Parse comma-separated IDs
+            ids = [id.strip() for id in options[opt].split(',')]
+            outgoing[opt] = ids
+
+    env.rigr_items[item_id] = {'outgoing': outgoing}
+
+
+def build_incoming_links(env) -> Dict[str, Dict[str, List[str]]]:
+    """Build a map of incoming links for all items."""
+    incoming = {}  # target_id -> {link_type: [source_ids]}
+
+    if not hasattr(env, 'rigr_items'):
+        return incoming
+
+    for source_id, data in env.rigr_items.items():
+        for link_type, target_ids in data.get('outgoing', {}).items():
+            for target_id in target_ids:
+                if target_id not in incoming:
+                    incoming[target_id] = {}
+                if link_type not in incoming[target_id]:
+                    incoming[target_id][link_type] = []
+                incoming[target_id][link_type].append(source_id)
+
+    return incoming
+
+
+def get_incoming_label(config: Any, link_type: str) -> str:
+    """Get the incoming label for a link type from config."""
+    link_types = getattr(config, 'rigr_link_types', [])
+    for lt in link_types:
+        if lt.get('option') == link_type:
+            return lt.get('incoming', f'{link_type} (incoming)').replace('_', ' ').title()
+    return f'{link_type} (incoming)'.replace('_', ' ').title()
+
+
+def add_incoming_links_to_doctree(app: Sphinx, doctree: nodes.document, docname: str) -> None:
+    """Post-process doctree to add incoming links to item metadata tables."""
+    env = app.env
+    config = app.config
+
+    # Build the incoming links map
+    incoming_links = build_incoming_links(env)
+
+    if not incoming_links:
+        return
+
+    # Find all rigr-item containers and add incoming links
+    for container in doctree.traverse(nodes.container):
+        classes = container.get('classes', [])
+        if 'rigr-item' not in classes and 'rigr-graphic' not in classes and 'rigr-code' not in classes:
+            continue
+
+        # Extract item ID from container ids (e.g., 'req-0001' -> '0001')
+        container_ids = container.get('ids', [])
+        item_id = None
+        for cid in container_ids:
+            if cid.startswith('req-'):
+                item_id = cid[4:]
+                break
+            elif cid.startswith('fig-'):
+                item_id = cid[4:]
+                break
+            elif cid.startswith('code-'):
+                item_id = cid[5:]
+                break
+
+        if not item_id or item_id not in incoming_links:
+            continue
+
+        # Find the metadata table in this container
+        for table in container.traverse(nodes.table):
+            if 'rigr-metadata-table' not in table.get('classes', []):
+                continue
+
+            # Find the tbody
+            for tgroup in table.traverse(nodes.tgroup):
+                for tbody in tgroup.traverse(nodes.tbody):
+                    # Add incoming link rows
+                    for link_type, source_ids in incoming_links[item_id].items():
+                        label = get_incoming_label(config, link_type)
+                        value = ', '.join(source_ids)
+
+                        # Create new row
+                        row = nodes.row()
+
+                        # Field name cell
+                        entry1 = nodes.entry()
+                        entry1 += nodes.paragraph(text=label)
+                        row += entry1
+
+                        # Field value cell
+                        entry2 = nodes.entry()
+                        entry2['classes'] = [f'rigr-field-{label.lower().replace(" ", "-")}']
+                        value_para = nodes.paragraph()
+                        value_para += nodes.inline(text=value)
+                        entry2 += value_para
+                        row += entry2
+
+                        tbody += row
+
+                    break  # Only process first tbody
+            break  # Only process first matching table
+
+
 class ItemDirective(SphinxDirective):
     """
     Directive for defining requirement items.
@@ -376,6 +500,9 @@ class ItemDirective(SphinxDirective):
         # Title is the full argument (all words), ID comes from :id: option
         title = ' '.join(self.arguments) if self.arguments else 'Untitled'
         item_id = self.options.get('id', '')
+
+        # Collect outgoing links for incoming link resolution
+        collect_item_links(env, item_id, self.options, config)
 
         # Get options with defaults
         item_type = self.options.get('type', 'requirement')
@@ -576,6 +703,9 @@ class GraphicDirective(SphinxDirective):
         file_path = self.options.get('file', '')
         alt_text = self.options.get('alt', title or 'Graphic')
 
+        # Collect outgoing links for incoming link resolution
+        collect_item_links(env, graphic_id, self.options, config)
+
         # Create container
         container = nodes.container()
         container['classes'] = ['rigr-graphic']
@@ -760,6 +890,9 @@ class CodeDirective(SphinxDirective):
         caption = self.options.get('caption', '')
         language = self.options.get('language', 'text')
 
+        # Collect outgoing links for incoming link resolution
+        collect_item_links(env, code_id, self.options, config)
+
         # Create container
         container = nodes.container()
         container['classes'] = ['rigr-code']
@@ -876,8 +1009,12 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_directive('graphic', GraphicDirective)
     app.add_directive('listing', CodeDirective)
 
+    # Register event handlers for incoming link resolution
+    app.connect('builder-inited', init_rigr_data)
+    app.connect('doctree-resolved', add_incoming_links_to_doctree)
+
     return {
-        'version': '1.0.0',
+        'version': '1.1.0',
         'parallel_read_safe': True,
         'parallel_write_safe': True,
     }
