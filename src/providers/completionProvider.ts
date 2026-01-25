@@ -315,6 +315,109 @@ function getTriggerCharacters(config: RigrConfig): string[] {
 }
 
 /**
+ * Result of detecting attribute context
+ */
+interface AttributeContextInfo {
+  attributeName: string | null;
+  replaceRange: vscode.Range | null;
+}
+
+/**
+ * Detect if cursor is in an attribute value context (e.g., ":type: " or ":status: draft")
+ * Returns the attribute name and a range to replace any existing value
+ */
+function detectAttributeContext(
+  line: string,
+  position: vscode.Position
+): AttributeContextInfo {
+  const linePrefix = line.substring(0, position.character);
+
+  // Match patterns like ":type: " or ":type: req" (with partial value)
+  // The attribute must be at the start of the line (with optional leading whitespace)
+  const attrMatch = linePrefix.match(/^\s+:(\w+):\s*(\S*)$/);
+  if (attrMatch) {
+    const attributeName = attrMatch[1];
+    const existingValue = attrMatch[2];
+    const valueStart = linePrefix.lastIndexOf(existingValue);
+
+    // Calculate the range to replace (from start of value to end of line's current value)
+    const lineSuffix = line.substring(position.character);
+    const valueEndMatch = lineSuffix.match(/^(\S*)/);
+    const valueEndLength = valueEndMatch ? valueEndMatch[1].length : 0;
+
+    const replaceRange = new vscode.Range(
+      position.line,
+      valueStart,
+      position.line,
+      position.character + valueEndLength
+    );
+
+    return { attributeName, replaceRange };
+  }
+
+  return { attributeName: null, replaceRange: null };
+}
+
+/**
+ * Create completion items for type attribute
+ */
+function createTypeCompletions(
+  config: RigrConfig,
+  replaceRange: vscode.Range | null
+): vscode.CompletionItem[] {
+  return config.objectTypes.map((objType, index) => {
+    const item = new vscode.CompletionItem(objType.type, vscode.CompletionItemKind.EnumMember);
+    item.detail = objType.title;
+    item.documentation = `Set type to "${objType.title}"`;
+    item.sortText = String(index).padStart(3, '0');
+    if (replaceRange) {
+      item.range = replaceRange;
+    }
+    return item;
+  });
+}
+
+/**
+ * Create completion items for level attribute
+ */
+function createLevelCompletions(
+  config: RigrConfig,
+  replaceRange: vscode.Range | null
+): vscode.CompletionItem[] {
+  return config.levels.map((level, index) => {
+    const item = new vscode.CompletionItem(level.level, vscode.CompletionItemKind.EnumMember);
+    item.detail = level.title;
+    item.documentation = `Set level to "${level.title}"`;
+    item.sortText = String(index).padStart(3, '0');
+    if (replaceRange) {
+      item.range = replaceRange;
+    }
+    return item;
+  });
+}
+
+/**
+ * Create completion items for status attribute
+ */
+function createStatusCompletions(
+  config: RigrConfig,
+  replaceRange: vscode.Range | null
+): vscode.CompletionItem[] {
+  return config.statuses.map((status, index) => {
+    const item = new vscode.CompletionItem(status.status, vscode.CompletionItemKind.EnumMember);
+    item.detail = `Status: ${status.status}`;
+    if (status.color) {
+      item.documentation = `Set status to "${status.status}"`;
+    }
+    item.sortText = String(index).padStart(3, '0');
+    if (replaceRange) {
+      item.range = replaceRange;
+    }
+    return item;
+  });
+}
+
+/**
  * Completion provider for requirement IDs
  */
 export class RequirementCompletionProvider implements vscode.CompletionItemProvider {
@@ -344,6 +447,28 @@ export class RequirementCompletionProvider implements vscode.CompletionItemProvi
   ): vscode.CompletionItem[] | null {
     const line = document.lineAt(position.line).text;
     const linePrefix = line.substring(0, position.character);
+
+    // Check if we're in an attribute value context (highest priority for contextual completions)
+    const attrContext = detectAttributeContext(line, position);
+    if (attrContext.attributeName) {
+      // Provide context-specific completions based on attribute name
+      switch (attrContext.attributeName) {
+        case 'type':
+          return createTypeCompletions(this.config, attrContext.replaceRange);
+        case 'level':
+          return createLevelCompletions(this.config, attrContext.replaceRange);
+        case 'status':
+          return createStatusCompletions(this.config, attrContext.replaceRange);
+        default:
+          // For link attributes, provide ID completions
+          const linkOptions = getLinkOptionNames(this.config);
+          if (linkOptions.includes(attrContext.attributeName)) {
+            const requirements = this.indexBuilder.getAllRequirements();
+            return requirements.map(req => createCompletionItem(req, this.config));
+          }
+          break;
+      }
+    }
 
     // Check if we're in a link context
     const inLinkContext = isInLinkContext(line, position.character, this.config);
