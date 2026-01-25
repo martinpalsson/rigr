@@ -355,6 +355,53 @@ function createParameterSnippetCompletion(
 }
 
 /**
+ * Create a snippet completion for inserting a new term
+ */
+function createTermSnippetCompletion(
+  nextId: string,
+  config: RigrConfig,
+  replaceRange: vscode.Range | null
+): vscode.CompletionItem {
+  const statuses = getStatusNames(config);
+  const statusChoices = statuses.length > 0 ? statuses.join(',') : 'draft,review,approved,implemented';
+  const levels = config.levels.map(l => l.level).join(',');
+
+  const label = `New Term (${nextId})`;
+  const item = new vscode.CompletionItem(label, vscode.CompletionItemKind.Snippet);
+
+  const snippetLines = [
+    `.. item:: \${1:Full Term Name}`,
+    `   :id: ${nextId}`,
+    `   :type: term`,
+    `   :level: \${2|${levels}|}`,
+    `   :status: \${3|${statusChoices}|}`,
+    `   :term: \${4:Abbreviation or Short Name}`,
+    ``,
+    `   \${0:Definition of the term.}`,
+  ];
+
+  item.insertText = new vscode.SnippetString(snippetLines.join('\n'));
+  item.filterText = `term .. item:: new term glossary terminology`;
+  item.sortText = `0-1-term`;
+
+  if (replaceRange) {
+    item.range = replaceRange;
+  }
+
+  item.documentation = new vscode.MarkdownString([
+    `**Insert New Term**`,
+    '',
+    `Creates a new terminology item with auto-generated ID \`${nextId}\`.`,
+    '',
+    `Terms have a \`:term:\` field that can be referenced using \`:termref:\`${nextId}\`\`.`,
+  ].join('\n'));
+
+  item.detail = `Insert term with ID ${nextId}`;
+
+  return item;
+}
+
+/**
  * Get trigger characters for completion
  */
 function getTriggerCharacters(config: RigrConfig): string[] {
@@ -557,6 +604,10 @@ export class RequirementCompletionProvider implements vscode.CompletionItemProvi
       // Add parameter snippet
       const paramItem = createParameterSnippetCompletion(nextId, this.config, directiveInfo.replaceRange);
       items.push(paramItem);
+
+      // Add term snippet
+      const termItem = createTermSnippetCompletion(nextId, this.config, directiveInfo.replaceRange);
+      items.push(termItem);
     }
 
     // Add ID reference completions if in link/inline context

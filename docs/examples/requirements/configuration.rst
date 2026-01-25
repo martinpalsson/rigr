@@ -124,6 +124,7 @@ Object Type Configuration
    - rationale: Justification for requirements
    - information: Supporting context
    - parameter: Configurable values
+   - term: Glossary and terminology definitions
    - design_element: Architectural decisions
 
 Parameter Value References
@@ -197,6 +198,82 @@ Parameter Value References
 
    When a ``:paramval:`` reference cannot be resolved (unknown ID or
    parameter has no ``:value:`` defined), the extension shall:
+
+   - Display the reference as "???" or "[unknown: ID]"
+   - Generate a WARNING during the Sphinx build
+   - Not fail the build
+
+Terminology References
+======================
+
+.. item:: Single source of truth for terminology
+   :id: 00317
+   :type: requirement
+   :level: stakeholder
+   :status: draft
+
+   As a requirements engineer I want to be able to define terms in a
+   glossary which can be referenced by name in other items (requirements,
+   specifications, etc.), with a single source of truth, such that if a
+   term definition changes or a term is renamed, only one change needs
+   to be made.
+
+.. item:: Term definition attribute
+   :id: 00318
+   :type: requirement
+   :level: system
+   :status: draft
+   :satisfies: 00317
+
+   The ``.. item::`` directive shall support a ``:term:`` option that
+   stores the term text. This option is intended for items of type
+   ``term`` but is available on all item types.
+
+   Example::
+
+      .. item:: Application Programming Interface
+         :id: 0050
+         :type: term
+         :term: API
+
+         A set of protocols and tools for building software applications.
+
+.. item:: Term reference role
+   :id: 00319
+   :type: requirement
+   :level: system
+   :status: draft
+   :satisfies: 00317
+
+   The Sphinx extension shall provide a ``:termref:`` role that renders
+   the term text of a terminology item inline. The role takes the term's
+   ID as argument and resolves to the term's ``:term:`` value at build time.
+
+   Example::
+
+      The system communicates via the :termref:`0050`.
+
+   Renders as: "The system communicates via the API."
+
+.. item:: Term reference with link
+   :id: 00320
+   :type: requirement
+   :level: system
+   :status: draft
+   :satisfies: 00319
+
+   The rendered term shall be a hyperlink to the term's definition,
+   allowing readers to navigate to the full glossary entry for context.
+
+.. item:: Missing term handling
+   :id: 00321
+   :type: requirement
+   :level: system
+   :status: draft
+   :satisfies: 00319
+
+   When a ``:termref:`` reference cannot be resolved (unknown ID or
+   item has no ``:term:`` defined), the extension shall:
 
    - Display the reference as "???" or "[unknown: ID]"
    - Generate a WARNING during the Sphinx build

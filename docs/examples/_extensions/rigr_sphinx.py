@@ -52,10 +52,11 @@ def collect_item_links(env, item_id: str, options: dict, config: Any) -> None:
             ids = [id.strip() for id in options[opt].split(',')]
             outgoing[opt] = ids
 
-    # Store the item data including value for parameter references
+    # Store the item data including value/term for references
     env.rigr_items[item_id] = {
         'outgoing': outgoing,
         'value': options.get('value', None),
+        'term': options.get('term', None),
     }
 
 
@@ -126,6 +127,48 @@ def resolve_paramval_refs(app: Sphinx, doctree: nodes.document, docname: str) ->
             logger.warning(f'Parameter value not found for ID: {param_id}')
             warning_node = nodes.inline('', f'[unknown: {param_id}]')
             warning_node['classes'] = ['paramval-missing']
+            node.replace_self(warning_node)
+
+
+class termref_node(nodes.Inline, nodes.TextElement):
+    """Node for term references (resolved later)."""
+    pass
+
+
+def termref_role(name, rawtext, text, lineno, inliner, options={}, content=[]):
+    """
+    Role for referencing terminology items inline.
+
+    Usage: :termref:`0050` -> renders as the term text of item 0050
+    """
+    term_id = text.strip()
+    node = termref_node(rawtext, term_id, term_id=term_id)
+    return [node], []
+
+
+def resolve_termref_nodes(app: Sphinx, doctree: nodes.document, docname: str) -> None:
+    """Resolve term references after all documents are read."""
+    env = app.env
+
+    if not hasattr(env, 'rigr_items'):
+        env.rigr_items = {}
+
+    for node in doctree.traverse(termref_node):
+        term_id = node.get('term_id', '')
+        item_data = env.rigr_items.get(term_id, {})
+        term = item_data.get('term')
+
+        if term:
+            # Create a reference link to the term definition
+            refnode = nodes.reference('', term, internal=True)
+            refnode['refuri'] = f'#req-{term_id}'
+            refnode['classes'] = ['termref']
+            node.replace_self(refnode)
+        else:
+            # Term not found or no term defined - show warning
+            logger.warning(f'Term not found for ID: {term_id}')
+            warning_node = nodes.inline('', f'[unknown: {term_id}]')
+            warning_node['classes'] = ['termref-missing']
             node.replace_self(warning_node)
 
 
@@ -232,6 +275,7 @@ class ItemDirective(SphinxDirective):
         'level': directives.unchanged,
         'status': directives.unchanged,
         'value': directives.unchanged,  # Parameter value for :paramval: references
+        'term': directives.unchanged,   # Term text for :termref: references
         # Link options (populated dynamically from config)
         'satisfies': directives.unchanged,
         'implements': directives.unchanged,
@@ -366,6 +410,10 @@ class ItemDirective(SphinxDirective):
         # Value field for parameters (per 00313)
         if 'value' in self.options and self.options['value']:
             rows.append(('Value', self.options['value'], 'rigr-value'))
+
+        # Term field for terminology (per 00318)
+        if 'term' in self.options and self.options['term']:
+            rows.append(('Term', self.options['term'], 'rigr-term'))
 
         # Link fields - all incoming and outgoing relationships
         link_types = getattr(config, 'rigr_link_types', [])
@@ -768,16 +816,18 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_directive('graphic', GraphicDirective)
     app.add_directive('listing', CodeDirective)
 
-    # Register the paramval role for parameter value references
+    # Register roles for parameter and term references
     roles.register_local_role('paramval', paramval_role)
+    roles.register_local_role('termref', termref_role)
 
-    # Register event handlers for incoming link resolution and paramval resolution
+    # Register event handlers for incoming link resolution and reference resolution
     app.connect('builder-inited', init_rigr_data)
     app.connect('doctree-resolved', add_incoming_links_to_doctree)
     app.connect('doctree-resolved', resolve_paramval_refs)
+    app.connect('doctree-resolved', resolve_termref_nodes)
 
     return {
-        'version': '1.2.0',
+        'version': '1.3.0',
         'parallel_read_safe': True,
         'parallel_write_safe': True,
     }

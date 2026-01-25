@@ -30,6 +30,12 @@ export const DEFAULT_OBJECT_TYPES: ObjectType[] = [
     style: 'node',
   },
   {
+    type: 'term',
+    title: 'Term',
+    color: '#98D8AA',
+    style: 'node',
+  },
+  {
     type: 'design_element',
     title: 'Design Element',
     color: '#C8A2C8',

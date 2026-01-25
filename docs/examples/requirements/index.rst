@@ -72,6 +72,8 @@ All requirements use the ``.. item::`` directive with a ``:type:`` field:
      - Supporting context and background information
    * - parameter
      - Configurable parameters and thresholds
+   * - term
+     - Glossary and terminology definitions
    * - design_element
      - Architectural and design decisions
 
@@ -117,6 +119,29 @@ Link Types
    * - tests
      - tested_by
      - Test case verifies requirement
+
+Glossary
+========
+
+.. item:: reStructuredText
+   :id: 00322
+   :type: term
+   :level: system
+   :status: approved
+   :term: RST
+
+   A lightweight markup language used for technical documentation.
+   Rigr uses :termref:`00322` files as the source format for requirements.
+
+.. item:: Visual Studio Code
+   :id: 00323
+   :type: term
+   :level: system
+   :status: approved
+   :term: VS Code
+
+   A source code editor developed by Microsoft. Rigr is implemented
+   as a :termref:`00323` extension.
 
 Document Index
 ==============
