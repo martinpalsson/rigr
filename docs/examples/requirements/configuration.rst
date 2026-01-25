@@ -19,6 +19,8 @@ Stakeholder Requirements
    :type: requirement
    :level: stakeholder
    :status: approved
+   :product: widget-pro
+   :priority: high
 
    The extension shall use a single, authoritative source for project configuration
    to avoid synchronization issues and ensure consistency across tools.

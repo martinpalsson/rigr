@@ -768,12 +768,26 @@ class ItemDirective(SphinxDirective):
                         break
                 rows.append((label, self.options[opt], None))
 
-        # Extra options
+        # Extra options (free text)
         extra_options = getattr(config, 'rigr_extra_options', [])
         for opt in extra_options:
             if opt in self.options and self.options[opt]:
                 label = opt.replace('_', ' ').title()
                 rows.append((label, self.options[opt], None))
+
+        # Custom fields (enumerated values)
+        custom_fields = getattr(config, 'rigr_custom_fields', {})
+        for field_name, field_values in custom_fields.items():
+            if field_name in self.options and self.options[field_name]:
+                # Get display title for the value if available
+                value = self.options[field_name]
+                display_value = value
+                for fv in field_values:
+                    if fv.get('value') == value:
+                        display_value = fv.get('title', value)
+                        break
+                label = field_name.replace('_', ' ').title()
+                rows.append((label, display_value, None))
 
         return rows
 
