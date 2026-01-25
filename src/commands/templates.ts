@@ -296,7 +296,7 @@ Rigr Sphinx Extension
 =====================
 
 A Sphinx extension that provides the \`\`.. item::\`\`, \`\`.. graphic::\`\`, and
-\`\`.. code::\`\` directives for requirements management documentation.
+\`\`.. listing::\`\` directives for requirements management documentation.
 
 This extension reads configuration from conf.py (rigr_* settings) and renders
 requirement items with proper styling and cross-references.
@@ -709,7 +709,7 @@ class CodeDirective(SphinxDirective):
 
     Usage::
 
-        .. code:: Database Schema
+        .. listing:: Database Schema
            :id: CODE-001
            :language: sql
            :caption: The main users table schema.
@@ -871,7 +871,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     # Register directives
     app.add_directive('item', ItemDirective)
     app.add_directive('graphic', GraphicDirective)
-    app.add_directive('code', CodeDirective)
+    app.add_directive('listing', CodeDirective)
 
     return {
         'version': '1.0.0',
@@ -1494,7 +1494,7 @@ Code Example
 
 Below is an example of the code directive with syntax highlighting:
 
-.. code:: User Data Model
+.. listing:: User Data Model
    :id: 0007
    :language: python
    :caption: Python class representing the user data model.

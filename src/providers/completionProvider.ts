@@ -277,7 +277,7 @@ function createCodeSnippetCompletion(
   const item = new vscode.CompletionItem(label, vscode.CompletionItemKind.Snippet);
 
   const snippetLines = [
-    `.. code:: \${1:Title}`,
+    `.. listing:: \${1:Title}`,
     `   :id: ${nextId}`,
     `   :language: \${2|python,c,cpp,java,rust,go,javascript,typescript,xml,yaml,json,bash,sql|}`,
     `   :caption: \${3:Description}`,
@@ -287,7 +287,7 @@ function createCodeSnippetCompletion(
   ];
 
   item.insertText = new vscode.SnippetString(snippetLines.join('\n'));
-  item.filterText = `code .. code:: new source codeblock`;
+  item.filterText = `listing .. listing:: new source codeblock`;
   item.sortText = `0-1-code`;
 
   if (replaceRange) {

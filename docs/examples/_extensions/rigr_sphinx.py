@@ -414,7 +414,7 @@ class CodeDirective(SphinxDirective):
 
     Usage::
 
-        .. code:: Database Schema
+        .. listing:: Database Schema
            :id: CODE-001
            :language: sql
            :caption: The main users table schema.
@@ -576,7 +576,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     # Register directives
     app.add_directive('item', ItemDirective)
     app.add_directive('graphic', GraphicDirective)
-    app.add_directive('code', CodeDirective)
+    app.add_directive('listing', CodeDirective)
 
     return {
         'version': '1.0.0',
