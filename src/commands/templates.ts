@@ -1437,6 +1437,8 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
     max-width: 280px;
     background: var(--rigr-bg-light);
     border-left: 1px solid var(--rigr-border-color);
+    display: flex;
+    flex-direction: column;
 }
 
 .rigr-metadata-wrapper .rigr-metadata-table,
@@ -1444,13 +1446,36 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
-    height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .rigr-metadata-wrapper tbody,
 .rigr-metadata-wrapper tgroup {
     margin: 0 !important;
     padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.rigr-metadata-wrapper tr {
+    display: flex;
+    width: 100%;
+}
+
+.rigr-metadata-wrapper tr:last-child {
+    flex: 1;
+}
+
+.rigr-metadata-wrapper td:first-child {
+    flex: 0 0 auto;
+    width: 40%;
+}
+
+.rigr-metadata-wrapper td:last-child {
+    flex: 1;
 }
 
 /* -----------------------------------------------------------------------------
