@@ -1348,7 +1348,7 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
 .rigr-body {
     flex: 1 1 70%;
     min-width: 300px;
-    padding: 0.75em;
+    padding: 0.5em 0.75em 0.5em 1em;
     background: var(--rigr-bg-content);
     color: var(--rigr-text-primary);
 }
@@ -1360,6 +1360,12 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
     max-width: 280px;
     background: var(--rigr-bg-light);
     border-left: 1px solid var(--rigr-border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.rigr-metadata-wrapper .rigr-metadata-table {
+    flex: 1;
 }
 
 /* -----------------------------------------------------------------------------
@@ -1369,8 +1375,10 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
     width: 100%;
     border-collapse: collapse;
     font-size: 0.8em;
-    margin: 0;
+    margin: 0 !important;
+    padding: 0;
     background: transparent;
+    border: none;
 }
 
 .rigr-metadata-table td {
