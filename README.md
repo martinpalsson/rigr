@@ -78,7 +78,7 @@ code --install-extension rigr-0.0.1.vsix
 ### From Source
 ```bash
 git clone https://github.com/martinpalsson/rigr.git
-cd rigr-vscode
+cd rigr
 npm install
 npm run compile
 # Press F5 to launch Extension Development Host
@@ -622,7 +622,7 @@ A new link type is set up by adding an object to rigr_link_types list. To demons
 
 ### Configuration not loading
 - Verify `conf.py` exists in supported location
-- Check Python is installed: `python3 --version`
+- Check Python is installed: `python --version` (or `python3 --version` on some Linux distributions)
 - View Output panel: View → Output → "Requirements"
 
 ### Autocomplete not working
@@ -642,7 +642,7 @@ Your requirements can be built as HTML using Sphinx:
 cd docs/examples
 
 # Create virtual environment (first time)
-python3 -m venv venv
+python -m venv venv
 source venv/bin/activate  # Linux/macOS
 # or: venv\Scripts\activate  # Windows
 
@@ -650,10 +650,12 @@ source venv/bin/activate  # Linux/macOS
 pip install -r python-dependencies.txt
 
 # Build HTML
-make html
+sphinx-build -b html . _build/html
 
 # Open: _build/html/index.html
 ```
+
+> **Note:** On some Linux distributions, you may need to use `python3` instead of `python`.
 
 ## Contributing
 
@@ -663,7 +665,7 @@ We welcome contributions! Here's how to get started:
 
 ```bash
 git clone https://github.com/martinpalsson/rigr.git
-cd rigr-vscode
+cd rigr
 npm install
 npm run compile
 ```
