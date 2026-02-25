@@ -804,7 +804,9 @@ function tryParseEnumList(lines: string[], i: number, indent: number): ParseResu
 // Field list parsing
 // ---------------------------------------------------------------------------
 
-const FIELD_PATTERN = /^(\s*):([^:]+):\s*(.*)/;
+// Field list pattern: :fieldname: value
+// Must NOT match role syntax like :termref:`0001` (field names don't contain backticks)
+const FIELD_PATTERN = /^(\s*):([^:`]+):\s+(.*)/;
 
 function tryParseFieldList(lines: string[], i: number, minIndent: number): ParseResult<FieldListNode> | null {
   const match = lines[i].match(FIELD_PATTERN);
