@@ -196,7 +196,7 @@ export interface ReleaseReport {
 /**
  * Tree view grouping options
  */
-export type TreeViewGroupBy = 'type' | 'level' | 'file' | 'status';
+export type TreeViewGroupBy = string;
 
 /**
  * Extension settings from VS Code configuration

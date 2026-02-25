@@ -39,7 +39,7 @@ export class RequirementTreeItem extends vscode.TreeItem {
     public readonly label: string,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly requirement?: RequirementObject,
-    public readonly groupType?: 'type' | 'level' | 'file' | 'status' | 'orphaned',
+    public readonly groupType?: string,
     public readonly groupValue?: string,
     public readonly count?: number
   ) {
@@ -98,6 +98,9 @@ export class RequirementTreeItem extends vscode.TreeItem {
         this.iconPath = new vscode.ThemeIcon(iconId.replace('$(', '').replace(')', ''));
       } else if (groupType === 'orphaned') {
         this.iconPath = new vscode.ThemeIcon('warning');
+      } else {
+        // Custom field group
+        this.iconPath = new vscode.ThemeIcon('tag');
       }
     }
   }
@@ -140,6 +143,7 @@ export class RequirementTreeDataProvider implements vscode.TreeDataProvider<Requ
 
   private baselineFilter: string | null = null;
   private searchFilter: string | null = null;
+  private treeView?: vscode.TreeView<RequirementTreeItem>;
 
   constructor(indexBuilder: IndexBuilder, config: PreceptConfig) {
     this.indexBuilder = indexBuilder;
@@ -149,6 +153,14 @@ export class RequirementTreeDataProvider implements vscode.TreeDataProvider<Requ
     indexBuilder.onIndexUpdate(() => {
       this.refresh();
     });
+  }
+
+  /**
+   * Bind the tree view so we can update its description
+   */
+  public setTreeView(treeView: vscode.TreeView<RequirementTreeItem>): void {
+    this.treeView = treeView;
+    this.updateDescription();
   }
 
   /**
@@ -163,7 +175,18 @@ export class RequirementTreeDataProvider implements vscode.TreeDataProvider<Requ
    * Refresh the tree view
    */
   public refresh(): void {
+    this.updateDescription();
     this._onDidChangeTreeData.fire();
+  }
+
+  /**
+   * Update the tree view description to show current grouping
+   */
+  private updateDescription(): void {
+    if (!this.treeView) return;
+    const groupBy = getTreeViewGroupBy();
+    const label = groupBy.charAt(0).toUpperCase() + groupBy.slice(1);
+    this.treeView.description = `by ${label}`;
   }
 
   /**
@@ -199,7 +222,7 @@ export class RequirementTreeDataProvider implements vscode.TreeDataProvider<Requ
       const req = element.requirement;
 
       let groupValue: string;
-      let groupType: 'type' | 'level' | 'file' | 'status' | 'orphaned';
+      let groupType: string;
 
       switch (groupBy) {
         case 'type':
@@ -219,8 +242,13 @@ export class RequirementTreeDataProvider implements vscode.TreeDataProvider<Requ
           groupValue = req.status || 'unset';
           break;
         default:
-          groupType = 'type';
-          groupValue = req.type;
+          if (groupBy && this.config.customFields[groupBy]) {
+            groupType = groupBy;
+            groupValue = this.getCustomFieldTokens(req, groupBy)[0];
+          } else {
+            groupType = 'type';
+            groupValue = req.type;
+          }
       }
 
       // Get the title for the group
@@ -236,7 +264,10 @@ export class RequirementTreeDataProvider implements vscode.TreeDataProvider<Requ
       } else if (groupType === 'status') {
         title = groupValue.charAt(0).toUpperCase() + groupValue.slice(1);
       } else {
-        title = groupValue;
+        // Custom field — use the title from config if available
+        const fieldValues = this.config.customFields[groupType];
+        const valueInfo = fieldValues?.find(v => v.value === groupValue);
+        title = valueInfo?.title || (groupValue === 'unassigned' ? 'Unassigned' : groupValue);
       }
 
       return new RequirementTreeItem(
@@ -276,18 +307,44 @@ export class RequirementTreeDataProvider implements vscode.TreeDataProvider<Requ
     const groupBy = getTreeViewGroupBy();
     const allReqs = this.getFilteredRequirements();
 
+    // Add a clickable header showing the current grouping mode
+    const label = groupBy.charAt(0).toUpperCase() + groupBy.slice(1);
+    const header = new RequirementTreeItem(
+      `Group by: ${label}`,
+      vscode.TreeItemCollapsibleState.None
+    );
+    header.id = 'group-by-header';
+    header.iconPath = new vscode.ThemeIcon('list-filter');
+    header.command = {
+      command: 'requirements.changeGroupBy',
+      title: 'Change grouping',
+    };
+    header.contextValue = 'groupByHeader';
+
+    let groups: RequirementTreeItem[];
     switch (groupBy) {
       case 'type':
-        return this.groupByType(allReqs);
+        groups = this.groupByType(allReqs);
+        break;
       case 'level':
-        return this.groupByLevel(allReqs);
+        groups = this.groupByLevel(allReqs);
+        break;
       case 'file':
-        return this.groupByFile(allReqs);
+        groups = this.groupByFile(allReqs);
+        break;
       case 'status':
-        return this.groupByStatus(allReqs);
+        groups = this.groupByStatus(allReqs);
+        break;
       default:
-        return this.groupByType(allReqs);
+        // Check if it's a custom field name
+        if (groupBy && this.config.customFields[groupBy]) {
+          groups = this.groupByCustomField(allReqs, groupBy);
+        } else {
+          groups = this.groupByType(allReqs);
+        }
     }
+
+    return [header, ...groups];
   }
 
   /**
@@ -484,6 +541,55 @@ export class RequirementTreeDataProvider implements vscode.TreeDataProvider<Requ
   }
 
   /**
+   * Split a custom field metadata value into individual tokens.
+   * Returns ['unassigned'] when the field is missing or empty.
+   */
+  private getCustomFieldTokens(req: RequirementObject, fieldName: string): string[] {
+    const raw = req.metadata[fieldName];
+    if (!raw || !raw.trim()) {
+      return ['unassigned'];
+    }
+    return raw.split(/[\s,]+/).map(t => t.trim()).filter(t => t.length > 0);
+  }
+
+  /**
+   * Group requirements by a custom field (multi-value aware)
+   */
+  private groupByCustomField(reqs: RequirementObject[], fieldName: string): RequirementTreeItem[] {
+    const groups = new Map<string, RequirementObject[]>();
+
+    for (const req of reqs) {
+      for (const token of this.getCustomFieldTokens(req, fieldName)) {
+        if (!groups.has(token)) {
+          groups.set(token, []);
+        }
+        groups.get(token)!.push(req);
+      }
+    }
+
+    const items: RequirementTreeItem[] = [];
+    const fieldValues = this.config.customFields[fieldName];
+
+    for (const [value, fieldReqs] of groups) {
+      const valueInfo = fieldValues?.find(v => v.value === value);
+      const title = valueInfo?.title || (value === 'unassigned' ? 'Unassigned' : value);
+
+      items.push(new RequirementTreeItem(
+        title,
+        vscode.TreeItemCollapsibleState.Expanded,
+        undefined,
+        fieldName,
+        value,
+        fieldReqs.length
+      ));
+    }
+
+    items.sort((a, b) => a.label.toString().localeCompare(b.label.toString()));
+
+    return items;
+  }
+
+  /**
    * Find orphaned requirements (no links)
    */
   private findOrphaned(reqs: RequirementObject[]): RequirementObject[] {
@@ -497,7 +603,7 @@ export class RequirementTreeDataProvider implements vscode.TreeDataProvider<Requ
   /**
    * Get children for a group
    */
-  private getGroupChildren(groupType: 'type' | 'level' | 'file' | 'status' | 'orphaned', groupValue: string): RequirementTreeItem[] {
+  private getGroupChildren(groupType: string, groupValue: string): RequirementTreeItem[] {
     const allReqs = this.getFilteredRequirements();
     let reqs: RequirementObject[];
 
@@ -512,17 +618,27 @@ export class RequirementTreeDataProvider implements vscode.TreeDataProvider<Requ
     } else if (groupType === 'orphaned') {
       reqs = this.findOrphaned(allReqs);
     } else {
-      reqs = [];
+      // Custom field grouping (multi-value aware)
+      reqs = allReqs.filter(r => this.getCustomFieldTokens(r, groupType).includes(groupValue));
     }
 
     // Sort by ID
     reqs.sort((a, b) => a.id.localeCompare(b.id));
 
-    return reqs.map(req => new RequirementTreeItem(
-      `${req.id} - ${req.title}`,
-      vscode.TreeItemCollapsibleState.None,
-      req
-    ));
+    return reqs.map(req => {
+      const item = new RequirementTreeItem(
+        `${req.id} - ${req.title}`,
+        vscode.TreeItemCollapsibleState.None,
+        req
+      );
+      // For custom field groups, a req can appear in multiple groups,
+      // so make the tree item ID unique per group to avoid deduplication.
+      if (groupType !== 'type' && groupType !== 'level' && groupType !== 'file'
+          && groupType !== 'status' && groupType !== 'orphaned') {
+        item.id = `req-${req.id}-${groupType}-${groupValue}`;
+      }
+      return item;
+    });
   }
 }
 
@@ -541,6 +657,7 @@ export function registerTreeView(
     showCollapseAll: true,
   });
 
+  provider.setTreeView(treeView);
   context.subscriptions.push(treeView);
 
   // Handle selection change to update relationship explorer

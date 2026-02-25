@@ -3,6 +3,7 @@
   "displayName": "Precept",
   "description": "Lightweight requirements management for VS Code - IntelliSense, validation, traceability, and documentation for RST files",
   "version": "0.1.0",
+  "icon": "icon.png",
   "publisher": "precept",
   "engines": {
     "vscode": "^1.80.0"
@@ -80,6 +81,11 @@
         "command": "requirements.openPreview",
         "title": "Precept: Open RST Preview",
         "icon": "$(open-preview)"
+      },
+      {
+        "command": "requirements.changeGroupBy",
+        "title": "Precept: Group By...",
+        "icon": "$(group-by-ref-type)"
       }
     ],
     "configuration": {
@@ -114,6 +120,7 @@
           "type": "string",
           "enum": [
             "type",
+            "level",
             "file",
             "status"
           ],
@@ -209,6 +216,11 @@
         }
       ],
       "view/title": [
+        {
+          "command": "requirements.changeGroupBy",
+          "when": "view == requirementsExplorer",
+          "group": "navigation"
+        },
         {
           "command": "requirements.refreshTreeView",
           "when": "view == requirementsExplorer",

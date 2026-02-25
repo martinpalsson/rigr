@@ -9,6 +9,7 @@ import {
   ConfigurationManager,
   loadConfiguration,
   onSettingsChange,
+  updateSetting,
 } from './configuration';
 import {
   IndexBuilder,
@@ -269,6 +270,34 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       vscode.window.showInformationMessage(
         `Create requirement '${id}' - Use a snippet to create a new requirement with this ID`
       );
+    })
+  );
+
+  // Register group-by quick pick command
+  context.subscriptions.push(
+    vscode.commands.registerCommand('requirements.changeGroupBy', async () => {
+      const builtInModes = [
+        { label: 'Type', value: 'type' },
+        { label: 'Level', value: 'level' },
+        { label: 'File', value: 'file' },
+        { label: 'Status', value: 'status' },
+      ];
+
+      const customFieldItems = Object.keys(config.customFields).map(field => ({
+        label: field.charAt(0).toUpperCase() + field.slice(1),
+        value: field,
+        description: 'custom field',
+      }));
+
+      const items = [...builtInModes, ...customFieldItems];
+
+      const selected = await vscode.window.showQuickPick(items, {
+        placeHolder: 'Group items by...',
+      });
+
+      if (selected) {
+        await updateSetting('treeView.groupBy', selected.value);
+      }
     })
   );
 
