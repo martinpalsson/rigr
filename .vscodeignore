@@ -1,0 +1,16 @@
+.vscode/**
+.claude/**
+src/**
+test/**
+docs/**
+node_modules/**
+!node_modules/highlight.js/lib/**
+!node_modules/highlight.js/package.json
+.gitignore
+.git/**
+tsconfig.json
+jest.config.js
+CLAUDE.md
+package-lock.json
+**/*.ts
+**/*.map

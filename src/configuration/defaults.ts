@@ -1,8 +1,8 @@
 /**
- * Default configuration when rigr.json is not found or parsing fails
+ * Default configuration when precept.json is not found or parsing fails
  */
 
-import { RigrConfig, ObjectType, Level, IdConfig, LinkType, Status, CustomFields } from '../types';
+import { PreceptConfig, ObjectType, Level, IdConfig, LinkType, Status, CustomFields } from '../types';
 
 export const DEFAULT_OBJECT_TYPES: ObjectType[] = [
   {
@@ -120,7 +120,7 @@ export function buildIdRegex(idConfig: IdConfig): RegExp {
 
 export const DEFAULT_ID_REGEX = buildIdRegex(DEFAULT_ID_CONFIG);
 
-export const DEFAULT_CONFIG: RigrConfig = {
+export const DEFAULT_CONFIG: PreceptConfig = {
   objectTypes: DEFAULT_OBJECT_TYPES,
   levels: DEFAULT_LEVELS,
   idConfig: DEFAULT_ID_CONFIG,
@@ -133,21 +133,21 @@ export const DEFAULT_CONFIG: RigrConfig = {
 /**
  * Get all valid object type values from configuration
  */
-export function getObjectTypeValues(config: RigrConfig): string[] {
+export function getObjectTypeValues(config: PreceptConfig): string[] {
   return config.objectTypes.map(t => t.type);
 }
 
 /**
  * Get all valid level values from configuration
  */
-export function getLevelValues(config: RigrConfig): string[] {
+export function getLevelValues(config: PreceptConfig): string[] {
   return config.levels.map(l => l.level);
 }
 
 /**
  * Get all valid link option names from configuration
  */
-export function getLinkOptionNames(config: RigrConfig): string[] {
+export function getLinkOptionNames(config: PreceptConfig): string[] {
   const options = new Set<string>();
   for (const link of config.linkTypes) {
     options.add(link.option);
@@ -160,42 +160,42 @@ export function getLinkOptionNames(config: RigrConfig): string[] {
 /**
  * Get all valid status names from configuration
  */
-export function getStatusNames(config: RigrConfig): string[] {
+export function getStatusNames(config: PreceptConfig): string[] {
   return config.statuses.map(s => s.status);
 }
 
 /**
  * Get object type info
  */
-export function getObjectTypeInfo(config: RigrConfig, type: string): ObjectType | undefined {
+export function getObjectTypeInfo(config: PreceptConfig, type: string): ObjectType | undefined {
   return config.objectTypes.find(t => t.type === type);
 }
 
 /**
  * Get level info
  */
-export function getLevelInfo(config: RigrConfig, level: string): Level | undefined {
+export function getLevelInfo(config: PreceptConfig, level: string): Level | undefined {
   return config.levels.find(l => l.level === level);
 }
 
 /**
  * Get status info
  */
-export function getStatusInfo(config: RigrConfig, status: string): Status | undefined {
+export function getStatusInfo(config: PreceptConfig, status: string): Status | undefined {
   return config.statuses.find(s => s.status === status);
 }
 
 /**
  * Get all custom field names from configuration
  */
-export function getCustomFieldNames(config: RigrConfig): string[] {
+export function getCustomFieldNames(config: PreceptConfig): string[] {
   return Object.keys(config.customFields || {});
 }
 
 /**
  * Get valid values for a custom field
  */
-export function getCustomFieldValues(config: RigrConfig, fieldName: string): string[] {
+export function getCustomFieldValues(config: PreceptConfig, fieldName: string): string[] {
   const field = config.customFields?.[fieldName];
   return field ? field.map(v => v.value) : [];
 }

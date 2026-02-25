@@ -1,7 +1,7 @@
-# Configuration file for testing Rigr
+# Configuration file for testing Precept
 
-# Rigr configuration
-rigr_object_types = [
+# Precept configuration
+precept_object_types = [
     {"type": "requirement", "title": "Requirement"},
     {"type": "specification", "title": "Specification"},
     {"type": "rationale", "title": "Rationale"},
@@ -9,21 +9,21 @@ rigr_object_types = [
     {"type": "parameter", "title": "Parameter"},
 ]
 
-rigr_levels = [
+precept_levels = [
     {"level": "stakeholder", "title": "Stakeholder"},
     {"level": "system", "title": "System"},
     {"level": "component", "title": "Component"},
     {"level": "software", "title": "Software"},
 ]
 
-rigr_id_config = {
+precept_id_config = {
     "prefix": "",
     "separator": "",
     "padding": 4,
     "start": 1,
 }
 
-rigr_link_types = [
+precept_link_types = [
     {
         "option": "satisfies",
         "incoming": "satisfied_by",
@@ -52,7 +52,7 @@ rigr_link_types = [
     },
 ]
 
-rigr_statuses = [
+precept_statuses = [
     {"status": "draft", "color": "#FFEB3B"},
     {"status": "review", "color": "#FF9800"},
     {"status": "approved", "color": "#4CAF50"},

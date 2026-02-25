@@ -4,7 +4,7 @@
 
 import * as vscode from 'vscode';
 import { IndexBuilder } from '../indexing/indexBuilder';
-import { RigrConfig, RequirementObject, Level } from '../types';
+import { PreceptConfig, RequirementObject, Level } from '../types';
 import { isInLinkContext, isInInlineItemContext } from '../indexing/rstParser';
 import { getLinkOptionNames, getStatusNames, getObjectTypeInfo, getLevelInfo, getCustomFieldNames, getCustomFieldValues } from '../configuration/defaults';
 import { generateNextId } from '../utils/idGenerator';
@@ -14,7 +14,7 @@ import { generateNextId } from '../utils/idGenerator';
  */
 function createCompletionItem(
   req: RequirementObject,
-  config: RigrConfig
+  config: PreceptConfig
 ): vscode.CompletionItem {
   const statusLabel = req.status ? ` [${req.status}]` : '';
   const typeInfo = getObjectTypeInfo(config, req.type);
@@ -75,7 +75,7 @@ interface DirectivePositionInfo {
 function detectDirectivePosition(
   line: string,
   position: vscode.Position,
-  config: RigrConfig
+  config: PreceptConfig
 ): DirectivePositionInfo {
   const linePrefix = line.substring(0, position.character);
   const trimmedPrefix = linePrefix.trim();
@@ -127,7 +127,7 @@ function detectDirectivePosition(
 function createRequirementSnippetCompletion(
   level: Level,
   nextId: string,
-  config: RigrConfig,
+  config: PreceptConfig,
   replaceRange: vscode.Range | null
 ): vscode.CompletionItem {
   const statuses = getStatusNames(config);
@@ -178,7 +178,7 @@ function createRequirementSnippetCompletion(
  */
 function createGenericSnippetCompletion(
   nextId: string,
-  config: RigrConfig,
+  config: PreceptConfig,
   replaceRange: vscode.Range | null
 ): vscode.CompletionItem {
   const statuses = getStatusNames(config);
@@ -229,7 +229,7 @@ function createGenericSnippetCompletion(
  */
 function createGraphicSnippetCompletion(
   nextId: string,
-  config: RigrConfig,
+  config: PreceptConfig,
   replaceRange: vscode.Range | null
 ): vscode.CompletionItem {
   const label = `New Graphic (${nextId})`;
@@ -270,7 +270,7 @@ function createGraphicSnippetCompletion(
  */
 function createCodeSnippetCompletion(
   nextId: string,
-  config: RigrConfig,
+  config: PreceptConfig,
   replaceRange: vscode.Range | null
 ): vscode.CompletionItem {
   const label = `New Code (${nextId})`;
@@ -312,7 +312,7 @@ function createCodeSnippetCompletion(
  */
 function createParameterSnippetCompletion(
   nextId: string,
-  config: RigrConfig,
+  config: PreceptConfig,
   replaceRange: vscode.Range | null
 ): vscode.CompletionItem {
   const statuses = getStatusNames(config);
@@ -359,7 +359,7 @@ function createParameterSnippetCompletion(
  */
 function createTermSnippetCompletion(
   nextId: string,
-  config: RigrConfig,
+  config: PreceptConfig,
   replaceRange: vscode.Range | null
 ): vscode.CompletionItem {
   const statuses = getStatusNames(config);
@@ -404,7 +404,7 @@ function createTermSnippetCompletion(
 /**
  * Get trigger characters for completion
  */
-function getTriggerCharacters(config: RigrConfig): string[] {
+function getTriggerCharacters(config: PreceptConfig): string[] {
   return [':', '`', ',', ' '];
 }
 
@@ -456,7 +456,7 @@ function detectAttributeContext(
  * Create completion items for type attribute
  */
 function createTypeCompletions(
-  config: RigrConfig,
+  config: PreceptConfig,
   replaceRange: vscode.Range | null
 ): vscode.CompletionItem[] {
   return config.objectTypes.map((objType, index) => {
@@ -475,7 +475,7 @@ function createTypeCompletions(
  * Create completion items for level attribute
  */
 function createLevelCompletions(
-  config: RigrConfig,
+  config: PreceptConfig,
   replaceRange: vscode.Range | null
 ): vscode.CompletionItem[] {
   return config.levels.map((level, index) => {
@@ -494,7 +494,7 @@ function createLevelCompletions(
  * Create completion items for status attribute
  */
 function createStatusCompletions(
-  config: RigrConfig,
+  config: PreceptConfig,
   replaceRange: vscode.Range | null
 ): vscode.CompletionItem[] {
   return config.statuses.map((status, index) => {
@@ -515,7 +515,7 @@ function createStatusCompletions(
  * Create completions for custom field values
  */
 function createCustomFieldCompletions(
-  config: RigrConfig,
+  config: PreceptConfig,
   fieldName: string,
   replaceRange: vscode.Range | null
 ): vscode.CompletionItem[] {
@@ -537,9 +537,9 @@ function createCustomFieldCompletions(
  */
 export class RequirementCompletionProvider implements vscode.CompletionItemProvider {
   private indexBuilder: IndexBuilder;
-  private config: RigrConfig;
+  private config: PreceptConfig;
 
-  constructor(indexBuilder: IndexBuilder, config: RigrConfig) {
+  constructor(indexBuilder: IndexBuilder, config: PreceptConfig) {
     this.indexBuilder = indexBuilder;
     this.config = config;
   }
@@ -547,7 +547,7 @@ export class RequirementCompletionProvider implements vscode.CompletionItemProvi
   /**
    * Update configuration
    */
-  public updateConfig(config: RigrConfig): void {
+  public updateConfig(config: PreceptConfig): void {
     this.config = config;
   }
 
@@ -672,7 +672,7 @@ export class RequirementCompletionProvider implements vscode.CompletionItemProvi
 export function registerCompletionProvider(
   context: vscode.ExtensionContext,
   indexBuilder: IndexBuilder,
-  config: RigrConfig
+  config: PreceptConfig
 ): RequirementCompletionProvider {
   const provider = new RequirementCompletionProvider(indexBuilder, config);
 

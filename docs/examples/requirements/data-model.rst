@@ -1,11 +1,11 @@
-.. _rigr-data-model:
+.. _precept-data-model:
 
 =============================
 Data Model and Indexing
 =============================
 
 This document specifies the requirement object model, RST parsing,
-and the indexing system for the Rigr extension.
+and the indexing system for the Precept extension.
 
 .. contents:: Table of Contents
    :local:
@@ -42,7 +42,7 @@ Stakeholder Requirements
    RST (reStructuredText) is chosen as the storage format because:
 
    - Plain text, version control friendly
-   - Sphinx ecosystem for documentation generation
+   - Built-in renderer for documentation generation
    - Directive syntax allows structured metadata
    - Human-readable without special tools
 
@@ -314,7 +314,7 @@ Index Persistence
 
    The cache shall be invalidated when:
 
-   - Configuration changes (conf.py modified)
+   - Configuration changes (precept.json modified)
    - Extension version changes
    - User requests manual rebuild
 

@@ -7,9 +7,9 @@ import {
   escapeAttr,
 } from '../directiveRenderer';
 import { parseRstDocument } from '../rstFullParser';
-import { RigrConfig, RequirementIndex, RequirementObject } from '../../types';
+import { PreceptConfig, RequirementIndex, RequirementObject } from '../../types';
 
-const defaultConfig: RigrConfig = {
+const defaultConfig: PreceptConfig = {
   objectTypes: [
     { type: 'requirement', title: 'Requirement' },
     { type: 'parameter', title: 'Parameter' },
@@ -27,7 +27,7 @@ const defaultConfig: RigrConfig = {
   id_regex: /\d{4}/g,
 };
 
-function makeCtx(config?: Partial<RigrConfig>, index?: RequirementIndex): RenderContext {
+function makeCtx(config?: Partial<PreceptConfig>, index?: RequirementIndex): RenderContext {
   return {
     config: { ...defaultConfig, ...config },
     index,
@@ -66,14 +66,14 @@ describe('directiveRenderer', () => {
 
       if (node.type === 'item_directive') {
         const html = renderItemDirective(node, makeCtx());
-        expect(html).toContain('class="rigr-item rigr-type-requirement rigr-status-draft"');
+        expect(html).toContain('class="precept-item precept-type-requirement precept-status-draft"');
         expect(html).toContain('id="req-REQ-001"');
-        expect(html).toContain('class="rubric rigr-title"');
-        expect(html).toContain('class="rigr-title-id"');
+        expect(html).toContain('class="rubric precept-title"');
+        expect(html).toContain('class="precept-title-id"');
         expect(html).toContain('REQ-001');
         expect(html).toContain('My Requirement');
-        expect(html).toContain('rigr-body');
-        expect(html).toContain('rigr-metadata-table');
+        expect(html).toContain('precept-body');
+        expect(html).toContain('precept-metadata-table');
         expect(html).toContain('Description here.');
       }
     });
@@ -117,7 +117,7 @@ describe('directiveRenderer', () => {
         const html = renderItemDirective(node, makeCtx());
         expect(html).toContain('Satisfies');
         expect(html).toContain('href="#req-REQ-001"');
-        expect(html).toContain('class="rigr-link-ref"');
+        expect(html).toContain('class="precept-link-ref"');
       }
     });
 
@@ -188,7 +188,7 @@ describe('directiveRenderer', () => {
         const html = renderItemDirective(node, makeCtx());
         expect(html).toContain('Value');
         expect(html).toContain('100 km/h');
-        expect(html).toContain('rigr-value');
+        expect(html).toContain('precept-value');
       }
     });
   });
@@ -209,12 +209,12 @@ describe('directiveRenderer', () => {
 
       if (node.type === 'graphic_directive') {
         const html = renderGraphicDirective(node, makeCtx());
-        expect(html).toContain('class="rigr-graphic rigr-status-draft"');
+        expect(html).toContain('class="precept-graphic precept-status-draft"');
         expect(html).toContain('id="fig-FIG-001"');
         expect(html).toContain('<img');
         expect(html).toContain('src="images/arch.png"');
         expect(html).toContain('alt="Architecture diagram"');
-        expect(html).toContain('rigr-metadata-table');
+        expect(html).toContain('precept-metadata-table');
       }
     });
 
@@ -258,13 +258,13 @@ describe('directiveRenderer', () => {
 
       if (node.type === 'listing_directive') {
         const html = renderListingDirective(node, makeCtx());
-        expect(html).toContain('class="rigr-code rigr-status-draft"');
+        expect(html).toContain('class="precept-code precept-status-draft"');
         expect(html).toContain('id="code-CODE-001"');
         expect(html).toContain('language-python');
         // Code is syntax-highlighted, so "def" is wrapped in spans
         expect(html).toContain('def');
         expect(html).toContain('foo');
-        expect(html).toContain('rigr-metadata-table');
+        expect(html).toContain('precept-metadata-table');
         expect(html).toContain('Language');
       }
     });

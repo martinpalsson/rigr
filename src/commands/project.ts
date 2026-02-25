@@ -1,20 +1,20 @@
 /**
- * Project Commands - Create and initialize Rigr RMS projects
+ * Project Commands - Create and initialize Precept RMS projects
  */
 
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import {
-  RIGR_JSON_TEMPLATE,
+  PRECEPT_JSON_TEMPLATE,
   SAMPLE_RST_TEMPLATE,
   INDEX_RST_TEMPLATE,
-  RIGR_CSS_TEMPLATE,
-  RIGR_JS_TEMPLATE,
+  PRECEPT_CSS_TEMPLATE,
+  PRECEPT_JS_TEMPLATE,
 } from './templates';
 
 /**
- * Create a new Rigr RMS project
+ * Create a new Precept RMS project
  */
 export function registerCreateProjectCommand(
   context: vscode.ExtensionContext
@@ -24,17 +24,17 @@ export function registerCreateProjectCommand(
     const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 
     if (!workspaceRoot) {
-      vscode.window.showErrorMessage('Please open a folder first to create a Rigr RMS project.');
+      vscode.window.showErrorMessage('Please open a folder first to create a Precept RMS project.');
       return;
     }
 
     // Check if project already exists
-    const rigrJsonPath = path.join(workspaceRoot, 'docs', 'rigr.json');
-    const altRigrJsonPath = path.join(workspaceRoot, 'rigr.json');
+    const preceptJsonPath = path.join(workspaceRoot, 'docs', 'precept.json');
+    const altPreceptJsonPath = path.join(workspaceRoot, 'precept.json');
 
-    if (fs.existsSync(rigrJsonPath) || fs.existsSync(altRigrJsonPath)) {
+    if (fs.existsSync(preceptJsonPath) || fs.existsSync(altPreceptJsonPath)) {
       const overwrite = await vscode.window.showWarningMessage(
-        'A rigr.json file already exists. Do you want to overwrite it?',
+        'A precept.json file already exists. Do you want to overwrite it?',
         'Yes',
         'No'
       );
@@ -46,7 +46,7 @@ export function registerCreateProjectCommand(
 
     // Prompt user to confirm project creation
     const confirm = await vscode.window.showInformationMessage(
-      'Create a new Rigr RMS project in this workspace?',
+      'Create a new Precept RMS project in this workspace?',
       'Yes',
       'No'
     );
@@ -58,7 +58,7 @@ export function registerCreateProjectCommand(
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: 'Creating Rigr RMS project...',
+        title: 'Creating Precept RMS project...',
         cancellable: false,
       },
       async (progress) => {
@@ -77,13 +77,13 @@ export function registerCreateProjectCommand(
             await fs.promises.mkdir(staticDir, { recursive: true });
           }
           await fs.promises.writeFile(
-            path.join(staticDir, 'rigr.css'),
-            RIGR_CSS_TEMPLATE,
+            path.join(staticDir, 'precept.css'),
+            PRECEPT_CSS_TEMPLATE,
             'utf-8'
           );
           await fs.promises.writeFile(
-            path.join(staticDir, 'rigr.js'),
-            RIGR_JS_TEMPLATE,
+            path.join(staticDir, 'precept.js'),
+            PRECEPT_JS_TEMPLATE,
             'utf-8'
           );
 
@@ -93,11 +93,11 @@ export function registerCreateProjectCommand(
             await fs.promises.mkdir(imagesDir, { recursive: true });
           }
 
-          // Create rigr.json
-          progress.report({ message: 'Creating rigr.json...' });
+          // Create precept.json
+          progress.report({ message: 'Creating precept.json...' });
           await fs.promises.writeFile(
-            path.join(docsDir, 'rigr.json'),
-            RIGR_JSON_TEMPLATE,
+            path.join(docsDir, 'precept.json'),
+            PRECEPT_JSON_TEMPLATE,
             'utf-8'
           );
 
@@ -117,14 +117,14 @@ export function registerCreateProjectCommand(
           );
 
           vscode.window.showInformationMessage(
-            'Rigr RMS project created successfully! Open docs/requirements.rst to get started.'
+            'Precept RMS project created successfully! Open docs/requirements.rst to get started.'
           );
 
           // Open the sample requirements file
           const sampleFile = vscode.Uri.file(path.join(docsDir, 'requirements.rst'));
           await vscode.window.showTextDocument(sampleFile);
 
-          // Reload configuration to pick up the new rigr.json
+          // Reload configuration to pick up the new precept.json
           await vscode.commands.executeCommand('requirements.reloadConfiguration');
 
         } catch (error) {

@@ -3,9 +3,9 @@
  */
 
 /**
- * Default rigr.json content for a new Rigr project
+ * Default precept.json content for a new Precept project
  */
-export const RIGR_JSON_TEMPLATE = JSON.stringify({
+export const PRECEPT_JSON_TEMPLATE = JSON.stringify({
   project: 'Requirements',
   version: '0.1',
 
@@ -88,76 +88,76 @@ export const RIGR_JSON_TEMPLATE = JSON.stringify({
 }, null, 2);
 
 /**
- * Rigr CSS template for styling requirements
+ * Precept CSS template for styling requirements
  */
-export const RIGR_CSS_TEMPLATE = `/* =============================================================================
-   Rigr Requirements Styling
+export const PRECEPT_CSS_TEMPLATE = `/* =============================================================================
+   Precept Requirements Styling
    =============================================================================
    Theme-compatible styles for requirement items.
-   All colours use var(--rigr-*) custom properties injected by the theme.
+   All colours use var(--precept-*) custom properties injected by the theme.
    ============================================================================= */
 
 /* -----------------------------------------------------------------------------
    Item Container
    ----------------------------------------------------------------------------- */
-.rigr-item {
-    border: 1px solid var(--rigr-border-color);
+.precept-item {
+    border: 1px solid var(--precept-border-color);
     border-radius: 4px;
     margin: 1.5em 0;
-    background: var(--rigr-bg-light);
+    background: var(--precept-bg-light);
     overflow: hidden;
 }
 
 /* Type-specific left border accent */
-.rigr-type-requirement {
+.precept-type-requirement {
     border-left: 4px solid #1976d2;
 }
 
-.rigr-type-specification {
+.precept-type-specification {
     border-left: 4px solid #388e3c;
 }
 
-.rigr-type-rationale {
+.precept-type-rationale {
     border-left: 4px solid #f57c00;
 }
 
-.rigr-type-information {
+.precept-type-information {
     border-left: 4px solid #7b1fa2;
 }
 
-.rigr-type-parameter {
+.precept-type-parameter {
     border-left: 4px solid #0097a7;
 }
 
-.rigr-type-term {
+.precept-type-term {
     border-left: 4px solid #98D8AA;
 }
 
-.rigr-type-design_element {
+.precept-type-design_element {
     border-left: 4px solid #455a64;
 }
 
 /* -----------------------------------------------------------------------------
    Title (rubric element)
    ----------------------------------------------------------------------------- */
-.rigr-item .rigr-title,
-.rigr-graphic .rigr-title,
-.rigr-code .rigr-title {
+.precept-item .precept-title,
+.precept-graphic .precept-title,
+.precept-code .precept-title {
     margin: 0;
     padding: 0.5em 0.75em;
-    background: var(--rigr-bg-header);
-    border-bottom: 1px solid var(--rigr-border-color);
+    background: var(--precept-bg-header);
+    border-bottom: 1px solid var(--precept-border-color);
     font-size: 1.1em;
     font-weight: 600;
-    color: var(--rigr-text-primary);
+    color: var(--precept-text-primary);
 }
 
 /* ID displayed in title */
-.rigr-title-id {
+.precept-title-id {
     font-family: ui-monospace, 'SF Mono', 'Monaco', 'Consolas', monospace;
     font-weight: 600;
-    color: var(--rigr-id-color);
-    background: var(--rigr-id-bg);
+    color: var(--precept-id-color);
+    background: var(--precept-id-bg);
     padding: 0.1em 0.35em;
     border-radius: 3px;
     font-size: 0.9em;
@@ -167,18 +167,18 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
 /* -----------------------------------------------------------------------------
    ID and Type styling in table cells
    ----------------------------------------------------------------------------- */
-.rigr-id {
+.precept-id {
     font-family: ui-monospace, 'SF Mono', 'Monaco', 'Consolas', monospace;
     font-weight: 600;
-    color: var(--rigr-id-color);
-    background: var(--rigr-id-bg);
+    color: var(--precept-id-color);
+    background: var(--precept-id-bg);
     padding: 0.15em 0.4em;
     border-radius: 3px;
     font-size: 0.95em;
 }
 
-.rigr-type-label {
-    color: var(--rigr-text-secondary);
+.precept-type-label {
+    color: var(--precept-text-secondary);
     font-weight: 500;
     text-transform: uppercase;
     font-size: 0.85em;
@@ -188,41 +188,41 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
 /* -----------------------------------------------------------------------------
    Content Wrapper - body on left, metadata on right
    ----------------------------------------------------------------------------- */
-.rigr-content-wrapper {
+.precept-content-wrapper {
     display: flex;
     flex-wrap: wrap;
     gap: 0;
 }
 
-.rigr-body {
+.precept-body {
     flex: 1 1 70%;
     min-width: 300px;
     padding: 0.5em 0.75em 0.5em 1em !important;
-    background: var(--rigr-bg-content);
-    color: var(--rigr-text-primary);
+    background: var(--precept-bg-content);
+    color: var(--precept-text-primary);
 }
 
-.rigr-body > *:first-child {
+.precept-body > *:first-child {
     margin-top: 0;
 }
 
-.rigr-body > *:last-child {
+.precept-body > *:last-child {
     margin-bottom: 0;
 }
 
-.rigr-metadata-wrapper {
+.precept-metadata-wrapper {
     flex: 0 0 auto;
     width: 25%;
     min-width: 180px;
     max-width: 280px;
-    background: var(--rigr-bg-light);
-    border-left: 1px solid var(--rigr-border-color);
+    background: var(--precept-bg-light);
+    border-left: 1px solid var(--precept-border-color);
     display: flex;
     flex-direction: column;
 }
 
-.rigr-metadata-wrapper .rigr-metadata-table,
-.rigr-metadata-wrapper table {
+.precept-metadata-wrapper .precept-metadata-table,
+.precept-metadata-wrapper table {
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
@@ -231,8 +231,8 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
     flex-direction: column;
 }
 
-.rigr-metadata-wrapper tbody,
-.rigr-metadata-wrapper tgroup {
+.precept-metadata-wrapper tbody,
+.precept-metadata-wrapper tgroup {
     margin: 0 !important;
     padding: 0 !important;
     display: flex;
@@ -240,28 +240,28 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
     flex: 1;
 }
 
-.rigr-metadata-wrapper tr {
+.precept-metadata-wrapper tr {
     display: flex;
     width: 100%;
 }
 
-.rigr-metadata-wrapper tr:last-child {
+.precept-metadata-wrapper tr:last-child {
     flex: 1;
 }
 
-.rigr-metadata-wrapper td:first-child {
+.precept-metadata-wrapper td:first-child {
     flex: 0 0 auto;
     width: 40%;
 }
 
-.rigr-metadata-wrapper td:last-child {
+.precept-metadata-wrapper td:last-child {
     flex: 1;
 }
 
 /* -----------------------------------------------------------------------------
    Metadata Table - compact styling
    ----------------------------------------------------------------------------- */
-.rigr-metadata-table {
+.precept-metadata-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.8em;
@@ -271,35 +271,35 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
     border: none;
 }
 
-.rigr-metadata-table td {
+.precept-metadata-table td {
     padding: 0.25em 0.5em;
-    border-bottom: 1px solid var(--rigr-border-color);
+    border-bottom: 1px solid var(--precept-border-color);
     vertical-align: top;
-    color: var(--rigr-text-primary);
+    color: var(--precept-text-primary);
 }
 
-.rigr-metadata-table td:first-child {
+.precept-metadata-table td:first-child {
     width: 40%;
     font-weight: 500;
-    color: var(--rigr-text-secondary);
+    color: var(--precept-text-secondary);
     white-space: nowrap;
 }
 
-.rigr-metadata-table td:last-child {
-    background: var(--rigr-bg-content);
+.precept-metadata-table td:last-child {
+    background: var(--precept-bg-content);
 }
 
-.rigr-metadata-table tr:last-child td {
+.precept-metadata-table tr:last-child td {
     border-bottom: none;
 }
 
 /* Clickable link references */
-.rigr-link-ref {
-    color: var(--rigr-id-color);
+.precept-link-ref {
+    color: var(--precept-id-color);
     text-decoration: none;
 }
 
-.rigr-link-ref:hover {
+.precept-link-ref:hover {
     text-decoration: underline;
 }
 
@@ -307,32 +307,32 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
    GRAPHIC DIRECTIVE STYLES
    ============================================================================= */
 
-.rigr-graphic {
+.precept-graphic {
     margin: 2em 0;
     padding: 0;
-    background: var(--rigr-bg-light);
-    border: 1px solid var(--rigr-border-color);
+    background: var(--precept-bg-light);
+    border: 1px solid var(--precept-border-color);
     border-radius: 4px;
     overflow: hidden;
 }
 
-.rigr-graphic-content {
+.precept-graphic-content {
     padding: 1em;
-    background: var(--rigr-bg-content);
+    background: var(--precept-bg-content);
     overflow-x: auto;
     text-align: center;
 }
 
-.rigr-graphic-link {
+.precept-graphic-link {
     display: block;
     cursor: zoom-in;
 }
 
-.rigr-graphic-link:hover img {
+.precept-graphic-link:hover img {
     opacity: 0.9;
 }
 
-.rigr-graphic-content img {
+.precept-graphic-content img {
     max-width: 100%;
     height: auto;
     display: block;
@@ -340,39 +340,39 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
     transition: opacity 0.2s;
 }
 
-.rigr-graphic-content object,
-.rigr-graphic-content svg {
+.precept-graphic-content object,
+.precept-graphic-content svg {
     max-width: 100%;
     height: auto;
     display: block;
     margin: 0 auto;
 }
 
-.rigr-graphic-uml {
+.precept-graphic-uml {
     width: 100%;
 }
 
-.rigr-graphic-uml .plantuml {
+.precept-graphic-uml .plantuml {
     width: 100%;
     overflow-x: auto;
 }
 
-.rigr-graphic-uml object {
+.precept-graphic-uml object {
     max-width: 100%;
     width: auto !important;
     height: auto !important;
 }
 
-.rigr-graphic-caption {
+.precept-graphic-caption {
     padding: 0.75em 1em;
-    background: var(--rigr-bg-header);
-    border-top: 1px solid var(--rigr-border-color);
+    background: var(--precept-bg-header);
+    border-top: 1px solid var(--precept-border-color);
     text-align: center;
     font-style: italic;
-    color: var(--rigr-text-secondary);
+    color: var(--precept-text-secondary);
 }
 
-.rigr-graphic-caption p {
+.precept-graphic-caption p {
     margin: 0;
 }
 
@@ -380,43 +380,43 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
    CODE DIRECTIVE STYLES
    ============================================================================= */
 
-.rigr-code {
+.precept-code {
     margin: 2em 0;
     padding: 0;
-    background: var(--rigr-bg-light);
-    border: 1px solid var(--rigr-border-color);
+    background: var(--precept-bg-light);
+    border: 1px solid var(--precept-border-color);
     border-radius: 4px;
     overflow: hidden;
 }
 
-.rigr-code-content {
+.precept-code-content {
     margin: 0;
     padding: 0;
 }
 
-.rigr-code-content .highlight {
+.precept-code-content .highlight {
     margin: 0;
     border-radius: 0;
 }
 
-.rigr-code-content pre {
+.precept-code-content pre {
     margin: 0;
     border-radius: 0;
     border: none;
-    border-top: 1px solid var(--rigr-border-color);
-    border-bottom: 1px solid var(--rigr-border-color);
+    border-top: 1px solid var(--precept-border-color);
+    border-bottom: 1px solid var(--precept-border-color);
 }
 
-.rigr-code-caption {
+.precept-code-caption {
     padding: 0.75em 1em;
-    background: var(--rigr-bg-header);
-    border-top: 1px solid var(--rigr-border-color);
+    background: var(--precept-bg-header);
+    border-top: 1px solid var(--precept-border-color);
     text-align: center;
     font-style: italic;
-    color: var(--rigr-text-secondary);
+    color: var(--precept-text-secondary);
 }
 
-.rigr-code-caption p {
+.precept-code-caption p {
     margin: 0;
 }
 
@@ -424,11 +424,11 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
    Admonitions
    ----------------------------------------------------------------------------- */
 .admonition {
-    border: 1px solid var(--rigr-border-color);
+    border: 1px solid var(--precept-border-color);
     border-radius: 4px;
     margin: 1em 0;
     padding: 0.75em 1em;
-    background: var(--rigr-bg-light);
+    background: var(--precept-bg-light);
 }
 
 .admonition-title {
@@ -446,33 +446,33 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
 /* -----------------------------------------------------------------------------
    Status Theming
    ----------------------------------------------------------------------------- */
-.rigr-status-draft { border-top: 2px solid #CFB53B; }
-.rigr-status-review { border-top: 2px solid #E08A00; }
-.rigr-status-approved { border-top: 2px solid #388E3C; }
-.rigr-status-implemented { border-top: 2px solid #1976D2; }
-.rigr-status-verified { border-top: 2px solid #7B1FA2; }
-.rigr-status-deprecated { border-top: 2px solid #9E9E9E; }
-.rigr-status-rejected { border-top: 2px solid #C62828; }
+.precept-status-draft { border-top: 2px solid #CFB53B; }
+.precept-status-review { border-top: 2px solid #E08A00; }
+.precept-status-approved { border-top: 2px solid #388E3C; }
+.precept-status-implemented { border-top: 2px solid #1976D2; }
+.precept-status-verified { border-top: 2px solid #7B1FA2; }
+.precept-status-deprecated { border-top: 2px solid #9E9E9E; }
+.precept-status-rejected { border-top: 2px solid #C62828; }
 
-.rigr-field-status { font-weight: 600; }
-.rigr-status-draft .rigr-field-status { color: #CFB53B; }
-.rigr-status-review .rigr-field-status { color: #E08A00; }
-.rigr-status-approved .rigr-field-status { color: #388E3C; }
-.rigr-status-implemented .rigr-field-status { color: #1976D2; }
-.rigr-status-verified .rigr-field-status { color: #7B1FA2; }
-.rigr-status-deprecated .rigr-field-status { color: #9E9E9E; }
-.rigr-status-rejected .rigr-field-status { color: #C62828; }
+.precept-field-status { font-weight: 600; }
+.precept-status-draft .precept-field-status { color: #CFB53B; }
+.precept-status-review .precept-field-status { color: #E08A00; }
+.precept-status-approved .precept-field-status { color: #388E3C; }
+.precept-status-implemented .precept-field-status { color: #1976D2; }
+.precept-status-verified .precept-field-status { color: #7B1FA2; }
+.precept-status-deprecated .precept-field-status { color: #9E9E9E; }
+.precept-status-rejected .precept-field-status { color: #C62828; }
 
 /* -----------------------------------------------------------------------------
    PlantUML Diagrams
    ----------------------------------------------------------------------------- */
-.rigr-graphic-uml {
+.precept-graphic-uml {
     padding: 1em;
     text-align: center;
-    background: var(--rigr-bg-content);
+    background: var(--precept-bg-content);
 }
 
-.rigr-graphic-uml img.plantuml-diagram {
+.precept-graphic-uml img.plantuml-diagram {
     max-width: 100%;
     height: auto;
     display: inline-block;
@@ -482,7 +482,7 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
    Syntax Highlighting (highlight.js)
    ----------------------------------------------------------------------------- */
 .hljs {
-    background: var(--rigr-code-block-bg);
+    background: var(--precept-code-block-bg);
 }
 
 .hljs-keyword, .hljs-built_in, .hljs-name { color: #0000ff; }
@@ -499,31 +499,31 @@ export const RIGR_CSS_TEMPLATE = `/* ===========================================
    Print Styles
    ----------------------------------------------------------------------------- */
 @media print {
-    .rigr-item {
+    .precept-item {
         break-inside: avoid;
         border: 1px solid #ccc;
         box-shadow: none;
     }
 
-    .rigr-graphic {
+    .precept-graphic {
         break-inside: avoid;
     }
 
-    .rigr-code {
+    .precept-code {
         break-inside: avoid;
     }
 }
 `;
 
 /**
- * Rigr JavaScript template for clickable graphics
+ * Precept JavaScript template for clickable graphics
  */
-export const RIGR_JS_TEMPLATE = `/**
- * Rigr - Make graphics clickable to view full-size
+export const PRECEPT_JS_TEMPLATE = `/**
+ * Precept - Make graphics clickable to view full-size
  */
 document.addEventListener('DOMContentLoaded', function() {
     // Find all clickable graphic images
-    document.querySelectorAll('.rigr-clickable img').forEach(function(img) {
+    document.querySelectorAll('.precept-clickable img').forEach(function(img) {
         img.style.cursor = 'zoom-in';
         img.addEventListener('click', function() {
             window.open(img.src, '_blank');
@@ -531,11 +531,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Find all PlantUML diagrams (rendered as <object> with SVG)
-    document.querySelectorAll('.rigr-graphic-uml .plantuml').forEach(function(container) {
+    document.querySelectorAll('.precept-graphic-uml .plantuml').forEach(function(container) {
         var obj = container.querySelector('object');
         if (obj) {
             var overlay = document.createElement('div');
-            overlay.className = 'rigr-uml-overlay';
+            overlay.className = 'precept-uml-overlay';
             overlay.style.position = 'absolute';
             overlay.style.top = '0';
             overlay.style.left = '0';
@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Handle PlantUML fallback images
-    document.querySelectorAll('.rigr-graphic-uml img').forEach(function(img) {
+    document.querySelectorAll('.precept-graphic-uml img').forEach(function(img) {
         img.style.cursor = 'zoom-in';
         img.addEventListener('click', function() {
             window.open(img.src, '_blank');

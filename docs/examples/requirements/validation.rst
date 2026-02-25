@@ -1,11 +1,11 @@
-.. _rigr-validation:
+.. _precept-validation:
 
 ==============================
 Validation and Diagnostics
 ==============================
 
 This document specifies requirements for validation, diagnostics,
-deep analysis, and quick fixes in the Rigr extension.
+deep analysis, and quick fixes in the Precept extension.
 
 .. contents:: Table of Contents
    :local:
@@ -110,7 +110,7 @@ Automatic Validation
    :satisfies: 00092
 
    The extension shall detect type field values not in configured
-   ``rigr_object_types`` as ERROR diagnostics.
+   ``precept_object_types`` as ERROR diagnostics.
 
 .. item:: Invalid level detection
    :id: 00096
@@ -120,7 +120,7 @@ Automatic Validation
    :satisfies: 00092
 
    The extension shall detect level field values not in configured
-   ``rigr_levels`` as ERROR diagnostics.
+   ``precept_levels`` as ERROR diagnostics.
 
 .. item:: Invalid status detection
    :id: 00097
@@ -130,7 +130,7 @@ Automatic Validation
    :satisfies: 00092
 
    The extension shall detect status field values not in configured
-   ``rigr_statuses`` as WARNING diagnostics.
+   ``precept_statuses`` as WARNING diagnostics.
 
 .. item:: Missing required fields
    :id: 00098
@@ -165,7 +165,7 @@ Deep Validation Command
    :status: approved
    :satisfies: 00088
 
-   The extension shall provide a command "Rigr: Deep Validation"
+   The extension shall provide a command "Precept: Deep Validation"
    for comprehensive analysis that is too expensive for real-time.
 
 .. item:: Deep validation output
@@ -712,8 +712,8 @@ Diagnostic Types
    - OrphanedReq: INFO - No links to/from requirement
    - StatusInconsistent: WARNING - Approved links to draft
    - InvalidStatus: WARNING - Status not in allowed list
-   - InvalidType: ERROR - Type not in rigr_object_types
-   - InvalidLevel: ERROR - Level not in rigr_levels
+   - InvalidType: ERROR - Type not in precept_object_types
+   - InvalidLevel: ERROR - Level not in precept_levels
    - MissingType: WARNING - Type field missing
    - MissingLevel: WARNING - Level field missing
    - MissingId: ERROR - ID field missing
@@ -763,9 +763,9 @@ Validation Configuration
 
    Validation behavior SHALL be configurable via settings:
 
-   - ``rigr.validation.automatic``: Enable/disable (default: true)
-   - ``rigr.validation.onSave``: Validate on save (default: true)
-   - ``rigr.validation.debounceMs``: Debounce interval (default: 500)
+   - ``precept.validation.automatic``: Enable/disable (default: true)
+   - ``precept.validation.onSave``: Validate on save (default: true)
+   - ``precept.validation.debounceMs``: Debounce interval (default: 500)
 
 .. item:: Configurable diagnostic severity
    :id: 00144
@@ -779,7 +779,7 @@ Validation Configuration
    .. code-block:: json
 
       {
-        "rigr.validation.errors": {
+        "precept.validation.errors": {
           "brokenLinks": "error",
           "duplicateIds": "error",
           "circularDeps": "warning",

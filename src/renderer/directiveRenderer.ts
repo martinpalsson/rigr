@@ -1,8 +1,8 @@
 /**
- * Rigr custom directive HTML renderer
+ * Precept custom directive HTML renderer
  *
  * Renders item, graphic, and listing directives to HTML that matches
- * the CSS classes from the original Sphinx extension.
+ * the CSS classes used by the Precept renderer.
  */
 
 import {
@@ -11,7 +11,7 @@ import {
   ListingDirectiveNode,
   BlockNode,
 } from './rstNodes';
-import { RigrConfig, RequirementIndex } from '../types';
+import { PreceptConfig, RequirementIndex } from '../types';
 import { renderBlockNodes } from './htmlEmitter';
 import { encodePlantUml } from './plantumlRenderer';
 import hljs from 'highlight.js';
@@ -22,7 +22,7 @@ const DEFAULT_PLANTUML_SERVER = 'https://www.plantuml.com/plantuml/svg/';
  * Context for rendering directives, providing access to config and index.
  */
 export interface RenderContext {
-  config: RigrConfig;
+  config: PreceptConfig;
   index?: RequirementIndex;
   /** Base path for resolving relative file references */
   basePath?: string;
@@ -38,25 +38,25 @@ export interface RenderContext {
 
 export function renderItemDirective(node: ItemDirectiveNode, ctx: RenderContext): string {
   const { config } = ctx;
-  const typeClass = `rigr-type-${node.itemType}`;
-  const statusClass = `rigr-status-${node.status}`;
+  const typeClass = `precept-type-${node.itemType}`;
+  const statusClass = `precept-status-${node.status}`;
   const idAttr = node.id ? ` id="req-${escapeAttr(node.id)}"` : '';
 
   const parts: string[] = [];
-  parts.push(`<div class="rigr-item ${typeClass} ${statusClass}"${idAttr}>`);
+  parts.push(`<div class="precept-item ${typeClass} ${statusClass}"${idAttr}>`);
 
   // Title with ID on the left
-  parts.push('<p class="rubric rigr-title">');
+  parts.push('<p class="rubric precept-title">');
   if (node.id) {
-    parts.push(`<span class="rigr-title-id">${escapeHtml(node.id)}</span> `);
+    parts.push(`<span class="precept-title-id">${escapeHtml(node.id)}</span> `);
   }
   parts.push(`${escapeHtml(node.title)}</p>`);
 
   // Content wrapper: body on left, metadata on right
-  parts.push('<div class="rigr-content-wrapper">');
+  parts.push('<div class="precept-content-wrapper">');
 
   // Body content
-  parts.push('<div class="rigr-body">');
+  parts.push('<div class="precept-body">');
   if (node.contentNodes.length > 0) {
     parts.push(renderBlockNodes(node.contentNodes, ctx));
   }
@@ -68,8 +68,8 @@ export function renderItemDirective(node: ItemDirectiveNode, ctx: RenderContext)
     parts.push(renderMetadataTable(rows));
   }
 
-  parts.push('</div>'); // rigr-content-wrapper
-  parts.push('</div>'); // rigr-item
+  parts.push('</div>'); // precept-content-wrapper
+  parts.push('</div>'); // precept-item
 
   return parts.join('\n');
 }
@@ -79,30 +79,30 @@ export function renderItemDirective(node: ItemDirectiveNode, ctx: RenderContext)
 // ---------------------------------------------------------------------------
 
 export function renderGraphicDirective(node: GraphicDirectiveNode, ctx: RenderContext): string {
-  const statusClass = `rigr-status-${node.status}`;
+  const statusClass = `precept-status-${node.status}`;
   const idAttr = node.id ? ` id="fig-${escapeAttr(node.id)}"` : '';
 
   const parts: string[] = [];
-  parts.push(`<div class="rigr-graphic ${statusClass}"${idAttr}>`);
+  parts.push(`<div class="precept-graphic ${statusClass}"${idAttr}>`);
 
   // Title
-  parts.push('<p class="rubric rigr-title">');
+  parts.push('<p class="rubric precept-title">');
   if (node.id) {
-    parts.push(`<span class="rigr-title-id">${escapeHtml(node.id)}</span> `);
+    parts.push(`<span class="precept-title-id">${escapeHtml(node.id)}</span> `);
   }
   parts.push(`${escapeHtml(node.title || 'Graphic')}</p>`);
 
   // Content wrapper
-  parts.push('<div class="rigr-content-wrapper">');
+  parts.push('<div class="precept-content-wrapper">');
 
   // Body
-  parts.push('<div class="rigr-body">');
+  parts.push('<div class="precept-body">');
 
   if (node.file) {
     // Image file
     const alt = escapeAttr(node.alt || node.title || 'Graphic');
     const scaleAttr = node.scale ? ` style="width:${escapeAttr(node.scale)}%"` : '';
-    parts.push(`<div class="rigr-graphic-image rigr-clickable">`);
+    parts.push(`<div class="precept-graphic-image precept-clickable">`);
     parts.push(`<img src="${escapeAttr(node.file)}" alt="${alt}"${scaleAttr}>`);
     parts.push('</div>');
   } else if (node.content.length > 0) {
@@ -113,7 +113,7 @@ export function renderGraphicDirective(node: GraphicDirectiveNode, ctx: RenderCo
       const encoded = encodePlantUml(contentText);
       const imgUrl = server.endsWith('/') ? `${server}${encoded}` : `${server}/${encoded}`;
       const alt = escapeAttr(node.alt || node.title || 'PlantUML diagram');
-      parts.push('<div class="rigr-graphic-uml">');
+      parts.push('<div class="precept-graphic-uml">');
       parts.push(`<img src="${escapeAttr(imgUrl)}" alt="${alt}" class="plantuml-diagram">`);
       parts.push('</div>');
     } else if (node.contentNodes.length > 0) {
@@ -123,12 +123,12 @@ export function renderGraphicDirective(node: GraphicDirectiveNode, ctx: RenderCo
 
   // Caption
   if (node.caption) {
-    parts.push('<div class="rigr-graphic-caption">');
+    parts.push('<div class="precept-graphic-caption">');
     parts.push(`<p>${escapeHtml(node.caption)}</p>`);
     parts.push('</div>');
   }
 
-  parts.push('</div>'); // rigr-body
+  parts.push('</div>'); // precept-body
 
   // Metadata table
   const rows = buildGraphicMetadataRows(node, ctx.config, ctx.index);
@@ -136,8 +136,8 @@ export function renderGraphicDirective(node: GraphicDirectiveNode, ctx: RenderCo
     parts.push(renderMetadataTable(rows));
   }
 
-  parts.push('</div>'); // rigr-content-wrapper
-  parts.push('</div>'); // rigr-graphic
+  parts.push('</div>'); // precept-content-wrapper
+  parts.push('</div>'); // precept-graphic
 
   return parts.join('\n');
 }
@@ -147,38 +147,38 @@ export function renderGraphicDirective(node: GraphicDirectiveNode, ctx: RenderCo
 // ---------------------------------------------------------------------------
 
 export function renderListingDirective(node: ListingDirectiveNode, ctx: RenderContext): string {
-  const statusClass = `rigr-status-${node.status}`;
+  const statusClass = `precept-status-${node.status}`;
   const idAttr = node.id ? ` id="code-${escapeAttr(node.id)}"` : '';
 
   const parts: string[] = [];
-  parts.push(`<div class="rigr-code ${statusClass}"${idAttr}>`);
+  parts.push(`<div class="precept-code ${statusClass}"${idAttr}>`);
 
   // Title
-  parts.push('<p class="rubric rigr-title">');
+  parts.push('<p class="rubric precept-title">');
   if (node.id) {
-    parts.push(`<span class="rigr-title-id">${escapeHtml(node.id)}</span> `);
+    parts.push(`<span class="precept-title-id">${escapeHtml(node.id)}</span> `);
   }
   parts.push(`${escapeHtml(node.title || 'Code')}</p>`);
 
   // Content wrapper
-  parts.push('<div class="rigr-content-wrapper">');
+  parts.push('<div class="precept-content-wrapper">');
 
   // Body: code block
-  parts.push('<div class="rigr-body">');
+  parts.push('<div class="precept-body">');
   if (node.code) {
-    parts.push('<div class="rigr-code-content">');
+    parts.push('<div class="precept-code-content">');
     parts.push(highlightCode(node.code, node.language));
     parts.push('</div>');
   }
 
   // Caption
   if (node.caption) {
-    parts.push('<div class="rigr-code-caption">');
+    parts.push('<div class="precept-code-caption">');
     parts.push(`<p>${escapeHtml(node.caption)}</p>`);
     parts.push('</div>');
   }
 
-  parts.push('</div>'); // rigr-body
+  parts.push('</div>'); // precept-body
 
   // Metadata table
   const rows = buildListingMetadataRows(node, ctx.config, ctx.index);
@@ -186,8 +186,8 @@ export function renderListingDirective(node: ListingDirectiveNode, ctx: RenderCo
     parts.push(renderMetadataTable(rows));
   }
 
-  parts.push('</div>'); // rigr-content-wrapper
-  parts.push('</div>'); // rigr-code
+  parts.push('</div>'); // precept-content-wrapper
+  parts.push('</div>'); // precept-code
 
   return parts.join('\n');
 }
@@ -203,7 +203,7 @@ interface MetadataRow {
   cssClass?: string;
 }
 
-function buildItemMetadataRows(node: ItemDirectiveNode, config: RigrConfig, index?: RequirementIndex): MetadataRow[] {
+function buildItemMetadataRows(node: ItemDirectiveNode, config: PreceptConfig, index?: RequirementIndex): MetadataRow[] {
   const rows: MetadataRow[] = [];
 
   // Type
@@ -221,12 +221,12 @@ function buildItemMetadataRows(node: ItemDirectiveNode, config: RigrConfig, inde
 
   // Value (for parameters)
   if (node.options.value) {
-    rows.push({ label: 'Value', value: node.options.value, isLink: false, cssClass: 'rigr-value' });
+    rows.push({ label: 'Value', value: node.options.value, isLink: false, cssClass: 'precept-value' });
   }
 
   // Term (for terminology)
   if (node.options.term) {
-    rows.push({ label: 'Term', value: node.options.term, isLink: false, cssClass: 'rigr-term' });
+    rows.push({ label: 'Term', value: node.options.term, isLink: false, cssClass: 'precept-term' });
   }
 
   // Outgoing link fields
@@ -244,7 +244,7 @@ function buildItemMetadataRows(node: ItemDirectiveNode, config: RigrConfig, inde
   return rows;
 }
 
-function buildGraphicMetadataRows(node: GraphicDirectiveNode, config: RigrConfig, index?: RequirementIndex): MetadataRow[] {
+function buildGraphicMetadataRows(node: GraphicDirectiveNode, config: PreceptConfig, index?: RequirementIndex): MetadataRow[] {
   const rows: MetadataRow[] = [];
 
   rows.push({ label: 'Type', value: 'Graphic', isLink: false });
@@ -262,13 +262,13 @@ function buildGraphicMetadataRows(node: GraphicDirectiveNode, config: RigrConfig
   return rows;
 }
 
-function buildListingMetadataRows(node: ListingDirectiveNode, config: RigrConfig, index?: RequirementIndex): MetadataRow[] {
+function buildListingMetadataRows(node: ListingDirectiveNode, config: PreceptConfig, index?: RequirementIndex): MetadataRow[] {
   const rows: MetadataRow[] = [];
 
   rows.push({ label: 'Type', value: 'Code', isLink: false });
 
   if (node.language && node.language !== 'text') {
-    rows.push({ label: 'Language', value: node.language, isLink: false, cssClass: 'rigr-language' });
+    rows.push({ label: 'Language', value: node.language, isLink: false, cssClass: 'precept-language' });
   }
 
   if (node.level) {
@@ -284,7 +284,7 @@ function buildListingMetadataRows(node: ListingDirectiveNode, config: RigrConfig
   return rows;
 }
 
-function addLinkRows(rows: MetadataRow[], options: Record<string, string>, config: RigrConfig): void {
+function addLinkRows(rows: MetadataRow[], options: Record<string, string>, config: PreceptConfig): void {
   const linkOptions = config.linkTypes.map(lt => lt.option).filter(Boolean);
 
   for (const opt of linkOptions) {
@@ -301,8 +301,8 @@ function addLinkRows(rows: MetadataRow[], options: Record<string, string>, confi
   }
 }
 
-function addExtraOptionRows(rows: MetadataRow[], options: Record<string, string>, _config: RigrConfig): void {
-  // Extra options are not currently stored in RigrConfig, but we can detect them
+function addExtraOptionRows(rows: MetadataRow[], options: Record<string, string>, _config: PreceptConfig): void {
+  // Extra options are not currently stored in PreceptConfig, but we can detect them
   const knownOptions = new Set(['id', 'type', 'level', 'status', 'value', 'term', 'file', 'alt', 'scale', 'caption', 'language']);
 
   for (const [key, value] of Object.entries(options)) {
@@ -316,7 +316,7 @@ function addExtraOptionRows(rows: MetadataRow[], options: Record<string, string>
   }
 }
 
-function addCustomFieldRows(rows: MetadataRow[], options: Record<string, string>, config: RigrConfig): void {
+function addCustomFieldRows(rows: MetadataRow[], options: Record<string, string>, config: PreceptConfig): void {
   for (const [fieldName, fieldValues] of Object.entries(config.customFields)) {
     if (options[fieldName]) {
       const value = options[fieldName];
@@ -332,7 +332,7 @@ function addCustomFieldRows(rows: MetadataRow[], options: Record<string, string>
   }
 }
 
-function addIncomingLinkRows(rows: MetadataRow[], itemId: string, config: RigrConfig, index?: RequirementIndex): void {
+function addIncomingLinkRows(rows: MetadataRow[], itemId: string, config: PreceptConfig, index?: RequirementIndex): void {
   if (!index || !itemId) return;
 
   // Build incoming links from the linkGraph
@@ -370,12 +370,12 @@ function addIncomingLinkRows(rows: MetadataRow[], itemId: string, config: RigrCo
 
 function renderMetadataTable(rows: MetadataRow[]): string {
   const parts: string[] = [];
-  parts.push('<div class="rigr-metadata-wrapper">');
-  parts.push('<table class="rigr-metadata-table">');
+  parts.push('<div class="precept-metadata-wrapper">');
+  parts.push('<table class="precept-metadata-table">');
   parts.push('<tbody>');
 
   for (const row of rows) {
-    const fieldClass = `rigr-field-${row.label.toLowerCase().replace(/\s+/g, '-')}`;
+    const fieldClass = `precept-field-${row.label.toLowerCase().replace(/\s+/g, '-')}`;
     parts.push('<tr>');
     parts.push(`<td>${escapeHtml(row.label)}</td>`);
     parts.push(`<td class="${fieldClass}">`);
@@ -383,7 +383,7 @@ function renderMetadataTable(rows: MetadataRow[]): string {
     if (row.isLink && row.value) {
       const ids = row.value.split(',').map(s => s.trim());
       const links = ids.map(id =>
-        `<a href="#req-${escapeAttr(id)}" class="rigr-link-ref">${escapeHtml(id)}</a>`
+        `<a href="#req-${escapeAttr(id)}" class="precept-link-ref">${escapeHtml(id)}</a>`
       );
       parts.push(links.join(', '));
     } else if (row.cssClass) {
@@ -407,7 +407,7 @@ function renderMetadataTable(rows: MetadataRow[]): string {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function getTypeTitle(config: RigrConfig, itemType: string): string {
+function getTypeTitle(config: PreceptConfig, itemType: string): string {
   for (const ot of config.objectTypes) {
     if (ot.type === itemType) {
       return ot.title || titleCase(itemType);
@@ -416,7 +416,7 @@ function getTypeTitle(config: RigrConfig, itemType: string): string {
   return titleCase(itemType);
 }
 
-function getLevelTitle(config: RigrConfig, level: string): string {
+function getLevelTitle(config: PreceptConfig, level: string): string {
   for (const lv of config.levels) {
     if (lv.level === level) {
       return lv.title || titleCase(level);
@@ -425,7 +425,7 @@ function getLevelTitle(config: RigrConfig, level: string): string {
   return titleCase(level);
 }
 
-function getIncomingLabel(config: RigrConfig, linkType: string): string {
+function getIncomingLabel(config: PreceptConfig, linkType: string): string {
   for (const lt of config.linkTypes) {
     if (lt.option === linkType) {
       return titleCase(lt.incoming.replace(/_/g, ' '));

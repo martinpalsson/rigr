@@ -2,13 +2,13 @@
  * Documentation Build Command
  *
  * Builds documentation using the built-in TypeScript renderer.
- * Replaces the previous Sphinx-based build pipeline.
+ * Built-in static HTML documentation builder.
  */
 
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { findRigrJsonPath, loadConfigFromJson } from '../configuration/configLoader';
+import { findPreceptJsonPath, loadConfigFromJson } from '../configuration/configLoader';
 import { buildStaticSite } from '../build/staticBuilder';
 import { DEFAULT_CONFIG } from '../configuration/defaults';
 import { IndexBuilder } from '../indexing';
@@ -21,7 +21,7 @@ let outputChannel: vscode.OutputChannel | null = null;
  */
 function getOutputChannel(): vscode.OutputChannel {
   if (!outputChannel) {
-    outputChannel = vscode.window.createOutputChannel('Rigr Documentation');
+    outputChannel = vscode.window.createOutputChannel('Precept Documentation');
   }
   return outputChannel;
 }
@@ -34,15 +34,15 @@ export async function buildDocumentation(workspaceRoot: string, indexBuilder?: I
   channel.clear();
   channel.show();
 
-  channel.appendLine('Rigr: Building Documentation');
+  channel.appendLine('Precept: Building Documentation');
   channel.appendLine('='.repeat(50));
   channel.appendLine('');
 
-  // Find rigr.json
-  const jsonPath = await findRigrJsonPath(workspaceRoot);
+  // Find precept.json
+  const jsonPath = await findPreceptJsonPath(workspaceRoot);
   channel.appendLine(jsonPath
     ? `Configuration: ${jsonPath}`
-    : 'Configuration: using defaults (no rigr.json found)');
+    : 'Configuration: using defaults (no precept.json found)');
   channel.appendLine('');
 
   // Find index.rst entry point
@@ -62,7 +62,7 @@ export async function buildDocumentation(workspaceRoot: string, indexBuilder?: I
   }
 
   if (!entryPoint) {
-    const error = 'No index.rst found. Please create an index.rst file or run "Rigr: New RMS Project".';
+    const error = 'No index.rst found. Please create an index.rst file or run "Precept: New RMS Project".';
     channel.appendLine(`Error: ${error}`);
     vscode.window.showErrorMessage(error);
     return false;
@@ -137,7 +137,7 @@ export async function buildDocumentation(workspaceRoot: string, indexBuilder?: I
  * Find the built documentation index.html
  */
 async function findDocumentationIndex(workspaceRoot: string): Promise<string | null> {
-  const jsonPath = await findRigrJsonPath(workspaceRoot);
+  const jsonPath = await findPreceptJsonPath(workspaceRoot);
   const searchDirs = jsonPath
     ? [path.dirname(jsonPath)]
     : [path.join(workspaceRoot, 'docs'), workspaceRoot];

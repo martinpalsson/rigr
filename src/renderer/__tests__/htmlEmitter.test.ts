@@ -2,9 +2,9 @@ import { renderDocument, renderBlockNodes, renderInlineNodes } from '../htmlEmit
 import { parseRstDocument } from '../rstFullParser';
 import { parseInline } from '../inlineParser';
 import { RenderContext } from '../directiveRenderer';
-import { RigrConfig } from '../../types';
+import { PreceptConfig } from '../../types';
 
-const defaultConfig: RigrConfig = {
+const defaultConfig: PreceptConfig = {
   objectTypes: [{ type: 'requirement', title: 'Requirement' }],
   levels: [{ level: 'stakeholder', title: 'Stakeholder' }],
   idConfig: { prefix: 'REQ', separator: '-', padding: 3, start: 1 },
@@ -51,7 +51,7 @@ describe('htmlEmitter', () => {
     it('should render :item: role as link', () => {
       const nodes = parseInline(':item:`REQ-001`');
       const html = renderInlineNodes(nodes, ctx);
-      expect(html).toBe('<a href="#req-REQ-001" class="rigr-link-ref">REQ-001</a>');
+      expect(html).toBe('<a href="#req-REQ-001" class="precept-link-ref">REQ-001</a>');
     });
   });
 

@@ -1,11 +1,11 @@
-.. _rigr-baseline:
+.. _precept-baseline:
 
 ================================
 Baseline and Release Management
 ================================
 
 This document specifies requirements for baseline tagging, release
-management, reporting, and Git integration in the Rigr extension.
+management, reporting, and Git integration in the Precept extension.
 
 .. contents:: Table of Contents
    :local:
@@ -63,7 +63,7 @@ Baseline Tagging
    :status: approved
    :satisfies: 00148
 
-   The extension shall provide a command "Rigr: Tag Current Baseline":
+   The extension shall provide a command "Precept: Tag Current Baseline":
 
    1. Prompt for baseline name (e.g., "v1.0.0")
    2. Add ``:baseline: v1.0.0`` to eligible requirements
@@ -103,7 +103,7 @@ Baseline Tagging
    :status: approved
    :satisfies: 00148
 
-   The extension shall provide "Rigr: Remove Baseline Tags" command
+   The extension shall provide "Precept: Remove Baseline Tags" command
    to remove baseline field from selected requirements.
 
 Baseline Filtering
@@ -155,7 +155,7 @@ Release Report Generation
    :status: approved
    :satisfies: 00146
 
-   The extension shall provide "Rigr: Generate Release Report" command
+   The extension shall provide "Precept: Generate Release Report" command
    to create comprehensive release documentation.
 
 .. item:: Report summary section
@@ -263,7 +263,7 @@ Git Integration
    :status: approved
    :satisfies: 00145
 
-   The extension shall provide "Rigr: Create Git Tag for Baseline"
+   The extension shall provide "Precept: Create Git Tag for Baseline"
    command to create an annotated Git tag.
 
 .. item:: Git tag format

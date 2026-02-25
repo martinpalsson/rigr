@@ -6,7 +6,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { RIGR_CSS_TEMPLATE, RIGR_JS_TEMPLATE } from '../commands/templates';
+import { PRECEPT_CSS_TEMPLATE, PRECEPT_JS_TEMPLATE } from '../commands/templates';
 import { STATIC_PAGE_CSS } from './templateEngine';
 import { generateStaticThemeCss } from '../themes';
 
@@ -20,13 +20,13 @@ export function copyStaticAssets(outputDir: string, themeName: string = 'default
   const staticDir = path.join(outputDir, '_static');
   mkdirSync(staticDir);
 
-  // Combined CSS: theme vars + page layout + rigr component styles
+  // Combined CSS: theme vars + page layout + precept component styles
   const themeCss = generateStaticThemeCss(themeName);
-  const combinedCss = `${themeCss}\n\n${STATIC_PAGE_CSS}\n\n${RIGR_CSS_TEMPLATE}`;
-  fs.writeFileSync(path.join(staticDir, 'rigr.css'), combinedCss, 'utf-8');
+  const combinedCss = `${themeCss}\n\n${STATIC_PAGE_CSS}\n\n${PRECEPT_CSS_TEMPLATE}`;
+  fs.writeFileSync(path.join(staticDir, 'precept.css'), combinedCss, 'utf-8');
 
   // JavaScript
-  fs.writeFileSync(path.join(staticDir, 'rigr.js'), RIGR_JS_TEMPLATE, 'utf-8');
+  fs.writeFileSync(path.join(staticDir, 'precept.js'), PRECEPT_JS_TEMPLATE, 'utf-8');
 }
 
 /**

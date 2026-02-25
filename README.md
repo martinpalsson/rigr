@@ -1,16 +1,12 @@
-# Rigr
+# Precept
 
-**A free and open source requirements engineering tool.**
+**A free and open source requirements engineering tool for VS Code.**
 
-Rigr (pronounced "rigger") is part of a complete open source RMS stack:
-- **Sphinx** - Documentation generation and publishing
-- **VS Code + Rigr** - Intelligent editing with IntelliSense, validation, and traceability
-- **Version Control** - Git-based change tracking (your choice of hosting)
+Precept is a lightweight requirements management system built into VS Code.
+Write requirements in RST files, get IntelliSense, validation, traceability,
+live preview, and static HTML documentation — no external tools needed.
 
-The goal of Rigr is to provide a free and light weight requirements 
-engineering tool suitable for developing software solutions and 
-physical products. 
-Rigr is heavily vibe-coded but there is a requirement base for it in
+Precept is heavily vibe-coded but there is a requirement base for it in
 docs/examples/requirements which serves both as an example and instruction
 to (in my case) claude code.
 
@@ -45,8 +41,20 @@ to (in my case) claude code.
 ### Item Explorer
 - **Tree View**: Browse all items in sidebar
 - **Flexible Grouping**: By type, file, or status
-- **Search & Filter**: Quick requirement lookup
+- **Cursor Sync**: Explorer follows your cursor position
 - **Click Navigation**: Instant jumps
+
+### Link Explorer
+- **Relationship View**: Incoming and outgoing links for the focused item
+- **Inline References**: `:termref:`, `:paramval:`, and `:item:` references tracked as links
+- **Bidirectional Navigation**: Click a linked item to navigate there
+
+### Live Preview & Static HTML
+- **Live RST Preview**: Rendered preview panel that follows your cursor
+- **Static HTML Build**: Generate a full documentation site from your RST files
+- **Selectable Themes**: Choose from Default, Read the Docs, Alabaster, Furo, or PyData
+- **PlantUML Diagrams**: Embedded diagram rendering
+- **Syntax Highlighting**: Code blocks with highlight.js
 
 ### Baseline & Release Management
 - **Version Tagging**: Mark requirements by release
@@ -60,25 +68,23 @@ to (in my case) claude code.
 
 ## Installation
 
-
-
 ### From VS Code Marketplace
-**Rigr is pre-release and currently not released in VS Code Marketplace, for now, install from source**
+**Precept is pre-release and currently not released in VS Code Marketplace, for now, install from source**
 
 1. Open Extensions (`Ctrl+Shift+X`)
-2. Search for "Rigr"
+2. Search for "Precept"
 3. Click **Install**
 
 ### From VSIX
-**Rigr is pre-release and currently not released in VS Code Marketplace, for now, install from source**
+**Precept is pre-release and currently not released in VS Code Marketplace, for now, install from source**
 ```bash
-code --install-extension rigr-0.0.1.vsix
+code --install-extension precept-0.1.0.vsix
 ```
 
 ### From Source
 ```bash
-git clone https://github.com/martinpalsson/rigr.git
-cd rigr
+git clone https://github.com/martinpalsson/precept.git
+cd precept
 npm install
 npm run compile
 # Press F5 to launch Extension Development Host
@@ -91,46 +97,46 @@ npm run compile
 **Option A: Use the command (Recommended)**
 
 1. Open an empty folder in VS Code
-2. Press `Ctrl+Shift+P` and run `Rigr: New RMS Project`
+2. Press `Ctrl+Shift+P` and run `Precept: New RMS Project`
 3. Confirm to create the project structure
 
-This creates a `docs/` folder with `conf.py`, sample requirements, and an index file.
+This creates a `docs/` folder with `precept.json`, sample requirements, and an index file.
 
 **Option B: Manual setup**
 
-Create a `docs/conf.py` with your configuration:
+Create a `docs/precept.json` with your configuration:
 
-```python
-# docs/conf.py
+```json
+{
+  "project": "My Requirements Project",
 
-project = 'My Requirements Project'
+  "objectTypes": [
+    { "type": "requirement", "title": "Requirement" },
+    { "type": "specification", "title": "Specification" },
+    { "type": "rationale", "title": "Rationale" },
+    { "type": "parameter", "title": "Parameter" }
+  ],
 
-rigr_object_types = [
-    {"value": "requirement", "title": "Requirement"},
-    {"value": "specification", "title": "Specification"},
-    {"value": "rationale", "title": "Rationale"},
-    {"value": "parameter", "title": "Parameter"},
-]
+  "idConfig": {
+    "prefix": "",
+    "separator": "",
+    "padding": 4,
+    "start": 1
+  },
 
-rigr_id_config = {
-    "prefix": "",        # Optional: e.g., "REQ" for "REQ-0001"
-    "separator": "",     # Separator between prefix and number
-    "padding": 4,        # Number of digits (e.g., 4 for "0001")
-    "start": 1,          # Starting number for auto-increment
+  "linkTypes": [
+    { "option": "satisfies", "incoming": "satisfied_by", "outgoing": "satisfies" },
+    { "option": "implements", "incoming": "implemented_by", "outgoing": "implements" },
+    { "option": "tests", "incoming": "tested_by", "outgoing": "tests" }
+  ],
+
+  "statuses": [
+    { "status": "draft" },
+    { "status": "review" },
+    { "status": "approved" },
+    { "status": "implemented" }
+  ]
 }
-
-rigr_link_types = [
-    {"option": "satisfies", "incoming": "satisfied_by", "outgoing": "satisfies"},
-    {"option": "implements", "incoming": "implemented_by", "outgoing": "implements"},
-    {"option": "tests", "incoming": "tested_by", "outgoing": "tests"},
-]
-
-rigr_statuses = [
-    {"status": "draft"},
-    {"status": "review"},
-    {"status": "approved"},
-    {"status": "implemented"},
-]
 ```
 
 ### 2. Create Requirements
@@ -150,7 +156,7 @@ Autocomplete helps with linking:
 .. item:: Network packet capture implementation
    :id: 0002
    :type: specification
-   :implements: |  ← Press Ctrl+Space for suggestions
+   :implements: |  <- Press Ctrl+Space for suggestions
 ```
 
 ### 4. Navigate
@@ -180,106 +186,88 @@ to the item, and focus the Item Explorer on it.
 Also works when clicking the star symbol.
 
 ![Quick Fix](docs/images/quick-fix1.png)
+
 ## Configuration
 
-Rigr reads its configuration from Sphinx's `conf.py` file - the same configuration drives both Rigr's VS Code features and Sphinx documentation builds.
+Precept reads its configuration from `precept.json`. This single file drives all features — IntelliSense, validation, preview themes, and static HTML builds.
 
 ### Configuration File Location
 
-Rigr searches for `conf.py` in this order:
-1. `docs/conf.py`
-2. `doc/conf.py`
-3. `conf.py` (project root)
+Precept searches for `precept.json` in this order:
+1. `docs/precept.json`
+2. `doc/precept.json`
+3. `source/precept.json`
+4. `precept.json` (project root)
+5. Recursive search in subdirectories
 
 ### Configuration Options
 
-#### 1. Object Types (`rigr_object_types`)
+#### 1. Object Types (`objectTypes`)
 
 Define the types of objects you can create. Each type appears in the tree view.
 
-```python
-rigr_object_types = [
-    {
-        "type": "requirement",      # Internal value (used in :type: field)
-        "title": "Requirement",     # Display name in UI
-        "color": "#BFD8D2"          # Optional: color for visualizations
-    },
-    {
-        "type": "specification",
-        "title": "Specification",
-        "color": "#FEDCD2"
-    },
-    {
-        "type": "test",
-        "title": "Test Case",
-        "color": "#AEDFF7"
-    },
-    {
-        "type": "rationale",
-        "title": "Rationale",
-        "color": "#DF744A"
-    },
-]
+```json
+{
+  "objectTypes": [
+    { "type": "requirement", "title": "Requirement" },
+    { "type": "specification", "title": "Specification" },
+    { "type": "rationale", "title": "Rationale" },
+    { "type": "parameter", "title": "Parameter" },
+    { "type": "term", "title": "Term" },
+    { "type": "design_element", "title": "Design Element" }
+  ]
+}
 ```
 
 **Usage in RST:**
 ```rst
 .. item:: My requirement title
    :id: 0001
-   :type: requirement    ← Must match a "type" value above
+   :type: requirement    <- Must match a "type" value above
 ```
 
-#### 2. ID Configuration (`rigr_id_config`)
+#### 2. ID Configuration (`idConfig`)
 
 Configure how requirement IDs are generated and formatted. By default, IDs are plain numeric (e.g., `0001`, `0002`). Prefixes are optional.
 
-```python
-rigr_id_config = {
-    "prefix": "",        # Optional prefix (e.g., "REQ" for "REQ-0001")
-    "separator": "",     # Separator between prefix and number (e.g., "-")
-    "padding": 4,        # Number of digits (e.g., 4 for "0001")
-    "start": 1,          # Starting number for auto-increment
+```json
+{
+  "idConfig": {
+    "prefix": "",
+    "separator": "",
+    "padding": 4,
+    "start": 1
+  }
 }
 ```
 
 **Example with prefix:**
-```python
-rigr_id_config = {
+```json
+{
+  "idConfig": {
     "prefix": "REQ",
     "separator": "-",
     "padding": 4,
-    "start": 1,
+    "start": 1
+  }
 }
-# Produces IDs like: REQ-0001, REQ-0002, ...
 ```
+Produces IDs like: `REQ-0001`, `REQ-0002`, ...
 
-#### 3. Link Types (`rigr_link_types`)
+#### 3. Link Types (`linkTypes`)
 
 Define how requirements can be linked together. This enables traceability and coverage analysis.
 
-```python
-rigr_link_types = [
-    {
-        "type": "satisfies",           # Link type name (used as :satisfies:)
-        "inverse": "satisfied_by"      # Inverse relationship name
-    },
-    {
-        "type": "implements",
-        "inverse": "implemented_by"
-    },
-    {
-        "type": "verifies",
-        "inverse": "verified_by"
-    },
-    {
-        "type": "derives",
-        "inverse": "derived_from"
-    },
-    {
-        "type": "links",               # Generic bidirectional link
-        "inverse": "links"
-    },
-]
+```json
+{
+  "linkTypes": [
+    { "option": "satisfies", "incoming": "satisfied_by", "outgoing": "satisfies" },
+    { "option": "implements", "incoming": "implemented_by", "outgoing": "implements" },
+    { "option": "tests", "incoming": "tested_by", "outgoing": "tests" },
+    { "option": "derives_from", "incoming": "derives_to", "outgoing": "derives_from" },
+    { "option": "links", "incoming": "linked_from", "outgoing": "links_to" }
+  ]
+}
 ```
 
 **Usage in RST:**
@@ -287,123 +275,132 @@ rigr_link_types = [
 .. item:: System requirement
    :id: 0002
    :type: requirement
-   :satisfies: 0001              ← Links to another requirement
+   :satisfies: 0001
 
 .. item:: Test case
    :id: 0003
-   :type: test
-   :verifies: 0002               ← Links to system requirement
+   :type: requirement
+   :tests: 0002
 ```
 
-#### 4. Statuses (`rigr_statuses`)
+#### 4. Statuses (`statuses`)
 
 Define the workflow states for requirements. Order matters for status consistency validation.
 
-```python
-rigr_statuses = [
-    {
-        "status": "draft",              # Status value (used in :status: field)
-        "title": "Draft",               # Display name
-        "color": "#808080"              # Optional: color for UI
-    },
-    {
-        "status": "review",
-        "title": "In Review",
-        "color": "#FFA500"
-    },
-    {
-        "status": "approved",
-        "title": "Approved",
-        "color": "#4CAF50"
-    },
-    {
-        "status": "implemented",
-        "title": "Implemented",
-        "color": "#2196F3"
-    },
-    {
-        "status": "rejected",
-        "title": "Rejected",
-        "color": "#F44336"
-    },
-]
-```
-
-**Status consistency:** Rigr warns if an `approved` requirement links to a `draft` requirement, as this may indicate incomplete review.
-
-#### 5. Validation Thresholds (Optional)
-
-Configure thresholds for deep validation coverage checks:
-
-```python
-rigr_validation_thresholds = {
-    'hierarchical_coverage': {
-        'satisfies': {
-            'threshold': 90,                    # Minimum coverage percentage
-            'from_types': ['requirement'],      # Source object types
-            'to_types': ['requirement']         # Target object types
-        },
-        'implements': {
-            'threshold': 85,
-            'from_types': ['requirement'],
-            'to_types': ['specification']
-        },
-        'verifies': {
-            'threshold': 80,
-            'from_types': ['specification'],
-            'to_types': ['test']
-        },
-    },
-    'priority_weighted_coverage': {
-        'critical': 100,    # Critical items need 100% coverage
-        'high': 95,
-        'medium': 85,
-        'low': 70,
-    },
+```json
+{
+  "statuses": [
+    { "status": "draft", "color": "#FFEB3B" },
+    { "status": "review", "color": "#FF9800" },
+    { "status": "approved", "color": "#4CAF50" },
+    { "status": "implemented", "color": "#2196F3" },
+    { "status": "rejected", "color": "#F44336" }
+  ]
 }
 ```
+
+**Status consistency:** Precept warns if an `approved` requirement links to a `draft` requirement, as this may indicate incomplete review.
+
+#### 5. Custom Fields (`customFields`)
+
+Define custom metadata fields with enumerated values for IntelliSense completion:
+
+```json
+{
+  "customFields": {
+    "product": [
+      { "value": "widget-pro", "title": "Widget Pro" },
+      { "value": "widget-lite", "title": "Widget Lite" }
+    ],
+    "priority": [
+      { "value": "critical", "title": "Critical" },
+      { "value": "high", "title": "High" },
+      { "value": "medium", "title": "Medium" },
+      { "value": "low", "title": "Low" }
+    ]
+  }
+}
+```
+
+**Usage in RST:**
+```rst
+.. item:: High priority requirement
+   :id: 0010
+   :type: requirement
+   :priority: critical
+   :product: widget-pro
+```
+
+#### 6. Theme (`theme`)
+
+Select a visual theme for preview and static HTML output:
+
+```json
+{
+  "theme": "readthedocs"
+}
+```
+
+Available themes: `default`, `readthedocs`, `alabaster`, `furo`, `pydata`
 
 ### Complete Example Configuration
 
-Here's a complete `conf.py` for an automotive project:
+Here's a complete `precept.json`:
 
-```python
-# docs/conf.py - Rigr Configuration for Automotive Project
+```json
+{
+  "project": "Vehicle Control System Requirements",
+  "version": "1.0",
+  "theme": "furo",
 
-project = 'Vehicle Control System Requirements'
-author = 'Engineering Team'
+  "objectTypes": [
+    { "type": "requirement", "title": "Requirement" },
+    { "type": "specification", "title": "Specification" },
+    { "type": "rationale", "title": "Rationale" },
+    { "type": "parameter", "title": "Parameter" },
+    { "type": "term", "title": "Term" },
+    { "type": "design_element", "title": "Design Element" }
+  ],
 
-# Object types
-rigr_object_types = [
-    {"type": "requirement", "title": "Requirement", "color": "#BFD8D2"},
-    {"type": "specification", "title": "Specification", "color": "#FEDCD2"},
-    {"type": "test", "title": "Test Case", "color": "#AEDFF7"},
-    {"type": "rationale", "title": "Rationale", "color": "#DF744A"},
-]
+  "levels": [
+    { "level": "stakeholder", "title": "Stakeholder" },
+    { "level": "system", "title": "System" },
+    { "level": "component", "title": "Component" },
+    { "level": "software", "title": "Software" },
+    { "level": "hardware", "title": "Hardware" }
+  ],
 
-# ID configuration (prefix is optional)
-rigr_id_config = {
+  "idConfig": {
     "prefix": "",
     "separator": "",
     "padding": 4,
-    "start": 1,
+    "start": 1
+  },
+
+  "linkTypes": [
+    { "option": "satisfies", "incoming": "satisfied_by", "outgoing": "satisfies" },
+    { "option": "implements", "incoming": "implemented_by", "outgoing": "implements" },
+    { "option": "derives_from", "incoming": "derives_to", "outgoing": "derives_from" },
+    { "option": "tests", "incoming": "tested_by", "outgoing": "tests" },
+    { "option": "links", "incoming": "linked_from", "outgoing": "links_to" }
+  ],
+
+  "statuses": [
+    { "status": "draft", "color": "#FFEB3B" },
+    { "status": "review", "color": "#FF9800" },
+    { "status": "approved", "color": "#4CAF50" },
+    { "status": "implemented", "color": "#2196F3" }
+  ],
+
+  "customFields": {
+    "priority": [
+      { "value": "critical", "title": "Critical" },
+      { "value": "high", "title": "High" },
+      { "value": "medium", "title": "Medium" },
+      { "value": "low", "title": "Low" }
+    ]
+  }
 }
-
-# Traceability links
-rigr_link_types = [
-    {"type": "satisfies", "inverse": "satisfied_by"},
-    {"type": "implements", "inverse": "implemented_by"},
-    {"type": "verifies", "inverse": "verified_by"},
-    {"type": "derives", "inverse": "derived_from"},
-]
-
-# Workflow statuses
-rigr_statuses = [
-    {"status": "draft", "title": "Draft", "color": "#808080"},
-    {"status": "review", "title": "In Review", "color": "#FFA500"},
-    {"status": "approved", "title": "Approved", "color": "#4CAF50"},
-    {"status": "implemented", "title": "Implemented", "color": "#2196F3"},
-]
 ```
 
 ### VS Code Settings
@@ -441,10 +438,10 @@ Additional settings can be configured in `.vscode/settings.json`:
 ### Creating Requirements
 
 **Using snippets** - type and press Tab:
-- `req-req` → Requirement
-- `req-spec` → Specification  
-- `req-test` → Test Case
-- `req-rationale` → Rationale
+- `req-req` -> Requirement
+- `req-spec` -> Specification
+- `req-test` -> Test Case
+- `req-rationale` -> Rationale
 
 **Manual creation:**
 
@@ -469,90 +466,90 @@ Additional settings can be configured in `.vscode/settings.json`:
 
 Use `Ctrl+Space` after `:` for autocomplete suggestions.
 
+### Inline References
+
+Reference items inline using roles:
+
+```rst
+The system communicates via the :termref:`0050`.
+The timeout is :paramval:`0042`.
+See :item:`0001` for details.
+```
+
+These are tracked as links in the Link Explorer.
+
 ### Validation
 
 **Automatic:** Errors appear as you type in Problems panel (`Ctrl+Shift+M`)
 
-**Manual:** Command Palette → "Rigr: Deep Validation"
+**Manual:** Command Palette -> "Precept: Deep Validation"
 
 **Error types:**
-- 🔴 Broken links
-- 🔴 Duplicate IDs
-- 🔴 Invalid status/type
-- 🟡 Circular dependencies
-- 🟡 Status inconsistencies
-- 🔵 Orphaned requirements
+- Broken links
+- Duplicate IDs
+- Invalid status/type
+- Circular dependencies
+- Status inconsistencies
+- Orphaned requirements
 
 **Quick fixes:** Press `Ctrl+.` on errors for solutions
 
 ### Baseline Management
 
 **Tag a baseline:**
-1. Command Palette → "Rigr: Tag Current Baseline"
+1. Command Palette -> "Precept: Tag Current Baseline"
 2. Enter version (e.g., `v1.0.0`)
 3. Select which requirements to tag
 
 **Generate release report:**
-1. Command Palette → "Rigr: Generate Release Report"
+1. Command Palette -> "Precept: Generate Release Report"
 2. Select baseline
 3. Choose comparison baseline (optional)
 4. View or save report
 
 **Create Git tag:**
-1. Command Palette → "Rigr: Create Git Tag for Baseline"
+1. Command Palette -> "Precept: Create Git Tag for Baseline"
 2. Select baseline
 3. Git tag `req-v1.0.0` is created
+
+### Building HTML Documentation
+
+Use the VS Code command palette:
+- **Precept: Build Documentation** - generates static HTML in `_build/html/`
+- **Precept: View Documentation** - opens the built HTML in your browser
+- **Precept: Open RST Preview** - live preview in VS Code
+
+The static HTML builder is built into the extension — no external tools required.
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `Rigr: New RMS Project` | Create a new Rigr project with sample conf.py and requirements |
-| `Rigr: Reload Configuration` | Reload conf.py and rebuild index |
-| `Rigr: Deep Validation` | Enterprise-grade validation with detailed reports |
-| `Rigr: Tag Current Baseline` | Add baseline tags |
-| `Rigr: Remove Baseline Tags` | Remove baseline |
-| `Rigr: Generate Release Report` | Create release report |
-| `Rigr: Create Git Tag for Baseline` | Git tag for baseline |
-| `Rigr: Refresh Explorer` | Refresh tree view |
+| `Precept: New RMS Project` | Create a new Precept project with precept.json and sample requirements |
+| `Precept: Reload Configuration` | Reload precept.json and rebuild index |
+| `Precept: Open RST Preview` | Live rendered preview of the current RST file |
+| `Precept: Build Documentation` | Generate static HTML documentation |
+| `Precept: View Documentation` | Open built HTML in browser |
+| `Precept: Deep Validation` | Comprehensive validation with detailed reports |
+| `Precept: Tag Current Baseline` | Add baseline tags |
+| `Precept: Remove Baseline Tags` | Remove baseline |
+| `Precept: Generate Release Report` | Create release report |
+| `Precept: Create Git Tag for Baseline` | Git tag for baseline |
+| `Precept: Refresh Explorer` | Refresh tree view |
 
 ### Deep Validation
 
-The **Rigr: Deep Validation** command provides comprehensive analysis of your requirements traceability:
+The **Precept: Deep Validation** command provides comprehensive analysis of your requirements traceability:
 
 **What it checks:**
 - **DV-001: Circular Dependencies** - Detects cycles using Tarjan's algorithm, severity by length
-- **DV-002: Hierarchical Coverage** - Stakeholder→System, System→Component coverage with thresholds
+- **DV-002: Hierarchical Coverage** - Stakeholder->System, System->Component coverage with thresholds
 - **DV-003: Orphaned Requirements** - Categorizes true orphans, dead-ends, and source-only nodes
-- **DV-004: Status Consistency** - Validates status propagation (approved→draft violations)
+- **DV-004: Status Consistency** - Validates status propagation (approved->draft violations)
 - **DV-005: Hierarchical Completeness** - Verifies complete traceability chains across levels
 - **DV-006: Priority-Weighted Coverage** - Coverage targets by priority (critical: 100%, high: 95%, etc.)
 - **DV-007: Baseline Stability** - Ensures baselined requirements are approved/implemented
 - **DV-010: Gap Analysis** - Actionable recommendations prioritized by severity
-
-**Severity Levels:**
-- 🔴 **BLOCKER** - Must be fixed before release
-- 🟠 **HIGH** - Should be fixed soon
-- 🟡 **MEDIUM** - Should be fixed eventually
-- 🔵 **LOW** - Nice to have
-- ℹ️ **INFO** - Informational only
-
-**Configuration** (in `conf.py`):
-```python
-rigr_validation_thresholds = {
-    'hierarchical_coverage': {
-        'satisfies': {'threshold': 90, 'from_types': ['requirement'], 'to_types': ['requirement']},
-        'implements': {'threshold': 85, 'from_types': ['requirement'], 'to_types': ['specification']},
-        'tests': {'threshold': 80, 'from_types': ['specification'], 'to_types': ['parameter']},
-    },
-    'priority_weighted_coverage': {
-        'critical': 100,
-        'high': 95,
-        'medium': 85,
-        'low': 70,
-    },
-}
-```
 
 **Output:** Detailed report in VS Code Output panel with:
 - Summary statistics (total issues by severity)
@@ -577,36 +574,27 @@ rigr_validation_thresholds = {
 ### ID Conventions and Optional ID Prefix
 - By default, IDs are plain numeric: `0001`, `0002`, `0003`
 - Use leading zeros for proper sorting
-- Optionally configure a prefix in `conf.py` (e.g., `REQ-0001`)
+- Optionally configure a prefix in `precept.json` (e.g., `REQ-0001`)
 
-```python
-rigr_id_config = {
-    "prefix": "",       # optional prefix e.g. REQ
-    "separator": "",    # optional separator e.g. the hyphen in REQ-0001
-    "padding": 4,       # default 10^4 space
-    "start": 1,         # default first ID is 1.
-}
-```
-
-### Links types
-Link types can be set up in conf.py in the rigr_link_types list. A few link types are included by default.
-A new link type is set up by adding an object to rigr_link_types list. To demonstrate this, lets implement a link type for linking rationale items to requirements.
-```python
+### Link Types
+Link types can be set up in precept.json in the `linkTypes` array. A few link types are included by default.
+A new link type is set up by adding an object to `linkTypes`. To demonstrate, here is a link type for linking rationale items to requirements:
+```json
 {
-    # The directive that is written in the rationale item. e.g. :motivates: 0002
-    "option": "motivates",
-    # the verb for this link type on the receiving end (in this example 0002)
-    "incoming": "motivated_by",
-    # the verb for this link type on the originating end (in this example 0001)
-    "outgoing": "motivates",
+  "option": "motivates",
+  "incoming": "motivated_by",
+  "outgoing": "motivates"
 }
 ```
+
+### Folder Structure
+RST files can be organized in subdirectories. Use `.. toctree::` to define the document hierarchy. The static HTML builder preserves the folder structure and generates correct cross-file links.
 
 ### Status Workflow
-1. **draft** → Initial creation
-2. **review** → Ready for review
-3. **approved** → Reviewed and approved
-4. **implemented** → Implementation complete
+1. **draft** -> Initial creation
+2. **review** -> Ready for review
+3. **approved** -> Reviewed and approved
+4. **implemented** -> Implementation complete
 
 ### Validation Strategy
 - Keep automatic validation enabled during requirements development
@@ -621,9 +609,8 @@ A new link type is set up by adding an object to rigr_link_types list. To demons
 - Check file language is "reStructuredText" (status bar)
 
 ### Configuration not loading
-- Verify `conf.py` exists in supported location
-- Check Python is installed: `python --version` (or `python3 --version` on some Linux distributions)
-- View Output panel: View → Output → "Requirements"
+- Verify `precept.json` exists in a supported location (see Configuration File Location above)
+- View Output panel: View -> Output -> "Requirements"
 
 ### Autocomplete not working
 - Ensure cursor is in link field (`:links:`, `:satisfies:`, etc.)
@@ -634,29 +621,6 @@ A new link type is set up by adding an object to rigr_link_types list. To demons
 - Add build dirs to `requirements.indexing.excludePatterns`
 - Increase `requirements.indexing.maxFiles` if needed
 
-## Building HTML Documentation
-
-Your requirements can be built as HTML using Sphinx:
-
-```bash
-cd docs/examples
-
-# Create virtual environment (first time)
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-# or: venv\Scripts\activate  # Windows
-
-# Install dependencies
-pip install -r python-dependencies.txt
-
-# Build HTML
-sphinx-build -b html . _build/html
-
-# Open: _build/html/index.html
-```
-
-> **Note:** On some Linux distributions, you may need to use `python3` instead of `python`.
-
 ## Contributing
 
 We welcome contributions! Here's how to get started:
@@ -664,8 +628,8 @@ We welcome contributions! Here's how to get started:
 ### Development Setup
 
 ```bash
-git clone https://github.com/martinpalsson/rigr.git
-cd rigr
+git clone https://github.com/martinpalsson/precept.git
+cd precept
 npm install
 npm run compile
 ```
@@ -682,21 +646,18 @@ npm run compile
 src/
 ├── extension.ts              # Entry point
 ├── types.ts                  # TypeScript types
-├── configuration/            # Config loading (conf.py parsing)
+├── configuration/            # Config loading (precept.json parsing)
 ├── indexing/                 # RST parsing & indexing
 ├── providers/                # VS Code language providers
 ├── views/                    # Item Explorer & Link Explorer
 ├── commands/                 # Command implementations
+├── renderer/                 # RST-to-HTML rendering engine
+├── preview/                  # Live preview panel
+├── build/                    # Static HTML site builder
+├── themes/                   # Selectable theme definitions
+├── validation/               # Deep validation analyzers
 └── utils/                    # Utility functions
 ```
-
-### Key Components
-
-- **configLoader.ts**: Executes Python to parse `conf.py`
-- **rstParser.ts**: Parses RST `.. item::` directives
-- **indexBuilder.ts**: Maintains requirement index
-- **completionProvider.ts**: Autocomplete suggestions
-- **diagnosticProvider.ts**: Validation errors
 
 ### Adding Features
 
@@ -713,19 +674,11 @@ src/
 - Unit tests for new features
 - [Conventional Commits](https://www.conventionalcommits.org/)
 
-### Submitting Changes
-
-1. Fork the repository
-2. Create feature branch: `git checkout -b feat/my-feature`
-3. Make changes with tests
-4. Commit: `feat: add feature description`
-5. Push and open Pull Request
-
 ## Requirements
 
 - VS Code 1.80.0+
-- Python 3.7+ (for conf.py parsing)
 - Works on Windows, macOS, Linux
+- No external dependencies required
 
 ## License
 
@@ -733,10 +686,5 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## Support
 
-- [Report Issues](https://github.com/martinpalsson/rigr/issues)
-- [Source Code](https://github.com/martinpalsson/rigr)
-
-## Related Projects
-
-- [reStructuredText](https://docutils.sourceforge.io/rst.html) - Documentation markup language
-- [Sphinx](https://www.sphinx-doc.org/) - Documentation generator
+- [Report Issues](https://github.com/martinpalsson/precept/issues)
+- [Source Code](https://github.com/martinpalsson/precept)

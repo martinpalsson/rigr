@@ -4,7 +4,7 @@
 
 import * as vscode from 'vscode';
 import { IndexBuilder } from '../indexing/indexBuilder';
-import { RigrConfig, DiagnosticType, ValidationIssue } from '../types';
+import { PreceptConfig, DiagnosticType, ValidationIssue } from '../types';
 import { parseRstFile, getIdsInLine } from '../indexing/rstParser';
 import { getStatusNames, getObjectTypeValues, getLinkOptionNames } from '../configuration/defaults';
 import { getValidationDebounceMs, isAutoValidationEnabled, isValidateOnSaveEnabled } from '../configuration/settingsManager';
@@ -75,7 +75,7 @@ export function validateFile(
   filePath: string,
   content: string,
   indexBuilder: IndexBuilder,
-  config: RigrConfig
+  config: PreceptConfig
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   const validStatuses = new Set(getStatusNames(config));
@@ -177,11 +177,11 @@ export function validateFile(
 export class RequirementDiagnosticProvider {
   private diagnosticCollection: vscode.DiagnosticCollection;
   private indexBuilder: IndexBuilder;
-  private config: RigrConfig;
+  private config: PreceptConfig;
   private debounceTimers: Map<string, NodeJS.Timeout> = new Map();
   private disposables: vscode.Disposable[] = [];
 
-  constructor(indexBuilder: IndexBuilder, config: RigrConfig) {
+  constructor(indexBuilder: IndexBuilder, config: PreceptConfig) {
     this.indexBuilder = indexBuilder;
     this.config = config;
     this.diagnosticCollection = vscode.languages.createDiagnosticCollection(DIAGNOSTIC_COLLECTION_NAME);
@@ -190,7 +190,7 @@ export class RequirementDiagnosticProvider {
   /**
    * Update configuration
    */
-  public updateConfig(config: RigrConfig): void {
+  public updateConfig(config: PreceptConfig): void {
     this.config = config;
   }
 
@@ -330,7 +330,7 @@ export class RequirementDiagnosticProvider {
 export function registerDiagnosticProvider(
   context: vscode.ExtensionContext,
   indexBuilder: IndexBuilder,
-  config: RigrConfig
+  config: PreceptConfig
 ): RequirementDiagnosticProvider {
   const provider = new RequirementDiagnosticProvider(indexBuilder, config);
   provider.setupListeners();

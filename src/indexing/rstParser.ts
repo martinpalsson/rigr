@@ -6,7 +6,7 @@ import {
   RequirementObject,
   RequirementReference,
   ParsedRstFile,
-  RigrConfig,
+  PreceptConfig,
   SourceLocation,
 } from '../types';
 import { getLinkOptionNames } from '../configuration/defaults';
@@ -110,7 +110,7 @@ function buildRequirement(
   state: ParseState,
   filePath: string,
   endLine: number,
-  config: RigrConfig
+  config: PreceptConfig
 ): RequirementObject | null {
   const id = state.currentOptions.get('id');
   // For graphics/code, default type to directive type if not specified
@@ -215,7 +215,7 @@ function findLinkReferences(
   options: Map<string, string>,
   lineNumber: number,
   filePath: string,
-  config: RigrConfig
+  config: PreceptConfig
 ): RequirementReference[] {
   const references: RequirementReference[] = [];
   const linkOptions = new Set(getLinkOptionNames(config));
@@ -245,7 +245,7 @@ function findLinkReferences(
 export function parseRstFile(
   content: string,
   filePath: string,
-  config: RigrConfig
+  config: PreceptConfig
 ): ParsedRstFile {
   const lines = content.split('\n');
   const requirements: RequirementObject[] = [];
@@ -416,7 +416,7 @@ export function parseRequirementAtLine(
   content: string,
   filePath: string,
   lineNumber: number,
-  config: RigrConfig
+  config: PreceptConfig
 ): RequirementObject | null {
   const parsed = parseRstFile(content, filePath, config);
 
@@ -436,7 +436,7 @@ export function parseRequirementAtLine(
 export function findIdAtPosition(
   line: string,
   column: number,
-  config: RigrConfig
+  config: PreceptConfig
 ): string | null {
   // Create a fresh regex for this search
   const idRegex = new RegExp(config.id_regex.source, 'g');
@@ -457,7 +457,7 @@ export function findIdAtPosition(
 /**
  * Get all requirement IDs mentioned in a line
  */
-export function getIdsInLine(line: string, config: RigrConfig): string[] {
+export function getIdsInLine(line: string, config: PreceptConfig): string[] {
   const ids: string[] = [];
   const idRegex = new RegExp(config.id_regex.source, 'g');
 
@@ -475,7 +475,7 @@ export function getIdsInLine(line: string, config: RigrConfig): string[] {
 export function isInLinkContext(
   line: string,
   column: number,
-  config: RigrConfig
+  config: PreceptConfig
 ): boolean {
   const linkOptions = getLinkOptionNames(config);
 

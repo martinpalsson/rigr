@@ -5,7 +5,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { IndexBuilder } from '../indexing/indexBuilder';
-import { RigrConfig, RequirementObject } from '../types';
+import { PreceptConfig, RequirementObject } from '../types';
 import { findIdAtPosition } from '../indexing/rstParser';
 import { getObjectTypeInfo, getLevelInfo } from '../configuration/defaults';
 
@@ -14,7 +14,7 @@ import { getObjectTypeInfo, getLevelInfo } from '../configuration/defaults';
  */
 function formatRequirementHover(
   req: RequirementObject,
-  config: RigrConfig
+  config: PreceptConfig
 ): vscode.MarkdownString {
   const typeInfo = getObjectTypeInfo(config, req.type);
   const typeName = typeInfo?.title || req.type;
@@ -103,9 +103,9 @@ function getStatusEmoji(status: string): string {
  */
 export class RequirementHoverProvider implements vscode.HoverProvider {
   private indexBuilder: IndexBuilder;
-  private config: RigrConfig;
+  private config: PreceptConfig;
 
-  constructor(indexBuilder: IndexBuilder, config: RigrConfig) {
+  constructor(indexBuilder: IndexBuilder, config: PreceptConfig) {
     this.indexBuilder = indexBuilder;
     this.config = config;
   }
@@ -113,7 +113,7 @@ export class RequirementHoverProvider implements vscode.HoverProvider {
   /**
    * Update configuration
    */
-  public updateConfig(config: RigrConfig): void {
+  public updateConfig(config: PreceptConfig): void {
     this.config = config;
   }
 
@@ -168,7 +168,7 @@ export class RequirementHoverProvider implements vscode.HoverProvider {
 export function registerHoverProvider(
   context: vscode.ExtensionContext,
   indexBuilder: IndexBuilder,
-  config: RigrConfig
+  config: PreceptConfig
 ): RequirementHoverProvider {
   const provider = new RequirementHoverProvider(indexBuilder, config);
 

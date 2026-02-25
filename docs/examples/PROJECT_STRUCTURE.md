@@ -1,13 +1,13 @@
 # Example Project Structure
 
-This document shows the recommended project structure for a requirements management project using Rigr.
+This document shows the recommended project structure for a requirements management project using Precept.
 
 ## Basic Structure
 
 ```
 my-project/
 ├── docs/                          # Documentation root
-│   ├── rigr.json                  # Rigr configuration
+│   ├── precept.json                  # Precept configuration
 │   ├── index.rst                  # Documentation home page
 │   │
 │   ├── requirements/              # Requirements documents
@@ -50,7 +50,7 @@ For projects following automotive standards (ISO 26262, ASPICE):
 ```
 automotive-project/
 ├── docs/
-│   ├── rigr.json
+│   ├── precept.json
 │   │
 │   ├── srs/                       # Software Requirements Specification
 │   │   ├── index.rst
@@ -140,9 +140,9 @@ _build/
 
 Use the VS Code command palette:
 
-- **Rigr: Build Documentation** - generates static HTML in `_build/html/`
-- **Rigr: View Documentation** - opens the built docs in your browser
-- **Rigr: Open RST Preview** - live preview in VS Code
+- **Precept: Build Documentation** - generates static HTML in `_build/html/`
+- **Precept: View Documentation** - opens the built docs in your browser
+- **Precept: Open RST Preview** - live preview in VS Code
 
 ## Tips
 

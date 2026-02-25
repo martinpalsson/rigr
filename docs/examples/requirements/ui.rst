@@ -1,11 +1,11 @@
-.. _rigr-ui:
+.. _precept-ui:
 
 ==========================
 User Interface Components
 ==========================
 
 This document specifies requirements for the tree view, status bar,
-and other UI components in the Rigr extension.
+and other UI components in the Precept extension.
 
 .. contents:: Table of Contents
    :local:
@@ -280,7 +280,7 @@ Status Bar
 
    When operating normally, status bar shall show:
 
-   ``Rigr: Ready (N objects)``
+   ``Precept: Ready (N objects)``
 
    Where N is the total indexed requirement count.
 
@@ -293,7 +293,7 @@ Status Bar
 
    When configuration error occurs, status bar shall show:
 
-   ``Rigr: Config Error``
+   ``Precept: Config Error``
 
    Clicking shall show error details.
 
@@ -306,7 +306,7 @@ Status Bar
 
    During indexing, status bar shall show:
 
-   ``Rigr: Indexing... (N/M files)``
+   ``Precept: Indexing... (N/M files)``
 
    With progress indication.
 
@@ -334,7 +334,7 @@ Status Bar
 
    When baseline filter is active, status bar shall show:
 
-   ``Rigr: v1.0.0 (87 reqs)``
+   ``Precept: v1.0.0 (87 reqs)``
 
 Progress Notifications
 ======================
@@ -348,7 +348,7 @@ Progress Notifications
 
    During initial workspace scan, a progress notification shall show:
 
-   - "Rigr: Indexing requirements..."
+   - "Precept: Indexing requirements..."
    - Progress bar or percentage
    - Cancel button for large workspaces
 
@@ -414,7 +414,7 @@ Error and Warning Displays
    :status: approved
    :satisfies: 00176
 
-   The extension shall provide an output channel "Rigr" for:
+   The extension shall provide an output channel "Precept" for:
 
    - Detailed error messages
    - Debug information
@@ -432,15 +432,15 @@ Commands Palette
 
    The following commands shall be available via Ctrl+Shift+P:
 
-   - Rigr: Reload Configuration
-   - Rigr: Deep Validation
-   - Rigr: Tag Current Baseline
-   - Rigr: Remove Baseline Tags
-   - Rigr: Generate Release Report
-   - Rigr: Create Git Tag for Baseline
-   - Rigr: New Project
-   - Rigr: Show Item Explorer
-   - Rigr: Show Output
+   - Precept: Reload Configuration
+   - Precept: Deep Validation
+   - Precept: Tag Current Baseline
+   - Precept: Remove Baseline Tags
+   - Precept: Generate Release Report
+   - Precept: Create Git Tag for Baseline
+   - Precept: New Project
+   - Precept: Show Item Explorer
+   - Precept: Show Output
 
 .. item:: Command descriptions
    :id: 00201
@@ -475,7 +475,7 @@ Keyboard Shortcuts
    :status: approved
    :satisfies: 00202
 
-   All Rigr commands shall be customizable via VS Code keyboard
+   All Precept commands shall be customizable via VS Code keyboard
    shortcuts settings (keybindings.json).
 
 Settings UI
@@ -489,7 +489,7 @@ Settings UI
    :satisfies: 00176
 
    The extension shall contribute settings to VS Code Settings UI
-   under a "Rigr" category with:
+   under a "Precept" category with:
 
    - Validation settings
    - Tree view preferences
@@ -562,7 +562,7 @@ Documentation Generation
    :level: stakeholder
    :status: draft
 
-   Users shall be able to build and preview the Sphinx documentation
+   Users shall be able to build and preview the documentation
    output directly from VS Code to verify how requirements will appear
    in the generated documentation.
 
@@ -573,11 +573,11 @@ Documentation Generation
    :status: draft
    :satisfies: 00291
 
-   The extension shall provide a command "Rigr: Build Documentation"
-   that invokes the Sphinx build process:
+   The extension shall provide a command "Precept: Build Documentation"
+   that invokes the built-in TypeScript renderer:
 
-   - Locate conf.py using existing discovery mechanism
-   - Execute ``sphinx-build -b html <source> <build>`` command
+   - Locate precept.json using existing discovery mechanism
+   - Render RST sources to static HTML
    - Display build progress in notification
    - Show build output in dedicated output channel
    - Report success or failure with actionable message
@@ -591,12 +591,10 @@ Documentation Generation
 
    Before building, the command shall verify:
 
-   - conf.py exists in workspace
-   - Python is available (python3 or python)
-   - sphinx-build command is accessible
+   - precept.json exists in workspace
 
    If prerequisites are not met, display helpful error message
-   with installation instructions.
+   with setup instructions.
 
 .. item:: Build output location
    :id: 00294
@@ -607,8 +605,7 @@ Documentation Generation
 
    The build command shall output to a standard location:
 
-   - Default: ``_build/html`` relative to conf.py directory
-   - Respect existing Sphinx configuration if specified
+   - Default: ``_build/html/`` relative to precept.json directory
    - Create output directory if it does not exist
 
 .. item:: Build error handling
@@ -622,7 +619,7 @@ Documentation Generation
 
    - Display error notification with "Show Output" action
    - Log full error details to output channel
-   - Parse Sphinx error messages to show file and line if available
+   - Parse error messages to show file and line if available
 
 .. item:: View documentation command
    :id: 00296
@@ -631,7 +628,7 @@ Documentation Generation
    :status: draft
    :satisfies: 00291
 
-   The extension shall provide a command "Rigr: View Documentation"
+   The extension shall provide a command "Precept: View Documentation"
    that opens the generated documentation in the default web browser:
 
    - Locate index.html in the build output directory
@@ -647,8 +644,7 @@ Documentation Generation
 
    The view command shall locate the documentation entry point:
 
-   - Check ``_build/html/index.html`` relative to conf.py
-   - Fall back to ``build/html/index.html`` if exists
+   - Check ``_build/html/index.html`` relative to precept.json
    - Report clear error if no built documentation found
 
 .. item:: Build and view workflow
@@ -664,13 +660,13 @@ Documentation Generation
    - "View Documentation" offers to build if output is stale or missing
    - Status bar shows last build timestamp when documentation exists
 
-.. item:: Presentation of items in the generated Sphinx document
+.. item:: Presentation of items in the generated document
    :id: 00300
    :type: requirement
    :level: system
    :status: draft
-   
-   The generated Sphinx documentation shall present each item according to
+
+   The generated documentation shall present each item according to
    below:
    - <Title> as a header of the item
    - Table containing:
@@ -681,19 +677,21 @@ Documentation Generation
    - All incoming and outgoing relationships, one table row per "relation type" and direction.
    - <Description> as the main content body
 
-.. item:: Theme of items in the generated Sphinx document
+.. item:: Theme of items in the generated document
    :id: 00301
    :type: requirement
    :level: system
    :status: draft
-   
-   The item in the generated Sphinx documentation shall follow the Theme
-   as configured in the Rigr settings for Sphinx documentation generation.
 
-   Example themes are:
-   - Sphinx default theme
-   - Alabaster
-   - Read the Docs
+   The item in the generated documentation shall follow the theme
+   as configured in the Precept settings for documentation generation.
+
+   Selectable themes are:
+   - default
+   - readthedocs
+   - alabaster
+   - furo
+   - pydata
 
 Graphics and Diagrams
 =====================
@@ -715,12 +713,12 @@ Graphics and Diagrams
    :status: draft
    :satisfies: 00302
 
-   The Sphinx extension shall provide a ``.. graphic::`` directive that:
+   The built-in renderer shall provide a ``.. graphic::`` directive that:
 
    - Accepts image files (PNG, JPG, SVG, GIF) via ``:file:`` option
    - Displays images at full width (100% of content area)
    - Supports caption (argument) and ID for cross-referencing
-   - Integrates with the configured Sphinx theme
+   - Integrates with the configured theme
 
 .. item:: Graphic directive for PlantUML diagrams
    :id: 00304
@@ -734,7 +732,7 @@ Graphics and Diagrams
    - PlantUML code in the directive body (between @startuml/@enduml)
    - Renders diagrams at full width (100% of content area)
    - Supports caption and ID for cross-referencing
-   - Uses the configured PlantUML renderer (local or server)
+   - Uses the configured PlantUML renderer (local command or PlantUML server)
 
 .. item:: Graphic presentation format
    :id: 00305
@@ -743,7 +741,7 @@ Graphics and Diagrams
    :status: draft
    :satisfies: 00302
 
-   The generated Sphinx documentation shall present each graphic item according to
+   The generated documentation shall present each graphic item according to
    below:
    - Consistent styling that follows the configured theme
    - <Title> as a header of the graphic item
@@ -775,10 +773,10 @@ Code Blocks
    :status: draft
    :satisfies: 00307
 
-   The Sphinx extension shall provide a ``.. code::`` directive that:
+   The built-in renderer shall provide a ``.. code::`` directive that:
 
    - Accepts a programming language via ``:language:`` option (e.g., python, c, java, rust, xml)
-   - Renders code with syntax highlighting using the Sphinx/Pygments code highlighter
+   - Renders code with syntax highlighting using highlight.js
    - Supports an ``:id:`` option for cross-referencing from other items
    - Supports a ``:caption:`` option for a description below the code
    - Supports all link options (satisfies, implements, etc.) for traceability
@@ -791,7 +789,7 @@ Code Blocks
    :status: draft
    :satisfies: 00307
 
-   The generated Sphinx documentation shall present each code item according to
+   The generated documentation shall present each code item according to
    below:
    - Consistent styling that follows the configured theme
    - <Title> as a header of the code item

@@ -1,13 +1,13 @@
 .. _requirements-index:
 
 ================================
-Rigr Extension - Requirements
+Precept Extension - Requirements
 ================================
 
-This is the requirements documentation for the **Rigr VS Code Extension**,
+This is the requirements documentation for the **Precept VS Code Extension**,
 a lightweight requirements management system for RST documentation.
 
-This project uses Rigr to manage its own requirements (dogfooding).
+This project uses Precept to manage its own requirements (dogfooding).
 
 .. graphic:: Some banana graphics
    :id: 00306
@@ -27,7 +27,7 @@ Requirements are organized by functional area across multiple specification file
 
    requirements/
    ├── index.rst              <- You are here (overview)
-   ├── configuration.rst      <- Configuration system (conf.py, settings)
+   ├── configuration.rst      <- Configuration system (precept.json, settings)
    ├── data-model.rst         <- Requirement object model and parsing
    ├── intellisense.rst       <- IntelliSense, completion, navigation
    ├── validation.rst         <- Validation, diagnostics, deep analysis
@@ -131,7 +131,7 @@ Glossary
    :term: RST
 
    A lightweight markup language used for technical documentation.
-   Rigr uses :termref:`00322` files as the source format for requirements.
+   Precept uses :termref:`00322` files as the source format for requirements.
 
 .. item:: Visual Studio Code
    :id: 00323
@@ -140,7 +140,7 @@ Glossary
    :status: approved
    :term: VS Code
 
-   A source code editor developed by Microsoft. Rigr is implemented
+   A source code editor developed by Microsoft. Precept is implemented
    as a :termref:`00323` extension.
 
 Document Index

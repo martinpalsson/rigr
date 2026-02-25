@@ -1,13 +1,13 @@
 /**
- * Configuration loader for Rigr
- * Loads requirements configuration from rigr.json
+ * Configuration loader for Precept
+ * Loads requirements configuration from precept.json
  */
 
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import {
-  RigrConfig,
+  PreceptConfig,
   ObjectType,
   Level,
   IdConfig,
@@ -21,14 +21,14 @@ import { DEFAULT_CONFIG, buildIdRegex } from './defaults';
 import { getSettings } from './settingsManager';
 
 /**
- * Locate rigr.json file in the workspace
+ * Locate precept.json file in the workspace
  */
-export async function findRigrJsonPath(workspaceRoot: string): Promise<string | null> {
+export async function findPreceptJsonPath(workspaceRoot: string): Promise<string | null> {
   const possiblePaths = [
-    path.join(workspaceRoot, 'docs', 'rigr.json'),
-    path.join(workspaceRoot, 'doc', 'rigr.json'),
-    path.join(workspaceRoot, 'source', 'rigr.json'),
-    path.join(workspaceRoot, 'rigr.json'),
+    path.join(workspaceRoot, 'docs', 'precept.json'),
+    path.join(workspaceRoot, 'doc', 'precept.json'),
+    path.join(workspaceRoot, 'source', 'precept.json'),
+    path.join(workspaceRoot, 'precept.json'),
   ];
 
   for (const jsonPath of possiblePaths) {
@@ -37,9 +37,9 @@ export async function findRigrJsonPath(workspaceRoot: string): Promise<string | 
     }
   }
 
-  // Search for rigr.json in subdirectories (limited depth)
+  // Search for precept.json in subdirectories (limited depth)
   try {
-    const files = await vscode.workspace.findFiles('**/rigr.json', '**/node_modules/**', 10);
+    const files = await vscode.workspace.findFiles('**/precept.json', '**/node_modules/**', 10);
     if (files.length > 0) {
       return files[0].fsPath;
     }
@@ -75,7 +75,7 @@ function parseRawConfig(raw: {
   defaultStatus?: string;
   idRegex?: string;
   relationships?: Record<string, string>;
-}): RigrConfig {
+}): PreceptConfig {
   const objectTypes: ObjectType[] = (raw.objectTypes || []).map((t) => ({
     type: String(t.type || ''),
     title: String(t.title || t.type || ''),
@@ -138,7 +138,7 @@ function parseRawConfig(raw: {
 }
 
 /**
- * Load configuration from rigr.json
+ * Load configuration from precept.json
  */
 export async function loadConfigFromJson(jsonPath: string): Promise<ConfigLoadResult> {
   try {
@@ -150,14 +150,14 @@ export async function loadConfigFromJson(jsonPath: string): Promise<ConfigLoadRe
     return {
       success: true,
       config,
-      source: 'rigr.json',
+      source: 'precept.json',
       theme,
     };
   } catch (error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : String(error),
-      source: 'rigr.json',
+      source: 'precept.json',
     };
   }
 }
@@ -176,7 +176,7 @@ export function loadConfigFromSettings(): ConfigLoadResult {
     };
   }
 
-  const config: RigrConfig = {
+  const config: PreceptConfig = {
     ...DEFAULT_CONFIG,
     objectTypes: settings.config.customTypes,
   };
@@ -190,7 +190,7 @@ export function loadConfigFromSettings(): ConfigLoadResult {
 
 /**
  * Main configuration loading function
- * Tries sources in order: VS Code settings (if override enabled) -> rigr.json -> defaults
+ * Tries sources in order: VS Code settings (if override enabled) -> precept.json -> defaults
  */
 export async function loadConfiguration(workspaceRoot: string): Promise<ConfigLoadResult> {
   // Check if settings override is enabled
@@ -202,15 +202,15 @@ export async function loadConfiguration(workspaceRoot: string): Promise<ConfigLo
     }
   }
 
-  // Try to find and load rigr.json
-  const jsonPath = await findRigrJsonPath(workspaceRoot);
+  // Try to find and load precept.json
+  const jsonPath = await findPreceptJsonPath(workspaceRoot);
   if (jsonPath) {
     const jsonResult = await loadConfigFromJson(jsonPath);
     if (jsonResult.success) {
       return jsonResult; // includes theme if present
     }
     // Log error but continue to defaults
-    console.warn(`Failed to load rigr.json: ${jsonResult.error}`);
+    console.warn(`Failed to load precept.json: ${jsonResult.error}`);
   }
 
   // Fall back to defaults
@@ -222,14 +222,14 @@ export async function loadConfiguration(workspaceRoot: string): Promise<ConfigLo
 }
 
 /**
- * Create a file watcher for rigr.json changes
+ * Create a file watcher for precept.json changes
  */
 export function createConfigWatcher(
   workspaceRoot: string,
   onConfigChange: () => void
 ): vscode.Disposable {
   const watcher = vscode.workspace.createFileSystemWatcher(
-    new vscode.RelativePattern(workspaceRoot, '**/rigr.json')
+    new vscode.RelativePattern(workspaceRoot, '**/precept.json')
   );
 
   const disposables = [
@@ -247,12 +247,12 @@ export function createConfigWatcher(
  */
 export class ConfigurationManager {
   private static instance: ConfigurationManager;
-  private config: RigrConfig = DEFAULT_CONFIG;
-  private configSource: 'rigr.json' | 'settings' | 'defaults' = 'defaults';
-  private rigrJsonPath: string | null = null;
+  private config: PreceptConfig = DEFAULT_CONFIG;
+  private configSource: 'precept.json' | 'settings' | 'defaults' = 'defaults';
+  private preceptJsonPath: string | null = null;
   private themeName: string = 'default';
   private disposables: vscode.Disposable[] = [];
-  private onConfigChangeEmitter = new vscode.EventEmitter<RigrConfig>();
+  private onConfigChangeEmitter = new vscode.EventEmitter<PreceptConfig>();
 
   public readonly onConfigChange = this.onConfigChangeEmitter.event;
 
@@ -272,7 +272,7 @@ export class ConfigurationManager {
     // Load initial configuration
     await this.reload(workspaceRoot);
 
-    // Set up rigr.json watcher
+    // Set up precept.json watcher
     this.disposables.push(
       createConfigWatcher(workspaceRoot, () => this.reload(workspaceRoot))
     );
@@ -304,14 +304,14 @@ export class ConfigurationManager {
   /**
    * Get current configuration
    */
-  public getConfig(): RigrConfig {
+  public getConfig(): PreceptConfig {
     return this.config;
   }
 
   /**
    * Get configuration source
    */
-  public getConfigSource(): 'rigr.json' | 'settings' | 'defaults' {
+  public getConfigSource(): 'precept.json' | 'settings' | 'defaults' {
     return this.configSource;
   }
 
@@ -323,10 +323,10 @@ export class ConfigurationManager {
   }
 
   /**
-   * Get rigr.json path if found
+   * Get precept.json path if found
    */
-  public getRigrJsonPath(): string | null {
-    return this.rigrJsonPath;
+  public getPreceptJsonPath(): string | null {
+    return this.preceptJsonPath;
   }
 
   /**

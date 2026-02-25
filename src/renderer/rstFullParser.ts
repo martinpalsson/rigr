@@ -3,7 +3,7 @@
  *
  * Parses reStructuredText into a tree of RstNode objects.
  * Handles: sections, paragraphs, lists, code blocks, images,
- * admonitions, toctree, and Rigr custom directives.
+ * admonitions, toctree, and Precept custom directives.
  */
 
 import {

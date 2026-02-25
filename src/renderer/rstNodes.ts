@@ -171,7 +171,7 @@ export interface RawHtmlNode {
 }
 
 // ---------------------------------------------------------------------------
-// Rigr custom directive nodes
+// Precept custom directive nodes
 // ---------------------------------------------------------------------------
 
 export interface ItemDirectiveNode {

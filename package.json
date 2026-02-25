@@ -1,9 +1,9 @@
 {
-  "name": "rigr",
-  "displayName": "Rigr",
-  "description": "The lightest tool to rig a project for success - minimalistic requirements management system for VS Code",
-  "version": "0.0.1",
-  "publisher": "rigr",
+  "name": "precept",
+  "displayName": "Precept",
+  "description": "Lightweight requirements management for VS Code - IntelliSense, validation, traceability, and documentation for RST files",
+  "version": "0.1.0",
+  "publisher": "precept",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -23,62 +23,62 @@
   "activationEvents": [
     "onLanguage:restructuredtext",
     "workspaceContains:**/*.rst",
-    "workspaceContains:**/rigr.json"
+    "workspaceContains:**/precept.json"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "requirements.reloadConfiguration",
-        "title": "Rigr: Reload Configuration"
+        "title": "Precept: Reload Configuration"
       },
       {
         "command": "requirements.deepValidation",
-        "title": "Rigr: Deep Validation"
+        "title": "Precept: Deep Validation"
       },
       {
         "command": "requirements.tagBaseline",
-        "title": "Rigr: Tag Current Baseline"
+        "title": "Precept: Tag Current Baseline"
       },
       {
         "command": "requirements.removeBaselineTags",
-        "title": "Rigr: Remove Baseline Tags"
+        "title": "Precept: Remove Baseline Tags"
       },
       {
         "command": "requirements.generateReport",
-        "title": "Rigr: Generate Release Report"
+        "title": "Precept: Generate Release Report"
       },
       {
         "command": "requirements.createGitTag",
-        "title": "Rigr: Create Git Tag for Baseline"
+        "title": "Precept: Create Git Tag for Baseline"
       },
       {
         "command": "requirements.refreshTreeView",
-        "title": "Rigr: Refresh Explorer"
+        "title": "Precept: Refresh Explorer"
       },
       {
         "command": "requirements.refreshRelationshipExplorer",
-        "title": "Rigr: Refresh Link Explorer"
+        "title": "Precept: Refresh Link Explorer"
       },
       {
         "command": "requirements.showRelationships",
-        "title": "Rigr: Show Relationships"
+        "title": "Precept: Show Relationships"
       },
       {
         "command": "requirements.createProject",
-        "title": "Rigr: New RMS Project"
+        "title": "Precept: New RMS Project"
       },
       {
         "command": "requirements.buildDocumentation",
-        "title": "Rigr: Build Documentation"
+        "title": "Precept: Build Documentation"
       },
       {
         "command": "requirements.viewDocumentation",
-        "title": "Rigr: View Documentation"
+        "title": "Precept: View Documentation"
       },
       {
         "command": "requirements.openPreview",
-        "title": "Rigr: Open RST Preview",
+        "title": "Precept: Open RST Preview",
         "icon": "$(open-preview)"
       }
     ],
@@ -141,10 +141,10 @@
           ],
           "description": "Glob patterns to exclude from indexing"
         },
-        "requirements.config.overrideSphinxConfig": {
+        "requirements.config.overrideConfig": {
           "type": "boolean",
           "default": false,
-          "description": "Override configuration from rigr.json with custom settings"
+          "description": "Override configuration from precept.json with custom settings"
         },
         "requirements.config.customTypes": {
           "type": "array",
@@ -174,7 +174,7 @@
             ]
           },
           "default": [],
-          "description": "Custom requirement types (only used if overrideSphinxConfig is true)"
+          "description": "Custom requirement types (only used if overrideConfig is true)"
         }
       }
     },
@@ -275,7 +275,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/martinpalsson/rigr"
+    "url": "https://github.com/martinpalsson/precept"
   },
   "license": "MIT",
   "dependencies": {

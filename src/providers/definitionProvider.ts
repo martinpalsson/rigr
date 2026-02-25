@@ -4,7 +4,7 @@
 
 import * as vscode from 'vscode';
 import { IndexBuilder } from '../indexing/indexBuilder';
-import { RigrConfig } from '../types';
+import { PreceptConfig } from '../types';
 import { findIdAtPosition } from '../indexing/rstParser';
 
 /**
@@ -12,9 +12,9 @@ import { findIdAtPosition } from '../indexing/rstParser';
  */
 export class RequirementDefinitionProvider implements vscode.DefinitionProvider {
   private indexBuilder: IndexBuilder;
-  private config: RigrConfig;
+  private config: PreceptConfig;
 
-  constructor(indexBuilder: IndexBuilder, config: RigrConfig) {
+  constructor(indexBuilder: IndexBuilder, config: PreceptConfig) {
     this.indexBuilder = indexBuilder;
     this.config = config;
   }
@@ -22,7 +22,7 @@ export class RequirementDefinitionProvider implements vscode.DefinitionProvider 
   /**
    * Update configuration
    */
-  public updateConfig(config: RigrConfig): void {
+  public updateConfig(config: PreceptConfig): void {
     this.config = config;
   }
 
@@ -64,7 +64,7 @@ export class RequirementDefinitionProvider implements vscode.DefinitionProvider 
 export function registerDefinitionProvider(
   context: vscode.ExtensionContext,
   indexBuilder: IndexBuilder,
-  config: RigrConfig
+  config: PreceptConfig
 ): RequirementDefinitionProvider {
   const provider = new RequirementDefinitionProvider(indexBuilder, config);
 

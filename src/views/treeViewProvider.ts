@@ -5,7 +5,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { IndexBuilder } from '../indexing/indexBuilder';
-import { RigrConfig, RequirementObject, TreeViewGroupBy } from '../types';
+import { PreceptConfig, RequirementObject, TreeViewGroupBy } from '../types';
 import { getTreeViewGroupBy, shouldShowStatusIcons } from '../configuration/settingsManager';
 
 /**
@@ -134,14 +134,14 @@ export class RequirementTreeItem extends vscode.TreeItem {
  */
 export class RequirementTreeDataProvider implements vscode.TreeDataProvider<RequirementTreeItem> {
   private indexBuilder: IndexBuilder;
-  private config: RigrConfig;
+  private config: PreceptConfig;
   private _onDidChangeTreeData = new vscode.EventEmitter<RequirementTreeItem | undefined | null | void>();
   readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
   private baselineFilter: string | null = null;
   private searchFilter: string | null = null;
 
-  constructor(indexBuilder: IndexBuilder, config: RigrConfig) {
+  constructor(indexBuilder: IndexBuilder, config: PreceptConfig) {
     this.indexBuilder = indexBuilder;
     this.config = config;
 
@@ -154,7 +154,7 @@ export class RequirementTreeDataProvider implements vscode.TreeDataProvider<Requ
   /**
    * Update configuration
    */
-  public updateConfig(config: RigrConfig): void {
+  public updateConfig(config: PreceptConfig): void {
     this.config = config;
     this.refresh();
   }
@@ -532,7 +532,7 @@ export class RequirementTreeDataProvider implements vscode.TreeDataProvider<Requ
 export function registerTreeView(
   context: vscode.ExtensionContext,
   indexBuilder: IndexBuilder,
-  config: RigrConfig
+  config: PreceptConfig
 ): RequirementTreeDataProvider {
   const provider = new RequirementTreeDataProvider(indexBuilder, config);
 

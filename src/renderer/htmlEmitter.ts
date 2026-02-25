@@ -272,7 +272,7 @@ function renderRole(node: InlineNode & { type: 'role' }, ctx: RenderContext): st
   switch (node.name) {
     case 'item': {
       const href = resolveItemHref(node.target, `req-${node.target}`, ctx);
-      return `<a href="${escapeAttr(href)}" class="rigr-link-ref">${escapeHtml(node.target)}</a>`;
+      return `<a href="${escapeAttr(href)}" class="precept-link-ref">${escapeHtml(node.target)}</a>`;
     }
     case 'paramval': {
       // Resolve parameter value from index

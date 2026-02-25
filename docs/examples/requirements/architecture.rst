@@ -1,10 +1,10 @@
-.. _rigr-architecture:
+.. _precept-architecture:
 
 ==============================
 Architecture and Implementation
 ==============================
 
-This document describes the actual implementation architecture of the Rigr extension,
+This document describes the actual implementation architecture of the Precept extension,
 mapping design elements to the requirements they implement.
 
 .. contents:: Table of Contents
@@ -14,15 +14,15 @@ mapping design elements to the requirements they implement.
 Architecture Overview
 =====================
 
-.. item:: Rigr extension architecture
+.. item:: Precept extension architecture
    :id: 00254
    :type: information
    :level: component
    :status: approved
 
-   The Rigr extension follows a layered architecture with clear separation of concerns:
+   The Precept extension follows a layered architecture with clear separation of concerns:
 
-   - **Configuration Layer**: Loads and manages configuration from conf.py and VS Code settings
+   - **Configuration Layer**: Loads and manages configuration from precept.json and VS Code settings
    - **Indexing Layer**: Parses RST files and maintains an in-memory index
    - **Provider Layer**: Implements VS Code language features (completion, hover, etc.)
    - **Validation Layer**: Performs automatic and deep validation analysis
@@ -32,11 +32,11 @@ Architecture Overview
 Component Diagram
 =================
 
-.. graphic:: Rigr Extension Component Architecture
+.. graphic:: Precept Extension Component Architecture
    :id: 00255
    :caption: Component diagram showing the VS Code extension architecture layers and their interactions.
 
-   @startuml Rigr Architecture
+   @startuml Precept Architecture
    skinparam componentStyle uml2
    skinparam backgroundColor #FEFEFE
 
@@ -177,13 +177,13 @@ Configuration Layer
 
    **File**: ``src/configuration/configLoader.ts``
 
-   Loads Rigr configuration from Sphinx conf.py:
+   Loads Precept configuration from precept.json:
 
-   - Searches for conf.py in docs/, doc/, source/, or workspace root
-   - Executes embedded Python script to extract configuration as JSON
-   - Parses rigr_object_types, rigr_levels, rigr_id_config, rigr_link_types, rigr_statuses
+   - Searches for precept.json in docs/, doc/, source/, workspace root, then recursively
+   - Parses JSON directly using built-in parser (no external tools required)
+   - Extracts objectTypes, levels, idConfig, linkTypes, statuses, customFields, theme
    - Falls back to default configuration on parse failure
-   - Supports legacy rigr_id_prefixes for backwards compatibility
+   - Auto-injects the built-in ``references`` link type if not present
 
 .. item:: SettingsManager component
    :id: 00258
@@ -196,9 +196,9 @@ Configuration Layer
 
    Manages VS Code extension settings:
 
-   - Reads rigr.validation.* settings (automatic, onSave, debounceMs)
-   - Reads rigr.treeView.* settings (groupBy, showStatusIcons)
-   - Reads rigr.indexing.* settings (maxFiles, excludePatterns)
+   - Reads requirements.validation.* settings (automatic, onSave, debounceMs)
+   - Reads requirements.treeView.* settings (groupBy, showStatusIcons)
+   - Reads requirements.indexing.* settings (maxFiles, excludePatterns)
    - Provides typed getters for all settings
    - Emits change events when settings are modified
 
@@ -570,7 +570,7 @@ Commands Layer
 
    Implements the deep validation command:
 
-   - "Rigr: Deep Validation" command
+   - "Precept: Deep Validation" command
    - Runs DeepValidationRunner
    - Displays progress notification
    - Shows results in output channel or webview
@@ -586,8 +586,8 @@ Commands Layer
 
    Implements baseline management commands:
 
-   - "Rigr: Tag Current Baseline"
-   - "Rigr: Remove Baseline Tags"
+   - "Precept: Tag Current Baseline"
+   - "Precept: Remove Baseline Tags"
    - Prompts for baseline name
    - Validates baseline eligibility
    - Applies tags to eligible requirements
@@ -604,7 +604,7 @@ Commands Layer
 
    Implements report generation commands:
 
-   - "Rigr: Generate Release Report"
+   - "Precept: Generate Release Report"
    - Collects data from index
    - Formats Markdown report
    - Includes summary, changes, coverage sections
@@ -621,11 +621,11 @@ Commands Layer
 
    Implements project creation commands:
 
-   - "Rigr: New Project"
-   - Template selection (minimal, standard, automotive)
-   - Creates docs/conf.py with configuration
-   - Creates example requirements structure
-   - Creates .vscode/settings.json
+   - "Precept: New RMS Project"
+   - Creates docs/precept.json with configuration
+   - Creates example requirements RST files
+   - Creates static assets (CSS, JS)
+   - Creates index.rst with toctree
 
    **Templates file**: ``src/commands/templates.ts``
    **Test file**: ``src/commands/project.test.ts``
@@ -684,7 +684,7 @@ Type Definitions
    Defines all TypeScript interfaces:
 
    - ObjectType, Level, IdConfig, LinkType, Status
-   - RigrConfig - complete configuration
+   - PreceptConfig - complete configuration
    - RequirementObject - parsed requirement
    - RequirementIndex - index structure
    - DiagnosticType enum
@@ -703,7 +703,7 @@ Implementation Status Summary
 
    **Implemented Features** (traced to requirements above):
 
-   - Configuration: conf.py loading, VS Code settings, defaults
+   - Configuration: precept.json loading, VS Code settings, defaults
    - Indexing: RST parsing, index building, caching
    - IntelliSense: completion, hover, definition, references
    - Validation: automatic diagnostics, deep validation with all DV checks

@@ -10,7 +10,7 @@ import * as path from 'path';
 import { parseRstDocument } from '../renderer/rstFullParser';
 import { renderDocument } from '../renderer/htmlEmitter';
 import { RenderContext } from '../renderer/directiveRenderer';
-import { RigrConfig } from '../types';
+import { PreceptConfig } from '../types';
 import { IndexBuilder } from '../indexing';
 import { PREVIEW_CSS } from './previewStyles';
 import { getTheme, generateThemeVars } from '../themes';
@@ -20,7 +20,7 @@ import { getTheme, generateThemeVars } from '../themes';
  */
 export class RstPreviewProvider implements vscode.Disposable {
   private panel: vscode.WebviewPanel | undefined;
-  private config: RigrConfig;
+  private config: PreceptConfig;
   private indexBuilder: IndexBuilder;
   private disposables: vscode.Disposable[] = [];
   private updateTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -28,7 +28,7 @@ export class RstPreviewProvider implements vscode.Disposable {
   private currentUri: vscode.Uri | undefined;
   private themeName: string;
 
-  constructor(config: RigrConfig, indexBuilder: IndexBuilder, themeName: string = 'default') {
+  constructor(config: PreceptConfig, indexBuilder: IndexBuilder, themeName: string = 'default') {
     this.config = config;
     this.indexBuilder = indexBuilder;
     this.themeName = themeName;
@@ -37,7 +37,7 @@ export class RstPreviewProvider implements vscode.Disposable {
   /**
    * Update the config (called when config changes).
    */
-  updateConfig(config: RigrConfig): void {
+  updateConfig(config: PreceptConfig): void {
     this.config = config;
     this.scheduleUpdate();
   }
@@ -67,7 +67,7 @@ export class RstPreviewProvider implements vscode.Disposable {
     }
 
     this.panel = vscode.window.createWebviewPanel(
-      'rigrPreview',
+      'preceptPreview',
       'RST Preview',
       { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true },
       {

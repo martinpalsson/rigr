@@ -4,7 +4,7 @@
 
 import * as vscode from 'vscode';
 import { IndexBuilder } from '../indexing/indexBuilder';
-import { RigrConfig, DiagnosticType } from '../types';
+import { PreceptConfig, DiagnosticType } from '../types';
 import { getStatusNames } from '../configuration/defaults';
 import { generateNextId } from '../utils/idGenerator';
 
@@ -13,13 +13,13 @@ import { generateNextId } from '../utils/idGenerator';
  */
 export class RequirementCodeActionProvider implements vscode.CodeActionProvider {
   private indexBuilder: IndexBuilder;
-  private config: RigrConfig;
+  private config: PreceptConfig;
 
   public static readonly providedCodeActionKinds = [
     vscode.CodeActionKind.QuickFix,
   ];
 
-  constructor(indexBuilder: IndexBuilder, config: RigrConfig) {
+  constructor(indexBuilder: IndexBuilder, config: PreceptConfig) {
     this.indexBuilder = indexBuilder;
     this.config = config;
   }
@@ -27,7 +27,7 @@ export class RequirementCodeActionProvider implements vscode.CodeActionProvider 
   /**
    * Update configuration
    */
-  public updateConfig(config: RigrConfig): void {
+  public updateConfig(config: PreceptConfig): void {
     this.config = config;
   }
 
@@ -229,7 +229,7 @@ export class RequirementCodeActionProvider implements vscode.CodeActionProvider 
 export function registerCodeActionProvider(
   context: vscode.ExtensionContext,
   indexBuilder: IndexBuilder,
-  config: RigrConfig
+  config: PreceptConfig
 ): RequirementCodeActionProvider {
   const provider = new RequirementCodeActionProvider(indexBuilder, config);
 

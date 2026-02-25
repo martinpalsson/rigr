@@ -13,15 +13,15 @@ import { RenderContext } from '../renderer/directiveRenderer';
 import { buildTocTree, getNavLinks, TocTree } from '../renderer/tocBuilder';
 import { renderPage, PageTemplateContext } from './templateEngine';
 import { copyStaticAssets, copyImages } from './assetCopier';
-import { RigrConfig, RequirementIndex } from '../types';
+import { PreceptConfig, RequirementIndex } from '../types';
 
 export interface BuildOptions {
   /** Absolute path to the root RST file (e.g. index.rst) */
   entryPoint: string;
   /** Absolute path to the output directory */
   outputDir: string;
-  /** Rigr configuration */
-  config: RigrConfig;
+  /** Precept configuration */
+  config: PreceptConfig;
   /** Requirement index for cross-reference resolution */
   index?: RequirementIndex;
   /** Project name for page titles */
@@ -124,8 +124,8 @@ export function buildStaticSite(options: BuildOptions): BuildResult {
         prevSlug: nav.prev,
         nextSlug: nav.next,
         projectName: projectName,
-        cssPath: `${pathPrefix}_static/rigr.css`,
-        jsPath: `${pathPrefix}_static/rigr.js`,
+        cssPath: `${pathPrefix}_static/precept.css`,
+        jsPath: `${pathPrefix}_static/precept.js`,
         pathPrefix,
       };
 

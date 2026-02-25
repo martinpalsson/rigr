@@ -1,9 +1,9 @@
 /**
- * Rigr - Type Definitions
+ * Precept - Type Definitions
  */
 
 /**
- * Object type definition from rigr_object_types in rigr.json
+ * Object type definition from precept_object_types in precept.json
  * Defines the type/nature of an object (requirement, rationale, information, parameter, etc.)
  */
 export interface ObjectType {
@@ -14,7 +14,7 @@ export interface ObjectType {
 }
 
 /**
- * Level definition from rigr_levels in rigr.json
+ * Level definition from precept_levels in precept.json
  * Defines abstraction tiers in the requirements hierarchy (stakeholder, system, component, etc.)
  */
 export interface Level {
@@ -23,7 +23,7 @@ export interface Level {
 }
 
 /**
- * ID configuration from rigr_id_config in rigr.json
+ * ID configuration from precept_id_config in precept.json
  * Controls how IDs are generated and formatted
  */
 export interface IdConfig {
@@ -42,7 +42,7 @@ export interface IdPrefix {
 }
 
 /**
- * Link type definition from link types configuration in rigr.json
+ * Link type definition from link types configuration in precept.json
  */
 export interface LinkType {
   option: string;     // Forward link name (e.g., "satisfies")
@@ -52,7 +52,7 @@ export interface LinkType {
 }
 
 /**
- * Status definition from statuses configuration in rigr.json
+ * Status definition from statuses configuration in precept.json
  */
 export interface Status {
   status: string;     // Status name (e.g., "draft", "approved")
@@ -60,7 +60,7 @@ export interface Status {
 }
 
 /**
- * Custom field value definition from rigr_custom_fields in rigr.json
+ * Custom field value definition from precept_custom_fields in precept.json
  */
 export interface CustomFieldValue {
   value: string;      // The value used in RST (e.g., "widget-pro")
@@ -73,9 +73,9 @@ export interface CustomFieldValue {
 export type CustomFields = Record<string, CustomFieldValue[]>;
 
 /**
- * Complete Rigr configuration
+ * Complete Precept configuration
  */
-export interface RigrConfig {
+export interface PreceptConfig {
   objectTypes: ObjectType[];    // Customizable object types (requirement, rationale, etc.)
   levels: Level[];              // Abstraction levels (stakeholder, system, component, etc.)
   idConfig: IdConfig;           // ID generation configuration
@@ -259,8 +259,8 @@ export interface IndexUpdateEvent {
  */
 export interface ConfigLoadResult {
   success: boolean;
-  config?: RigrConfig;
+  config?: PreceptConfig;
   error?: string;
-  source: 'rigr.json' | 'settings' | 'defaults';
+  source: 'precept.json' | 'settings' | 'defaults';
   theme?: string;
 }

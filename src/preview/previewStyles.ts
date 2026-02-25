@@ -1,15 +1,15 @@
 /**
  * Webview preview styles
  *
- * Adapts the Rigr CSS for VS Code webview rendering, using VS Code
- * CSS variables for theme integration plus --rigr-* custom properties
+ * Adapts the Precept CSS for VS Code webview rendering, using VS Code
+ * CSS variables for theme integration plus --precept-* custom properties
  * that are injected per-theme.
  */
 
 /**
  * CSS for the RST preview webview.
  *
- * All colour references use var(--rigr-*) which are injected
+ * All colour references use var(--precept-*) which are injected
  * from the selected theme before this stylesheet.
  */
 export const PREVIEW_CSS = `
@@ -19,8 +19,8 @@ export const PREVIEW_CSS = `
 body {
   font-family: var(--vscode-editor-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif);
   font-size: var(--vscode-editor-font-size, 14px);
-  color: var(--rigr-text-primary);
-  background: var(--rigr-page-bg);
+  color: var(--precept-text-primary);
+  background: var(--precept-page-bg);
   line-height: 1.6;
   padding: 1em 2em;
   max-width: 960px;
@@ -31,11 +31,11 @@ body {
    Typography
    --------------------------------------------------------------------------- */
 h1, h2, h3, h4, h5, h6 {
-  color: var(--rigr-text-primary);
+  color: var(--precept-text-primary);
   margin-top: 1.5em;
   margin-bottom: 0.5em;
   font-weight: 600;
-  border-bottom: 1px solid var(--rigr-border-color);
+  border-bottom: 1px solid var(--precept-border-color);
   padding-bottom: 0.3em;
 }
 
@@ -46,19 +46,19 @@ h4 { font-size: 1.1em; border-bottom: none; }
 h5, h6 { font-size: 1em; border-bottom: none; }
 
 p { margin: 0.5em 0; }
-a { color: var(--rigr-link-color); text-decoration: none; }
-a:hover { color: var(--rigr-link-hover); text-decoration: underline; }
+a { color: var(--precept-link-color); text-decoration: none; }
+a:hover { color: var(--precept-link-hover); text-decoration: underline; }
 
 code {
   font-family: var(--vscode-editor-font-family, 'SF Mono', 'Monaco', 'Consolas', monospace);
   font-size: 0.9em;
-  background: var(--rigr-code-block-bg);
+  background: var(--precept-code-block-bg);
   padding: 0.15em 0.3em;
   border-radius: 3px;
 }
 
 pre {
-  background: var(--rigr-code-block-bg);
+  background: var(--precept-code-block-bg);
   padding: 1em;
   border-radius: 4px;
   overflow-x: auto;
@@ -71,15 +71,15 @@ pre code {
 }
 
 blockquote {
-  border-left: 3px solid var(--rigr-border-color);
+  border-left: 3px solid var(--precept-border-color);
   margin: 0.5em 0;
   padding: 0.25em 1em;
-  color: var(--rigr-text-secondary);
+  color: var(--precept-text-secondary);
 }
 
 hr {
   border: none;
-  border-top: 1px solid var(--rigr-border-color);
+  border-top: 1px solid var(--precept-border-color);
   margin: 2em 0;
 }
 
@@ -93,13 +93,13 @@ table {
 }
 
 th, td {
-  border: 1px solid var(--rigr-border-color);
+  border: 1px solid var(--precept-border-color);
   padding: 0.4em 0.75em;
   text-align: left;
 }
 
 th {
-  background: var(--rigr-bg-header);
+  background: var(--precept-bg-header);
   font-weight: 600;
 }
 
@@ -140,44 +140,44 @@ img {
 }
 
 /* ---------------------------------------------------------------------------
-   Rigr Item Container
+   Precept Item Container
    --------------------------------------------------------------------------- */
-.rigr-item {
-  border: 1px solid var(--rigr-border-color);
+.precept-item {
+  border: 1px solid var(--precept-border-color);
   border-radius: 4px;
   margin: 1.5em 0;
-  background: var(--rigr-bg-light);
+  background: var(--precept-bg-light);
   overflow: hidden;
 }
 
-.rigr-type-requirement { border-left: 4px solid #1976d2; }
-.rigr-type-specification { border-left: 4px solid #388e3c; }
-.rigr-type-rationale { border-left: 4px solid #f57c00; }
-.rigr-type-information { border-left: 4px solid #7b1fa2; }
-.rigr-type-parameter { border-left: 4px solid #0097a7; }
-.rigr-type-term { border-left: 4px solid #98D8AA; }
-.rigr-type-design_element { border-left: 4px solid #455a64; }
+.precept-type-requirement { border-left: 4px solid #1976d2; }
+.precept-type-specification { border-left: 4px solid #388e3c; }
+.precept-type-rationale { border-left: 4px solid #f57c00; }
+.precept-type-information { border-left: 4px solid #7b1fa2; }
+.precept-type-parameter { border-left: 4px solid #0097a7; }
+.precept-type-term { border-left: 4px solid #98D8AA; }
+.precept-type-design_element { border-left: 4px solid #455a64; }
 
 /* ---------------------------------------------------------------------------
    Title
    --------------------------------------------------------------------------- */
-.rigr-item .rigr-title,
-.rigr-graphic .rigr-title,
-.rigr-code .rigr-title {
+.precept-item .precept-title,
+.precept-graphic .precept-title,
+.precept-code .precept-title {
   margin: 0;
   padding: 0.5em 0.75em;
-  background: var(--rigr-bg-header);
-  border-bottom: 1px solid var(--rigr-border-color);
+  background: var(--precept-bg-header);
+  border-bottom: 1px solid var(--precept-border-color);
   font-size: 1.1em;
   font-weight: 600;
-  color: var(--rigr-text-primary);
+  color: var(--precept-text-primary);
 }
 
-.rigr-title-id {
+.precept-title-id {
   font-family: var(--vscode-editor-font-family, monospace);
   font-weight: 600;
-  color: var(--rigr-id-color);
-  background: var(--rigr-id-bg);
+  color: var(--precept-id-color);
+  background: var(--precept-id-bg);
   padding: 0.1em 0.35em;
   border-radius: 3px;
   font-size: 0.9em;
@@ -187,36 +187,36 @@ img {
 /* ---------------------------------------------------------------------------
    Content Wrapper
    --------------------------------------------------------------------------- */
-.rigr-content-wrapper {
+.precept-content-wrapper {
   display: flex;
   flex-wrap: wrap;
   gap: 0;
 }
 
-.rigr-body {
+.precept-body {
   flex: 1 1 70%;
   min-width: 300px;
   padding: 0.5em 0.75em 0.5em 1em;
-  background: var(--rigr-bg-content);
-  color: var(--rigr-text-primary);
+  background: var(--precept-bg-content);
+  color: var(--precept-text-primary);
 }
 
-.rigr-body > *:first-child { margin-top: 0; }
-.rigr-body > *:last-child { margin-bottom: 0; }
+.precept-body > *:first-child { margin-top: 0; }
+.precept-body > *:last-child { margin-bottom: 0; }
 
-.rigr-metadata-wrapper {
+.precept-metadata-wrapper {
   flex: 0 0 auto;
   width: 25%;
   min-width: 180px;
   max-width: 280px;
-  background: var(--rigr-bg-light);
-  border-left: 1px solid var(--rigr-border-color);
+  background: var(--precept-bg-light);
+  border-left: 1px solid var(--precept-border-color);
   display: flex;
   flex-direction: column;
 }
 
-.rigr-metadata-wrapper .rigr-metadata-table,
-.rigr-metadata-wrapper table {
+.precept-metadata-wrapper .precept-metadata-table,
+.precept-metadata-wrapper table {
   margin: 0 !important;
   padding: 0 !important;
   border: none !important;
@@ -225,7 +225,7 @@ img {
   flex-direction: column;
 }
 
-.rigr-metadata-wrapper tbody {
+.precept-metadata-wrapper tbody {
   margin: 0 !important;
   padding: 0 !important;
   display: flex;
@@ -233,28 +233,28 @@ img {
   flex: 1;
 }
 
-.rigr-metadata-wrapper tr {
+.precept-metadata-wrapper tr {
   display: flex;
   width: 100%;
 }
 
-.rigr-metadata-wrapper tr:last-child {
+.precept-metadata-wrapper tr:last-child {
   flex: 1;
 }
 
-.rigr-metadata-wrapper td:first-child {
+.precept-metadata-wrapper td:first-child {
   flex: 0 0 auto;
   width: 40%;
 }
 
-.rigr-metadata-wrapper td:last-child {
+.precept-metadata-wrapper td:last-child {
   flex: 1;
 }
 
 /* ---------------------------------------------------------------------------
    Metadata Table
    --------------------------------------------------------------------------- */
-.rigr-metadata-table {
+.precept-metadata-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.8em;
@@ -264,108 +264,108 @@ img {
   border: none;
 }
 
-.rigr-metadata-table td {
+.precept-metadata-table td {
   padding: 0.25em 0.5em;
-  border-bottom: 1px solid var(--rigr-border-color);
+  border-bottom: 1px solid var(--precept-border-color);
   vertical-align: top;
-  color: var(--rigr-text-primary);
+  color: var(--precept-text-primary);
 }
 
-.rigr-metadata-table td:first-child {
+.precept-metadata-table td:first-child {
   width: 40%;
   font-weight: 500;
-  color: var(--rigr-text-secondary);
+  color: var(--precept-text-secondary);
   white-space: nowrap;
 }
 
-.rigr-metadata-table td:last-child {
-  background: var(--rigr-bg-content);
+.precept-metadata-table td:last-child {
+  background: var(--precept-bg-content);
 }
 
-.rigr-metadata-table tr:last-child td {
+.precept-metadata-table tr:last-child td {
   border-bottom: none;
 }
 
 /* Clickable link references */
-.rigr-link-ref {
-  color: var(--rigr-id-color);
+.precept-link-ref {
+  color: var(--precept-id-color);
   text-decoration: none;
 }
 
-.rigr-link-ref:hover {
+.precept-link-ref:hover {
   text-decoration: underline;
 }
 
 /* ---------------------------------------------------------------------------
    Graphic Directive
    --------------------------------------------------------------------------- */
-.rigr-graphic {
+.precept-graphic {
   margin: 2em 0;
   padding: 0;
-  background: var(--rigr-bg-light);
-  border: 1px solid var(--rigr-border-color);
+  background: var(--precept-bg-light);
+  border: 1px solid var(--precept-border-color);
   border-radius: 4px;
   overflow: hidden;
 }
 
-.rigr-graphic-image img {
+.precept-graphic-image img {
   max-width: 100%;
   height: auto;
   display: block;
   margin: 0 auto;
 }
 
-.rigr-graphic-caption {
+.precept-graphic-caption {
   padding: 0.75em 1em;
-  background: var(--rigr-bg-header);
-  border-top: 1px solid var(--rigr-border-color);
+  background: var(--precept-bg-header);
+  border-top: 1px solid var(--precept-border-color);
   text-align: center;
   font-style: italic;
-  color: var(--rigr-text-secondary);
+  color: var(--precept-text-secondary);
 }
 
-.rigr-graphic-caption p { margin: 0; }
+.precept-graphic-caption p { margin: 0; }
 
 /* ---------------------------------------------------------------------------
    Code Directive
    --------------------------------------------------------------------------- */
-.rigr-code {
+.precept-code {
   margin: 2em 0;
   padding: 0;
-  background: var(--rigr-bg-light);
-  border: 1px solid var(--rigr-border-color);
+  background: var(--precept-bg-light);
+  border: 1px solid var(--precept-border-color);
   border-radius: 4px;
   overflow: hidden;
 }
 
-.rigr-code-content pre {
+.precept-code-content pre {
   margin: 0;
   border-radius: 0;
   border: none;
-  border-top: 1px solid var(--rigr-border-color);
-  border-bottom: 1px solid var(--rigr-border-color);
+  border-top: 1px solid var(--precept-border-color);
+  border-bottom: 1px solid var(--precept-border-color);
 }
 
-.rigr-code-caption {
+.precept-code-caption {
   padding: 0.75em 1em;
-  background: var(--rigr-bg-header);
-  border-top: 1px solid var(--rigr-border-color);
+  background: var(--precept-bg-header);
+  border-top: 1px solid var(--precept-border-color);
   text-align: center;
   font-style: italic;
-  color: var(--rigr-text-secondary);
+  color: var(--precept-text-secondary);
 }
 
-.rigr-code-caption p { margin: 0; }
+.precept-code-caption p { margin: 0; }
 
 /* ---------------------------------------------------------------------------
    Admonitions
    --------------------------------------------------------------------------- */
 .admonition {
-  border: 1px solid var(--rigr-border-color);
+  border: 1px solid var(--precept-border-color);
   border-radius: 4px;
   margin: 1em 0;
   padding: 0.75em 1em;
-  background: var(--rigr-bg-light);
+  background: var(--precept-bg-light);
 }
 
 .admonition-title {
@@ -385,44 +385,44 @@ img {
    --------------------------------------------------------------------------- */
 
 /* Status indicator: subtle coloured top border */
-.rigr-status-draft { border-top: 2px solid #CFB53B; }
-.rigr-status-review { border-top: 2px solid #E08A00; }
-.rigr-status-approved { border-top: 2px solid #388E3C; }
-.rigr-status-implemented { border-top: 2px solid #1976D2; }
-.rigr-status-verified { border-top: 2px solid #7B1FA2; }
-.rigr-status-deprecated { border-top: 2px solid #9E9E9E; }
-.rigr-status-rejected { border-top: 2px solid #C62828; }
+.precept-status-draft { border-top: 2px solid #CFB53B; }
+.precept-status-review { border-top: 2px solid #E08A00; }
+.precept-status-approved { border-top: 2px solid #388E3C; }
+.precept-status-implemented { border-top: 2px solid #1976D2; }
+.precept-status-verified { border-top: 2px solid #7B1FA2; }
+.precept-status-deprecated { border-top: 2px solid #9E9E9E; }
+.precept-status-rejected { border-top: 2px solid #C62828; }
 
 /* Status value in the metadata table */
-.rigr-field-status {
+.precept-field-status {
   font-weight: 600;
 }
 
-.rigr-status-draft .rigr-field-status { color: #CFB53B; }
-.rigr-status-review .rigr-field-status { color: #E08A00; }
-.rigr-status-approved .rigr-field-status { color: #388E3C; }
-.rigr-status-implemented .rigr-field-status { color: #1976D2; }
-.rigr-status-verified .rigr-field-status { color: #7B1FA2; }
-.rigr-status-deprecated .rigr-field-status { color: #9E9E9E; }
-.rigr-status-rejected .rigr-field-status { color: #C62828; }
+.precept-status-draft .precept-field-status { color: #CFB53B; }
+.precept-status-review .precept-field-status { color: #E08A00; }
+.precept-status-approved .precept-field-status { color: #388E3C; }
+.precept-status-implemented .precept-field-status { color: #1976D2; }
+.precept-status-verified .precept-field-status { color: #7B1FA2; }
+.precept-status-deprecated .precept-field-status { color: #9E9E9E; }
+.precept-status-rejected .precept-field-status { color: #C62828; }
 
 /* ---------------------------------------------------------------------------
    PlantUML Diagrams
    --------------------------------------------------------------------------- */
-.rigr-graphic-uml {
+.precept-graphic-uml {
   padding: 1em;
   text-align: center;
-  background: var(--rigr-bg-content);
+  background: var(--precept-bg-content);
 }
 
-.rigr-graphic-uml img.plantuml-diagram {
+.precept-graphic-uml img.plantuml-diagram {
   max-width: 100%;
   height: auto;
   display: inline-block;
 }
 
-.rigr-plantuml-fallback .plantuml-notice {
-  color: var(--rigr-text-secondary);
+.precept-plantuml-fallback .plantuml-notice {
+  color: var(--precept-text-secondary);
   font-size: 0.9em;
   margin-bottom: 0.5em;
 }
@@ -431,8 +431,8 @@ img {
    Syntax Highlighting (highlight.js theme adapted for VS Code)
    --------------------------------------------------------------------------- */
 .hljs {
-  background: var(--rigr-code-block-bg);
-  color: var(--rigr-text-primary);
+  background: var(--precept-code-block-bg);
+  color: var(--precept-text-primary);
 }
 
 /* Keywords, built-ins */
@@ -532,7 +532,7 @@ ul.toctree li {
    Print
    --------------------------------------------------------------------------- */
 @media print {
-  .rigr-item, .rigr-graphic, .rigr-code {
+  .precept-item, .precept-graphic, .precept-code {
     break-inside: avoid;
   }
 }

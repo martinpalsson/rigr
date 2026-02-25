@@ -9,7 +9,7 @@ import {
   RequirementObject,
   RequirementReference,
   ParsedRstFile,
-  RigrConfig,
+  PreceptConfig,
   IndexUpdateEvent,
 } from '../types';
 import { parseRstFile } from './rstParser';
@@ -189,7 +189,7 @@ function removeFileFromIndex(index: RequirementIndex, filePath: string): string[
 export class IndexBuilder {
   private index: RequirementIndex = createEmptyIndex();
   private references: Map<string, RequirementReference[]> = new Map();
-  private config: RigrConfig;
+  private config: PreceptConfig;
   private disposables: vscode.Disposable[] = [];
   private onIndexUpdateEmitter = new vscode.EventEmitter<IndexUpdateEvent>();
   private debounceTimer: NodeJS.Timeout | null = null;
@@ -197,14 +197,14 @@ export class IndexBuilder {
 
   public readonly onIndexUpdate = this.onIndexUpdateEmitter.event;
 
-  constructor(config: RigrConfig) {
+  constructor(config: PreceptConfig) {
     this.config = config;
   }
 
   /**
    * Update configuration
    */
-  public updateConfig(config: RigrConfig): void {
+  public updateConfig(config: PreceptConfig): void {
     this.config = config;
   }
 

@@ -1,4 +1,4 @@
-.. _rigr-intellisense:
+.. _precept-intellisense:
 
 ================================
 IntelliSense and Navigation
@@ -363,8 +363,8 @@ Use Case: Project Creation
    :status: approved
    :satisfies: 00056
 
-   The extension shall provide a command (Ctrl+Shift+P: "Rigr: New Project")
-   to create a new Rigr requirements management project.
+   The extension shall provide a command (Ctrl+Shift+P: "Precept: New Project")
+   to create a new Precept requirements management project.
 
 .. item:: Project creation confirmation
    :id: 00084
@@ -398,7 +398,7 @@ Use Case: Project Creation
 
    Created project shall include:
 
-   - ``docs/conf.py`` with Rigr configuration
+   - ``docs/precept.json`` with Precept configuration
    - ``docs/requirements/index.rst`` with overview
    - Example requirement file(s)
    - ``.vscode/settings.json`` with recommended settings

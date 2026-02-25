@@ -1,22 +1,22 @@
-# Rigr Example Requirements
+# Precept Example Requirements
 
-This directory contains example requirements documentation demonstrating the Rigr format.
+This directory contains example requirements documentation demonstrating the Precept format.
 
 ## Getting Started
 
-1. Open this folder in VS Code with the Rigr extension installed
-2. Open any `.rst` file and use **Rigr: Open RST Preview** (or click the preview icon in the editor toolbar) for live preview
-3. Use **Rigr: Build Documentation** to generate a static HTML site in `_build/html/`
+1. Open this folder in VS Code with the Precept extension installed
+2. Open any `.rst` file and use **Precept: Open RST Preview** (or click the preview icon in the editor toolbar) for live preview
+3. Use **Precept: Build Documentation** to generate a static HTML site in `_build/html/`
 
 ## Building HTML Documentation
 
 Use the VS Code command palette:
-- **Rigr: Build Documentation** - generates static HTML in `_build/html/`
-- **Rigr: View Documentation** - opens the built HTML in your browser
+- **Precept: Build Documentation** - generates static HTML in `_build/html/`
+- **Precept: View Documentation** - opens the built HTML in your browser
 
 ## Structure
 
-- **rigr.json** - Configuration file defining object types, levels, and link types
+- **precept.json** - Configuration file defining object types, levels, and link types
 - **requirements/** - Example RST files with requirements
   - **index.rst** - Main index and traceability matrices
   - **architecture.rst** - Architecture requirements

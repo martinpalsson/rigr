@@ -2,13 +2,13 @@
  * Unit tests for Project Command templates
  */
 
-import { RIGR_JSON_TEMPLATE, SAMPLE_RST_TEMPLATE } from './templates';
+import { PRECEPT_JSON_TEMPLATE, SAMPLE_RST_TEMPLATE } from './templates';
 import { parseRstFile } from '../indexing/rstParser';
 import { DEFAULT_CONFIG } from '../configuration/defaults';
-import { RigrConfig } from '../types';
+import { PreceptConfig } from '../types';
 
 // Config that matches the project template
-const projectConfig: RigrConfig = {
+const projectConfig: PreceptConfig = {
   ...DEFAULT_CONFIG,
   objectTypes: [
     { type: 'requirement', title: 'Requirement' },
@@ -37,13 +37,13 @@ const projectConfig: RigrConfig = {
 };
 
 describe('Project Templates', () => {
-  describe('RIGR_JSON_TEMPLATE', () => {
+  describe('PRECEPT_JSON_TEMPLATE', () => {
     it('should be valid JSON', () => {
-      expect(() => JSON.parse(RIGR_JSON_TEMPLATE)).not.toThrow();
+      expect(() => JSON.parse(PRECEPT_JSON_TEMPLATE)).not.toThrow();
     });
 
     it('should contain all required object types', () => {
-      const config = JSON.parse(RIGR_JSON_TEMPLATE);
+      const config = JSON.parse(PRECEPT_JSON_TEMPLATE);
       const types = config.objectTypes.map((t: { type: string }) => t.type);
       expect(types).toContain('requirement');
       expect(types).toContain('design_element');
@@ -51,7 +51,7 @@ describe('Project Templates', () => {
     });
 
     it('should contain all required levels', () => {
-      const config = JSON.parse(RIGR_JSON_TEMPLATE);
+      const config = JSON.parse(PRECEPT_JSON_TEMPLATE);
       const levels = config.levels.map((l: { level: string }) => l.level);
       expect(levels).toContain('stakeholder');
       expect(levels).toContain('system');
@@ -59,14 +59,14 @@ describe('Project Templates', () => {
     });
 
     it('should contain ID configuration', () => {
-      const config = JSON.parse(RIGR_JSON_TEMPLATE);
+      const config = JSON.parse(PRECEPT_JSON_TEMPLATE);
       expect(config.idConfig).toBeDefined();
       expect(config.idConfig.padding).toBe(4);
       expect(config.idConfig.start).toBe(1);
     });
 
     it('should contain all required link types', () => {
-      const config = JSON.parse(RIGR_JSON_TEMPLATE);
+      const config = JSON.parse(PRECEPT_JSON_TEMPLATE);
       const options = config.linkTypes.map((l: { option: string }) => l.option);
       expect(options).toContain('satisfies');
       expect(options).toContain('implements');
@@ -74,7 +74,7 @@ describe('Project Templates', () => {
     });
 
     it('should contain all required statuses', () => {
-      const config = JSON.parse(RIGR_JSON_TEMPLATE);
+      const config = JSON.parse(PRECEPT_JSON_TEMPLATE);
       const statuses = config.statuses.map((s: { status: string }) => s.status);
       expect(statuses).toContain('draft');
       expect(statuses).toContain('approved');

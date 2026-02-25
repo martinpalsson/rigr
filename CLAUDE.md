@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rigr (pronounced "rigger") is the lightest tool to rig a project for success. It's a VS Code extension providing a minimalistic requirements management system for RST (reStructuredText) files. It provides IntelliSense, validation, and navigation for requirement documentation.
+Precept is a lightweight VS Code extension for requirements management using RST (reStructuredText) files. It provides IntelliSense, validation, navigation, live preview, and static HTML documentation — all self-contained with no external dependencies.
 
 ## Build & Development Commands
 
@@ -26,24 +26,31 @@ npm run test             # Full integration tests (requires VS Code)
 src/
 ├── extension.ts              # Entry point - activation, provider registration
 ├── types.ts                  # Core interfaces (ObjectType, RequirementObject, etc.)
-├── configuration/            # Config loading from Sphinx conf.py + defaults
+├── configuration/            # Config loading from precept.json + defaults
 ├── indexing/                 # RST parsing and in-memory index
 ├── providers/                # VS Code language providers (completion, hover, definition, etc.)
 ├── views/                    # UI (Item Explorer & Link Explorer tree views)
 ├── commands/                 # Command implementations (validation, baseline, reports)
+├── renderer/                 # Pure TypeScript RST-to-HTML rendering engine
+├── preview/                  # Live preview webview panel
+├── build/                    # Static HTML site builder
+├── themes/                   # Selectable theme definitions (default, readthedocs, alabaster, furo, pydata)
+├── validation/               # Deep validation analyzers
 └── utils/                    # ID generation, graph analysis
 ```
 
 ### Key Patterns
 
-**Dependency Injection**: All providers receive `IndexBuilder` and `RigrConfig` via constructor, with `updateConfig()` method for config changes.
+**Dependency Injection**: All providers receive `IndexBuilder` and `PreceptConfig` via constructor, with `updateConfig()` method for config changes.
 
 **Index Architecture**: `IndexBuilder` maintains multiple maps:
 - `objects`: Map<id, RequirementObject> - primary lookup
 - `fileIndex`, `typeIndex`, `statusIndex`: secondary indexes
 - `linkGraph`: dependency tracking for traceability
 
-**Configuration Layer**: Three-tier priority: Sphinx conf.py → defaults → VS Code settings. ConfigLoader parses Python conf.py via subprocess.
+**Configuration Layer**: Loads from `precept.json` (JSON) with fallback to built-in defaults. No external tools required. Search order: `docs/precept.json`, `doc/precept.json`, `source/precept.json`, `precept.json`, then recursive search.
+
+**Rendering**: Pure TypeScript renderer converts RST to HTML for both live preview and static site. Supports themes via CSS custom properties (`--precept-*`).
 
 **Validation**: Automatic (on save, lightweight) vs Deep (command-triggered, circular deps, coverage analysis).
 

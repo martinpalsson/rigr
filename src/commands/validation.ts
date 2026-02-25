@@ -4,7 +4,7 @@
 
 import * as vscode from 'vscode';
 import { IndexBuilder } from '../indexing/indexBuilder';
-import { RigrConfig, DeepValidationResult, DiagnosticType } from '../types';
+import { PreceptConfig, DeepValidationResult, DiagnosticType } from '../types';
 import { performDeepValidation } from '../utils/graphAnalysis';
 import { getStatusNames } from '../configuration/defaults';
 import { runDeepValidation as runNewDeepValidation, exportReportAsText } from '../validation/deepValidationRunner';
@@ -14,7 +14,7 @@ import { runDeepValidation as runNewDeepValidation, exportReportAsText } from '.
  */
 export async function runDeepValidation(
   indexBuilder: IndexBuilder,
-  config: RigrConfig
+  config: PreceptConfig
 ): Promise<DeepValidationResult> {
   const requirements = indexBuilder.getAllRequirements();
   const index = indexBuilder.getIndex();
@@ -28,9 +28,9 @@ export async function runDeepValidation(
  */
 export async function runComprehensiveDeepValidation(
   indexBuilder: IndexBuilder,
-  config: RigrConfig
+  config: PreceptConfig
 ): Promise<void> {
-  const outputChannel = vscode.window.createOutputChannel('Rigr Deep Validation');
+  const outputChannel = vscode.window.createOutputChannel('Precept Deep Validation');
   outputChannel.show();
   outputChannel.clear();
   
@@ -215,7 +215,7 @@ async function showValidationResults(result: DeepValidationResult): Promise<void
 export function registerValidationCommand(
   context: vscode.ExtensionContext,
   indexBuilder: IndexBuilder,
-  config: RigrConfig
+  config: PreceptConfig
 ): vscode.Disposable {
   return vscode.commands.registerCommand('requirements.deepValidation', async () => {
     // Use the new comprehensive deep validation

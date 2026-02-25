@@ -1,4 +1,4 @@
-.. _rigr-nfr:
+.. _precept-nfr:
 
 ==============================
 Non-Functional Requirements
@@ -132,7 +132,7 @@ Reliability Requirements
    :level: system
    :status: approved
 
-   If conf.py parsing fails, the extension SHALL:
+   If precept.json parsing fails, the extension SHALL:
 
    - Fall back to default configuration
    - Display notification about fallback
@@ -233,7 +233,7 @@ Usability Requirements
 
    - "Requirement" for all item types (generic)
    - "Object" when referring to any item type
-   - Configuration term alignment with conf.py
+   - Configuration term alignment with precept.json
 
 .. item:: Discoverability
    :id: 00232
@@ -259,14 +259,15 @@ Compatibility Requirements
 
    The extension SHALL support VS Code version 1.80.0 and later.
 
-.. item:: Python version compatibility
+.. item:: Node.js compatibility
    :id: 00234
    :type: requirement
    :level: system
    :status: approved
 
-   For conf.py parsing, the extension SHALL support Python 3.7
-   and later.
+   The extension SHALL run on the Node.js runtime bundled with
+   VS Code 1.80+ (Node.js 18.x or later). No external runtime
+   dependencies are required.
 
 .. item:: Operating system compatibility
    :id: 00235
@@ -280,14 +281,15 @@ Compatibility Requirements
    - macOS 10.15+
    - Linux (Ubuntu 20.04+, Fedora 34+)
 
-.. item:: Sphinx compatibility
+.. item:: Built-in renderer
    :id: 00236
    :type: requirement
    :level: system
    :status: approved
 
-   The RST format SHALL be compatible with Sphinx versions 4.x
-   through 7.x for documentation building.
+   The extension SHALL include a built-in TypeScript renderer
+   for previewing requirements documentation without external
+   dependencies.
 
 .. item:: Compatibility parameters
    :id: 00237
@@ -298,9 +300,7 @@ Compatibility Requirements
    Minimum version requirements:
 
    - VS Code: 1.80.0
-   - Python: 3.7
-   - Sphinx: 4.0
-   - Node.js (for extension): 18.x
+   - Node.js: 18.x (bundled with VS Code)
 
 Testing Requirements
 ====================
@@ -327,7 +327,7 @@ Testing Requirements
 
    Unit tests SHALL cover:
 
-   - Various conf.py formats and edge cases
+   - Various precept.json formats and edge cases
    - All RST directive types and malformed input
    - Incremental index updates
    - Circular dependency detection
@@ -354,7 +354,7 @@ Testing Requirements
 
    Test fixtures SHALL include:
 
-   - Sample conf.py files with various configurations
+   - Sample precept.json files with various configurations
    - RST files with different requirement types
    - Multi-file project structure
    - Edge cases (empty files, malformed content)
@@ -372,7 +372,7 @@ Testing Requirements
 
       test-fixtures/
       +-- docs/
-      |   +-- conf.py
+      |   +-- precept.json
       |   +-- requirements/
       |       +-- stakeholder.rst
       |       +-- system.rst
@@ -449,7 +449,7 @@ Documentation Requirements
 
    Documentation SHALL include example project:
 
-   - Example conf.py with comments explaining options
+   - Example precept.json with comments explaining options
    - Example requirements.rst files
    - Sample project structure demonstrating features
 
@@ -462,7 +462,7 @@ Success Criteria
    :level: system
    :status: approved
 
-   The extension SHALL correctly parse conf.py with arbitrary
+   The extension SHALL correctly parse precept.json with arbitrary
    object types, levels, and link types as defined by users.
 
 .. item:: Validation accuracy
@@ -505,7 +505,7 @@ Deliverables
 
    MVP (v1.0.0) deliverables:
 
-   - Configuration loading from conf.py
+   - Configuration loading from precept.json
    - Requirement indexing (all types/levels)
    - IntelliSense (autocomplete, hover, go-to-def)
    - Dynamic snippets from config

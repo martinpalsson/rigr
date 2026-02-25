@@ -1,5 +1,5 @@
 /**
- * Rigr - Requirements Management System - VS Code Extension
+ * Precept - Requirements Management System - VS Code Extension
  *
  * Main entry point for the extension.
  */
@@ -37,7 +37,7 @@ import {
   registerDocumentationCommands,
 } from './commands';
 import { RstPreviewProvider } from './preview';
-import { RigrConfig } from './types';
+import { PreceptConfig } from './types';
 import { DEFAULT_CONFIG } from './configuration/defaults';
 
 let statusBarItem: vscode.StatusBarItem;
@@ -59,7 +59,7 @@ let previewProvider: RstPreviewProvider;
 /**
  * Update status bar with current state
  */
-function updateStatusBar(config: RigrConfig, source: string, count: number): void {
+function updateStatusBar(config: PreceptConfig, source: string, count: number): void {
   const typeCount = config.objectTypes.length;
   const levelCount = config.levels.length;
   statusBarItem.text = `$(checklist) Requirements: ${count} objects`;
@@ -81,7 +81,7 @@ function showConfigError(error: string): void {
 /**
  * Update all providers with new config
  */
-function updateProvidersConfig(config: RigrConfig): void {
+function updateProvidersConfig(config: PreceptConfig): void {
   if (completionProvider) {
     completionProvider.updateConfig(config);
   }
@@ -118,7 +118,7 @@ function updateProvidersConfig(config: RigrConfig): void {
  * Extension activation
  */
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  console.log('Rigr Requirements extension is activating...');
+  console.log('Precept Requirements extension is activating...');
 
   // Get workspace root
   const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
@@ -139,7 +139,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   context.subscriptions.push(statusBarItem);
 
   // Load configuration
-  let config: RigrConfig = DEFAULT_CONFIG;
+  let config: PreceptConfig = DEFAULT_CONFIG;
   try {
     const result = await loadConfiguration(workspaceRoot);
     if (result.success && result.config) {
@@ -309,14 +309,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     }
   }
 
-  console.log('Rigr Requirements extension is now active');
+  console.log('Precept Requirements extension is now active');
 }
 
 /**
  * Extension deactivation
  */
 export function deactivate(): void {
-  console.log('Rigr Requirements extension is deactivating...');
+  console.log('Precept Requirements extension is deactivating...');
 
   // Save cache before deactivating
   if (cacheManager) {

@@ -3,11 +3,11 @@
  */
 
 import { parseRstFile, findIdAtPosition, isInLinkContext, isInInlineItemContext, getIdsInLine } from './rstParser';
-import { RigrConfig } from '../types';
+import { PreceptConfig } from '../types';
 import { DEFAULT_CONFIG } from '../configuration/defaults';
 
 describe('rstParser', () => {
-  const testConfig: RigrConfig = {
+  const testConfig: PreceptConfig = {
     ...DEFAULT_CONFIG,
     objectTypes: [
       { type: 'requirement', title: 'Requirement' },

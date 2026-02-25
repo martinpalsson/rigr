@@ -1,8 +1,8 @@
 /* =============================================================================
-   Rigr Requirements Styling
+   Precept Requirements Styling
    =============================================================================
    Theme-compatible styles for requirement items (implements 00300, 00301, 00305).
-   Works with: Sphinx default, Alabaster, Read the Docs, Furo, and other themes.
+   Works with all Precept themes: default, readthedocs, alabaster, furo, pydata.
    ============================================================================= */
 
 /* -----------------------------------------------------------------------------
@@ -10,54 +10,54 @@
    These inherit from the page context for proper theme compatibility
    ----------------------------------------------------------------------------- */
 :root {
-    --rigr-border-color: rgba(0, 0, 0, 0.1);
-    --rigr-bg-light: rgba(0, 0, 0, 0.02);
-    --rigr-bg-header: rgba(0, 0, 0, 0.04);
-    --rigr-bg-content: transparent;
-    --rigr-text-primary: inherit;
-    --rigr-text-secondary: inherit;
-    --rigr-id-color: #1565c0;
-    --rigr-id-bg: rgba(21, 101, 192, 0.1);
-    --rigr-type-color: #5d4037;
+    --precept-border-color: rgba(0, 0, 0, 0.1);
+    --precept-bg-light: rgba(0, 0, 0, 0.02);
+    --precept-bg-header: rgba(0, 0, 0, 0.04);
+    --precept-bg-content: transparent;
+    --precept-text-primary: inherit;
+    --precept-text-secondary: inherit;
+    --precept-id-color: #1565c0;
+    --precept-id-bg: rgba(21, 101, 192, 0.1);
+    --precept-type-color: #5d4037;
 }
 
 /* -----------------------------------------------------------------------------
    Item Container
    ----------------------------------------------------------------------------- */
-.rigr-item {
-    border: 1px solid var(--rigr-border-color);
+.precept-item {
+    border: 1px solid var(--precept-border-color);
     border-radius: 4px;
     margin: 1.5em 0;
-    background: var(--rigr-bg-light);
+    background: var(--precept-bg-light);
     overflow: hidden;
 }
 
 /* Type-specific left border accent */
-.rigr-type-requirement {
+.precept-type-requirement {
     border-left: 4px solid #1976d2;
 }
 
-.rigr-type-specification {
+.precept-type-specification {
     border-left: 4px solid #388e3c;
 }
 
-.rigr-type-rationale {
+.precept-type-rationale {
     border-left: 4px solid #f57c00;
 }
 
-.rigr-type-information {
+.precept-type-information {
     border-left: 4px solid #7b1fa2;
 }
 
-.rigr-type-parameter {
+.precept-type-parameter {
     border-left: 4px solid #0097a7;
 }
 
-.rigr-type-term {
+.precept-type-term {
     border-left: 4px solid #98D8AA;
 }
 
-.rigr-type-design_element {
+.precept-type-design_element {
     border-left: 4px solid #455a64;
 }
 
@@ -65,24 +65,24 @@
    Title (rubric element) - per 00300, 00305
    Used for both items and graphics
    ----------------------------------------------------------------------------- */
-.rigr-item .rigr-title,
-.rigr-graphic .rigr-title,
-.rigr-code .rigr-title {
+.precept-item .precept-title,
+.precept-graphic .precept-title,
+.precept-code .precept-title {
     margin: 0;
     padding: 0.5em 0.75em;
-    background: var(--rigr-bg-header);
-    border-bottom: 1px solid var(--rigr-border-color);
+    background: var(--precept-bg-header);
+    border-bottom: 1px solid var(--precept-border-color);
     font-size: 1.1em;
     font-weight: 600;
-    color: var(--rigr-text-primary);
+    color: var(--precept-text-primary);
 }
 
 /* ID displayed in title (per issue #9) */
-.rigr-title-id {
+.precept-title-id {
     font-family: ui-monospace, 'SF Mono', 'Monaco', 'Consolas', monospace;
     font-weight: 600;
-    color: var(--rigr-id-color);
-    background: var(--rigr-id-bg);
+    color: var(--precept-id-color);
+    background: var(--precept-id-bg);
     padding: 0.1em 0.35em;
     border-radius: 3px;
     font-size: 0.9em;
@@ -92,18 +92,18 @@
 /* -----------------------------------------------------------------------------
    ID and Type styling in table cells - per 00300
    ----------------------------------------------------------------------------- */
-.rigr-id {
+.precept-id {
     font-family: ui-monospace, 'SF Mono', 'Monaco', 'Consolas', monospace;
     font-weight: 600;
-    color: var(--rigr-id-color);
-    background: var(--rigr-id-bg);
+    color: var(--precept-id-color);
+    background: var(--precept-id-bg);
     padding: 0.15em 0.4em;
     border-radius: 3px;
     font-size: 0.95em;
 }
 
-.rigr-type-label {
-    color: var(--rigr-type-color);
+.precept-type-label {
+    color: var(--precept-type-color);
     font-weight: 500;
     text-transform: uppercase;
     font-size: 0.85em;
@@ -113,41 +113,41 @@
 /* -----------------------------------------------------------------------------
    Content Wrapper - body on left, metadata on right (per issue #9)
    ----------------------------------------------------------------------------- */
-.rigr-content-wrapper {
+.precept-content-wrapper {
     display: flex;
     flex-wrap: wrap;
     gap: 0;
 }
 
-.rigr-body {
+.precept-body {
     flex: 1 1 70%;
     min-width: 300px;
     padding: 0.5em 0.75em 0.5em 1em !important;
-    background: var(--rigr-bg-content);
-    color: var(--rigr-text-primary);
+    background: var(--precept-bg-content);
+    color: var(--precept-text-primary);
 }
 
-.rigr-body > *:first-child {
+.precept-body > *:first-child {
     margin-top: 0;
 }
 
-.rigr-body > *:last-child {
+.precept-body > *:last-child {
     margin-bottom: 0;
 }
 
-.rigr-metadata-wrapper {
+.precept-metadata-wrapper {
     flex: 0 0 auto;
     width: 25%;
     min-width: 180px;
     max-width: 280px;
-    background: var(--rigr-bg-light);
-    border-left: 1px solid var(--rigr-border-color);
+    background: var(--precept-bg-light);
+    border-left: 1px solid var(--precept-border-color);
     display: flex;
     flex-direction: column;
 }
 
-.rigr-metadata-wrapper .rigr-metadata-table,
-.rigr-metadata-wrapper table {
+.precept-metadata-wrapper .precept-metadata-table,
+.precept-metadata-wrapper table {
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
@@ -156,8 +156,8 @@
     flex-direction: column;
 }
 
-.rigr-metadata-wrapper tbody,
-.rigr-metadata-wrapper tgroup {
+.precept-metadata-wrapper tbody,
+.precept-metadata-wrapper tgroup {
     margin: 0 !important;
     padding: 0 !important;
     display: flex;
@@ -165,28 +165,28 @@
     flex: 1;
 }
 
-.rigr-metadata-wrapper tr {
+.precept-metadata-wrapper tr {
     display: flex;
     width: 100%;
 }
 
-.rigr-metadata-wrapper tr:last-child {
+.precept-metadata-wrapper tr:last-child {
     flex: 1;
 }
 
-.rigr-metadata-wrapper td:first-child {
+.precept-metadata-wrapper td:first-child {
     flex: 0 0 auto;
     width: 40%;
 }
 
-.rigr-metadata-wrapper td:last-child {
+.precept-metadata-wrapper td:last-child {
     flex: 1;
 }
 
 /* -----------------------------------------------------------------------------
    Metadata Table - compact styling (per issue #9)
    ----------------------------------------------------------------------------- */
-.rigr-metadata-table {
+.precept-metadata-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.8em;
@@ -196,35 +196,35 @@
     border: none;
 }
 
-.rigr-metadata-table td {
+.precept-metadata-table td {
     padding: 0.25em 0.5em;
-    border-bottom: 1px solid var(--rigr-border-color);
+    border-bottom: 1px solid var(--precept-border-color);
     vertical-align: top;
-    color: var(--rigr-text-primary);
+    color: var(--precept-text-primary);
 }
 
-.rigr-metadata-table td:first-child {
+.precept-metadata-table td:first-child {
     width: 40%;
     font-weight: 500;
-    color: var(--rigr-text-secondary);
+    color: var(--precept-text-secondary);
     white-space: nowrap;
 }
 
-.rigr-metadata-table td:last-child {
-    background: var(--rigr-bg-content);
+.precept-metadata-table td:last-child {
+    background: var(--precept-bg-content);
 }
 
-.rigr-metadata-table tr:last-child td {
+.precept-metadata-table tr:last-child td {
     border-bottom: none;
 }
 
 /* Clickable link references (per issue #9) */
-.rigr-link-ref {
-    color: var(--rigr-id-color);
+.precept-link-ref {
+    color: var(--precept-id-color);
     text-decoration: none;
 }
 
-.rigr-link-ref:hover {
+.precept-link-ref:hover {
     text-decoration: underline;
 }
 
@@ -232,109 +232,109 @@
    Body Content - adjusted for side-by-side layout
    ----------------------------------------------------------------------------- */
 
-.rigr-body > *:first-child {
+.precept-body > *:first-child {
     margin-top: 0;
 }
 
-.rigr-body > *:last-child {
+.precept-body > *:last-child {
     margin-bottom: 0;
 }
 
 /* -----------------------------------------------------------------------------
    Theme: Read the Docs Compatibility
    ----------------------------------------------------------------------------- */
-.wy-body-for-nav .rigr-item,
-.wy-body-for-nav .rigr-graphic,
-.wy-body-for-nav .rigr-code,
-.rst-content .rigr-item,
-.rst-content .rigr-graphic,
-.rst-content .rigr-code {
-    --rigr-border-color: #e1e4e5;
-    --rigr-bg-light: #f8f9fa;
-    --rigr-bg-header: #eef0f1;
-    --rigr-bg-content: #fcfcfc;
-    --rigr-text-primary: #404040;
-    --rigr-text-secondary: #6c757d;
-    --rigr-type-color: #6c757d;
+.wy-body-for-nav .precept-item,
+.wy-body-for-nav .precept-graphic,
+.wy-body-for-nav .precept-code,
+.rst-content .precept-item,
+.rst-content .precept-graphic,
+.rst-content .precept-code {
+    --precept-border-color: #e1e4e5;
+    --precept-bg-light: #f8f9fa;
+    --precept-bg-header: #eef0f1;
+    --precept-bg-content: #fcfcfc;
+    --precept-text-primary: #404040;
+    --precept-text-secondary: #6c757d;
+    --precept-type-color: #6c757d;
 }
 
 /* RTD specific table overrides - prevent theme table styles from interfering */
-.rst-content .rigr-metadata-table,
-.rst-content .rigr-metadata-wrapper table {
+.rst-content .precept-metadata-table,
+.rst-content .precept-metadata-wrapper table {
     margin: 0 !important;
     margin-bottom: 0 !important;
     border: none !important;
 }
 
-.rst-content .rigr-metadata-table td {
+.rst-content .precept-metadata-table td {
     border-left: none;
     border-right: none;
 }
 
-.rst-content .rigr-metadata-table tbody,
-.rst-content .rigr-metadata-table tgroup,
-.rst-content .rigr-metadata-wrapper tbody {
+.rst-content .precept-metadata-table tbody,
+.rst-content .precept-metadata-table tgroup,
+.rst-content .precept-metadata-wrapper tbody {
     margin: 0 !important;
     padding: 0 !important;
 }
 
 /* RTD body padding override */
-.rst-content .rigr-body {
+.rst-content .precept-body {
     padding: 0.5em 0.75em 0.5em 1em !important;
 }
 
 /* -----------------------------------------------------------------------------
    Theme: Alabaster Compatibility
    ----------------------------------------------------------------------------- */
-body.alabaster .rigr-item,
-body.alabaster .rigr-graphic,
-body.alabaster .rigr-code {
-    --rigr-border-color: #ddd;
-    --rigr-bg-light: #fdfdfd;
-    --rigr-bg-header: #f7f7f7;
-    --rigr-bg-content: #fff;
+body.alabaster .precept-item,
+body.alabaster .precept-graphic,
+body.alabaster .precept-code {
+    --precept-border-color: #ddd;
+    --precept-bg-light: #fdfdfd;
+    --precept-bg-header: #f7f7f7;
+    --precept-bg-content: #fff;
 }
 
 /* -----------------------------------------------------------------------------
-   Theme: Sphinx Default (Classic) Compatibility
+   Theme: Default Compatibility
    ----------------------------------------------------------------------------- */
-div.body .rigr-item,
-div.body .rigr-graphic,
-div.body .rigr-code {
-    --rigr-border-color: #ccc;
-    --rigr-bg-light: #f8f8f8;
-    --rigr-bg-header: #efefef;
-    --rigr-bg-content: #fff;
+div.body .precept-item,
+div.body .precept-graphic,
+div.body .precept-code {
+    --precept-border-color: #ccc;
+    --precept-bg-light: #f8f8f8;
+    --precept-bg-header: #efefef;
+    --precept-bg-content: #fff;
 }
 
 /* -----------------------------------------------------------------------------
    Theme: Furo Compatibility
    ----------------------------------------------------------------------------- */
-body[data-theme="light"] .rigr-item,
-body[data-theme="light"] .rigr-graphic,
-body[data-theme="light"] .rigr-code,
-.furo-body .rigr-item,
-.furo-body .rigr-graphic,
-.furo-body .rigr-code {
-    --rigr-border-color: var(--color-background-border, #e0e0e0);
-    --rigr-bg-light: var(--color-background-secondary, #fafafa);
-    --rigr-bg-header: var(--color-background-hover, #f5f5f5);
-    --rigr-bg-content: var(--color-background-primary, #fff);
+body[data-theme="light"] .precept-item,
+body[data-theme="light"] .precept-graphic,
+body[data-theme="light"] .precept-code,
+.furo-body .precept-item,
+.furo-body .precept-graphic,
+.furo-body .precept-code {
+    --precept-border-color: var(--color-background-border, #e0e0e0);
+    --precept-bg-light: var(--color-background-secondary, #fafafa);
+    --precept-bg-header: var(--color-background-hover, #f5f5f5);
+    --precept-bg-content: var(--color-background-primary, #fff);
 }
 
 /* Furo dark theme */
-body[data-theme="dark"] .rigr-item,
-body[data-theme="dark"] .rigr-graphic,
-body[data-theme="dark"] .rigr-code {
-    --rigr-border-color: var(--color-background-border, #404040);
-    --rigr-bg-light: var(--color-background-secondary, #1a1a1a);
-    --rigr-bg-header: var(--color-background-hover, #262626);
-    --rigr-bg-content: var(--color-background-primary, #1a1a1a);
-    --rigr-text-primary: var(--color-foreground-primary, #e0e0e0);
-    --rigr-text-secondary: var(--color-foreground-secondary, #9e9e9e);
-    --rigr-id-color: #90caf9;
-    --rigr-id-bg: rgba(144, 202, 249, 0.15);
-    --rigr-type-color: #bcaaa4;
+body[data-theme="dark"] .precept-item,
+body[data-theme="dark"] .precept-graphic,
+body[data-theme="dark"] .precept-code {
+    --precept-border-color: var(--color-background-border, #404040);
+    --precept-bg-light: var(--color-background-secondary, #1a1a1a);
+    --precept-bg-header: var(--color-background-hover, #262626);
+    --precept-bg-content: var(--color-background-primary, #1a1a1a);
+    --precept-text-primary: var(--color-foreground-primary, #e0e0e0);
+    --precept-text-secondary: var(--color-foreground-secondary, #9e9e9e);
+    --precept-id-color: #90caf9;
+    --precept-id-bg: rgba(144, 202, 249, 0.15);
+    --precept-type-color: #bcaaa4;
 }
 
 /* -----------------------------------------------------------------------------
@@ -342,13 +342,13 @@ body[data-theme="dark"] .rigr-code {
    ----------------------------------------------------------------------------- */
 @media (prefers-color-scheme: dark) {
     :root {
-        --rigr-border-color: rgba(255, 255, 255, 0.1);
-        --rigr-bg-light: rgba(255, 255, 255, 0.03);
-        --rigr-bg-header: rgba(255, 255, 255, 0.05);
-        --rigr-bg-content: transparent;
-        --rigr-id-color: #90caf9;
-        --rigr-id-bg: rgba(144, 202, 249, 0.15);
-        --rigr-type-color: #bcaaa4;
+        --precept-border-color: rgba(255, 255, 255, 0.1);
+        --precept-bg-light: rgba(255, 255, 255, 0.03);
+        --precept-bg-header: rgba(255, 255, 255, 0.05);
+        --precept-bg-content: transparent;
+        --precept-id-color: #90caf9;
+        --precept-id-bg: rgba(144, 202, 249, 0.15);
+        --precept-type-color: #bcaaa4;
     }
 }
 
@@ -359,11 +359,11 @@ body[data-theme="dark"] .rigr-code {
 /* -----------------------------------------------------------------------------
    Graphic Container - Full width display
    ----------------------------------------------------------------------------- */
-.rigr-graphic {
+.precept-graphic {
     margin: 2em 0;
     padding: 0;
-    background: var(--rigr-bg-light);
-    border: 1px solid var(--rigr-border-color);
+    background: var(--precept-bg-light);
+    border: 1px solid var(--precept-border-color);
     border-radius: 4px;
     overflow: hidden;
 }
@@ -371,25 +371,25 @@ body[data-theme="dark"] .rigr-code {
 /* -----------------------------------------------------------------------------
    Graphic Content - Full width images and diagrams (per 00305)
    ----------------------------------------------------------------------------- */
-.rigr-graphic-content {
+.precept-graphic-content {
     padding: 1em;
-    background: var(--rigr-bg-content);
+    background: var(--precept-bg-content);
     overflow-x: auto;
     text-align: center;
 }
 
 /* Clickable link wrapper for full-size view (per 00305) */
-.rigr-graphic-link {
+.precept-graphic-link {
     display: block;
     cursor: zoom-in;
 }
 
-.rigr-graphic-link:hover img {
+.precept-graphic-link:hover img {
     opacity: 0.9;
 }
 
 /* Images display at full width */
-.rigr-graphic-content img {
+.precept-graphic-content img {
     max-width: 100%;
     height: auto;
     display: block;
@@ -398,8 +398,8 @@ body[data-theme="dark"] .rigr-code {
 }
 
 /* PlantUML SVG objects display at full width */
-.rigr-graphic-content object,
-.rigr-graphic-content svg {
+.precept-graphic-content object,
+.precept-graphic-content svg {
     max-width: 100%;
     height: auto;
     display: block;
@@ -407,16 +407,16 @@ body[data-theme="dark"] .rigr-code {
 }
 
 /* PlantUML container */
-.rigr-graphic-uml {
+.precept-graphic-uml {
     width: 100%;
 }
 
-.rigr-graphic-uml .plantuml {
+.precept-graphic-uml .plantuml {
     width: 100%;
     overflow-x: auto;
 }
 
-.rigr-graphic-uml object {
+.precept-graphic-uml object {
     max-width: 100%;
     width: auto !important;
     height: auto !important;
@@ -425,23 +425,23 @@ body[data-theme="dark"] .rigr-code {
 /* -----------------------------------------------------------------------------
    Graphic Caption (per 00305)
    ----------------------------------------------------------------------------- */
-.rigr-graphic-caption {
+.precept-graphic-caption {
     padding: 0.75em 1em;
-    background: var(--rigr-bg-header);
-    border-top: 1px solid var(--rigr-border-color);
+    background: var(--precept-bg-header);
+    border-top: 1px solid var(--precept-border-color);
     text-align: center;
     font-style: italic;
-    color: var(--rigr-text-secondary);
+    color: var(--precept-text-secondary);
 }
 
-.rigr-graphic-caption p {
+.precept-graphic-caption p {
     margin: 0;
 }
 
 /* -----------------------------------------------------------------------------
    Theme: Read the Docs Compatibility for Graphics
    ----------------------------------------------------------------------------- */
-.rst-content .rigr-graphic-content img {
+.rst-content .precept-graphic-content img {
     max-width: 100%;
 }
 
@@ -452,46 +452,46 @@ body[data-theme="dark"] .rigr-code {
 /* -----------------------------------------------------------------------------
    Code Container
    ----------------------------------------------------------------------------- */
-.rigr-code {
+.precept-code {
     margin: 2em 0;
     padding: 0;
-    background: var(--rigr-bg-light);
-    border: 1px solid var(--rigr-border-color);
+    background: var(--precept-bg-light);
+    border: 1px solid var(--precept-border-color);
     border-radius: 4px;
     overflow: hidden;
 }
 
 /* Code content - the actual code block */
-.rigr-code-content {
+.precept-code-content {
     margin: 0;
     padding: 0;
 }
 
 /* Remove extra margins from nested code-block */
-.rigr-code-content .highlight {
+.precept-code-content .highlight {
     margin: 0;
     border-radius: 0;
 }
 
-.rigr-code-content pre {
+.precept-code-content pre {
     margin: 0;
     border-radius: 0;
     border: none;
-    border-top: 1px solid var(--rigr-border-color);
-    border-bottom: 1px solid var(--rigr-border-color);
+    border-top: 1px solid var(--precept-border-color);
+    border-bottom: 1px solid var(--precept-border-color);
 }
 
 /* Code Caption */
-.rigr-code-caption {
+.precept-code-caption {
     padding: 0.75em 1em;
-    background: var(--rigr-bg-header);
-    border-top: 1px solid var(--rigr-border-color);
+    background: var(--precept-bg-header);
+    border-top: 1px solid var(--precept-border-color);
     text-align: center;
     font-style: italic;
-    color: var(--rigr-text-secondary);
+    color: var(--precept-text-secondary);
 }
 
-.rigr-code-caption p {
+.precept-code-caption p {
     margin: 0;
 }
 
@@ -499,17 +499,17 @@ body[data-theme="dark"] .rigr-code {
    Print Styles
    ----------------------------------------------------------------------------- */
 @media print {
-    .rigr-item {
+    .precept-item {
         break-inside: avoid;
         border: 1px solid #ccc;
         box-shadow: none;
     }
 
-    .rigr-graphic {
+    .precept-graphic {
         break-inside: avoid;
     }
 
-    .rigr-status-badge {
+    .precept-status-badge {
         border: 1px solid currentColor;
     }
 }

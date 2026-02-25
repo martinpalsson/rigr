@@ -238,7 +238,7 @@ describe('rstFullParser', () => {
     });
   });
 
-  describe('Rigr directives', () => {
+  describe('Precept directives', () => {
     it('should parse an item directive', () => {
       const rst = [
         '.. item:: My Requirement',

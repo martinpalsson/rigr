@@ -1,11 +1,11 @@
-.. _rigr-configuration:
+.. _precept-configuration:
 
 ======================
 Configuration System
 ======================
 
-This document specifies requirements for the Rigr configuration system,
-including Sphinx conf.py parsing, VS Code settings, and configuration management.
+This document specifies requirements for the Precept configuration system,
+including precept.json parsing, VS Code settings, and configuration management.
 
 .. contents:: Table of Contents
    :local:
@@ -34,20 +34,22 @@ Stakeholder Requirements
    Users shall be able to use the extension immediately without mandatory
    configuration, with sensible defaults for common use cases.
 
-.. item:: Rationale for Sphinx integration
+.. item:: Rationale for JSON configuration
    :id: 00003
    :type: rationale
    :level: stakeholder
    :status: approved
    :justifies: 00001
 
-   Sphinx conf.py is chosen as the primary configuration source because:
+   A JSON configuration file (precept.json) is chosen as the primary
+   configuration source because:
 
-   - Most RST-based documentation projects already use Sphinx
-   - Avoids duplication of configuration between docs and editor
-   - Enables consistent behavior between Sphinx build and VS Code editing
+   - JSON is universally supported and easy to edit
+   - No external tooling or runtime dependencies required
+   - Enables consistent behavior between live preview and static HTML build
+   - Can be version-controlled alongside the requirements
 
-Sphinx Configuration Parsing
+JSON Configuration Parsing
 ============================
 
 .. item:: Primary configuration source
@@ -57,8 +59,8 @@ Sphinx Configuration Parsing
    :status: approved
    :satisfies: 00001
 
-   The extension SHALL read its primary configuration from the Sphinx ``conf.py``
-   file to ensure single source of truth with the documentation build system.
+   The extension SHALL read its primary configuration from a ``precept.json``
+   file to provide a self-contained, dependency-free configuration mechanism.
 
 .. item:: Configuration file discovery
    :id: 00005
@@ -67,37 +69,40 @@ Sphinx Configuration Parsing
    :status: approved
    :satisfies: 00004
 
-   The extension shall search for conf.py in the following locations (in order):
+   The extension shall search for precept.json in the following locations (in order):
 
-   1. ``docs/conf.py`` relative to workspace root
-   2. ``conf.py`` in workspace root
-   3. User-specified path via VS Code settings
+   1. ``docs/precept.json`` relative to workspace root
+   2. ``doc/precept.json`` relative to workspace root
+   3. ``source/precept.json`` relative to workspace root
+   4. ``precept.json`` in workspace root
+   5. Recursive search in subdirectories
 
-.. item:: Python configuration extraction
+.. item:: JSON configuration parsing
    :id: 00006
    :type: requirement
    :level: system
    :status: approved
    :satisfies: 00004
 
-   The extension shall parse Python configuration by executing a Python script
-   to extract configuration as JSON, with fallback to AST parsing if Python
-   is unavailable.
+   The extension shall parse the JSON configuration file directly using
+   the built-in JSON parser, requiring no external tools or runtimes.
 
-.. item:: Configuration variables to extract
+.. item:: Configuration fields to extract
    :id: 00007
    :type: requirement
    :level: system
    :status: approved
    :satisfies: 00004
 
-   The extension shall extract the following configuration from conf.py:
+   The extension shall extract the following configuration from precept.json:
 
-   - ``rigr_object_types``: Object type definitions
-   - ``rigr_levels``: Hierarchy level definitions
-   - ``rigr_link_types``: Relationship type definitions
-   - ``rigr_statuses``: Status value definitions
-   - ``rigr_id_config``: ID format configuration
+   - ``objectTypes``: Object type definitions
+   - ``levels``: Hierarchy level definitions
+   - ``linkTypes``: Relationship type definitions
+   - ``statuses``: Status value definitions
+   - ``idConfig``: ID format configuration
+   - ``customFields``: Custom metadata field definitions
+   - ``theme``: Visual theme selection
 
 Object Type Configuration
 =========================
@@ -170,9 +175,9 @@ Parameter Value References
    :status: draft
    :satisfies: 00312
 
-   The Sphinx extension shall provide a ``:paramval:`` role that renders
+   The renderer shall provide a ``:paramval:`` role that renders
    the value of a parameter item inline. The role takes the parameter's
-   ID as argument and resolves to the parameter's ``:value:`` at build time.
+   ID as argument and resolves to the parameter's ``:value:`` at render time.
 
    Example::
 
@@ -199,11 +204,10 @@ Parameter Value References
    :satisfies: 00314
 
    When a ``:paramval:`` reference cannot be resolved (unknown ID or
-   parameter has no ``:value:`` defined), the extension shall:
+   parameter has no ``:value:`` defined), the renderer shall:
 
    - Display the reference as "???" or "[unknown: ID]"
-   - Generate a WARNING during the Sphinx build
-   - Not fail the build
+   - Not break the page rendering
 
 Terminology References
 ======================
@@ -247,9 +251,9 @@ Terminology References
    :status: draft
    :satisfies: 00317
 
-   The Sphinx extension shall provide a ``:termref:`` role that renders
+   The renderer shall provide a ``:termref:`` role that renders
    the term text of a terminology item inline. The role takes the term's
-   ID as argument and resolves to the term's ``:term:`` value at build time.
+   ID as argument and resolves to the term's ``:term:`` value at render time.
 
    Example::
 
@@ -275,11 +279,10 @@ Terminology References
    :satisfies: 00319
 
    When a ``:termref:`` reference cannot be resolved (unknown ID or
-   item has no ``:term:`` defined), the extension shall:
+   item has no ``:term:`` defined), the renderer shall:
 
    - Display the reference as "???" or "[unknown: ID]"
-   - Generate a WARNING during the Sphinx build
-   - Not fail the build
+   - Not break the page rendering
 
 Level Configuration
 ===================
@@ -340,6 +343,7 @@ Link Type Configuration
    - implements/implemented_by: Implementation links
    - derives_from/derives_to: Derivation relationships
    - tests/tested_by: Verification links
+   - references/referenced_by: Inline reference tracking (auto-injected)
 
 Status Configuration
 ====================
@@ -390,8 +394,8 @@ Custom Fields Configuration
    :status: draft
    :satisfies: 00324
 
-   The extension shall support a ``rigr_custom_fields`` configuration
-   in conf.py that maps field names to lists of valid values. Each value
+   The extension shall support a ``customFields`` configuration
+   in precept.json that maps field names to lists of valid values. Each value
    entry shall have:
 
    - value: The string value used in RST (e.g., "widget-pro")
@@ -399,16 +403,16 @@ Custom Fields Configuration
 
    Example::
 
-      rigr_custom_fields = {
+      "customFields": {
           "product": [
               {"value": "widget-pro", "title": "Widget Pro"},
-              {"value": "widget-lite", "title": "Widget Lite"},
+              {"value": "widget-lite", "title": "Widget Lite"}
           ],
           "priority": [
               {"value": "high", "title": "High"},
               {"value": "medium", "title": "Medium"},
-              {"value": "low", "title": "Low"},
-          ],
+              {"value": "low", "title": "Low"}
+          ]
       }
 
 .. item:: Custom field IntelliSense completion
@@ -420,7 +424,7 @@ Custom Fields Configuration
 
    When editing an item directive and the cursor is on a custom field
    line (e.g., ``:product:``), the extension shall provide completion
-   suggestions for all valid values defined in ``rigr_custom_fields``.
+   suggestions for all valid values defined in ``customFields``.
 
 .. item:: Custom field directive acceptance
    :id: 00327
@@ -429,8 +433,8 @@ Custom Fields Configuration
    :status: draft
    :satisfies: 00324
 
-   The Sphinx extension shall accept any custom field defined in
-   ``rigr_custom_fields`` as a valid option on item directives,
+   The renderer shall accept any custom field defined in
+   ``customFields`` as a valid option on item directives,
    without requiring code changes.
 
 ID Configuration
@@ -484,7 +488,7 @@ Default Configuration
    :status: approved
    :satisfies: 00002
 
-   If no conf.py is found or parsing fails, the extension shall use a
+   If no precept.json is found or parsing fails, the extension shall use a
    minimal default configuration that enables basic functionality.
 
 .. item:: Graceful degradation
@@ -519,9 +523,9 @@ VS Code Settings
 
    Validation behavior settings shall include:
 
-   - ``rigr.validation.automatic``: Enable/disable automatic validation
-   - ``rigr.validation.onSave``: Validate on file save
-   - ``rigr.validation.debounceMs``: Debounce interval (default: 500ms)
+   - ``requirements.validation.automatic``: Enable/disable automatic validation
+   - ``requirements.validation.onSave``: Validate on file save
+   - ``requirements.validation.debounceMs``: Debounce interval (default: 500ms)
 
 .. item:: UI preference settings
    :id: 00023
@@ -532,8 +536,8 @@ VS Code Settings
 
    UI preference settings shall include:
 
-   - ``rigr.treeView.groupBy``: Grouping mode (type/file/status/level)
-   - ``rigr.treeView.showStatusIcons``: Show status icons in tree
+   - ``requirements.treeView.groupBy``: Grouping mode (type/file/status/level)
+   - ``requirements.treeView.showStatusIcons``: Show status icons in tree
 
 .. item:: Performance settings
    :id: 00024
@@ -544,8 +548,8 @@ VS Code Settings
 
    Performance settings shall include:
 
-   - ``rigr.indexing.maxFiles``: Maximum files to index (default: 1000)
-   - ``rigr.indexing.excludePatterns``: Glob patterns to exclude
+   - ``requirements.indexing.maxFiles``: Maximum files to index (default: 1000)
+   - ``requirements.indexing.excludePatterns``: Glob patterns to exclude
 
 .. item:: Validation debounce parameter
    :id: 00025
@@ -575,8 +579,8 @@ Configuration Refresh
    :status: approved
    :satisfies: 00001
 
-   The extension shall provide a command "Rigr: Reload Configuration"
-   to manually reload configuration from conf.py.
+   The extension shall provide a command "Precept: Reload Configuration"
+   to manually reload configuration from precept.json.
 
 .. item:: Automatic configuration reload
    :id: 00028
@@ -585,7 +589,7 @@ Configuration Refresh
    :status: approved
    :satisfies: 00027
 
-   The extension shall automatically reload configuration when conf.py
+   The extension shall automatically reload configuration when precept.json
    is saved, without requiring manual refresh.
 
 .. item:: Configuration status indicator
@@ -597,8 +601,8 @@ Configuration Refresh
 
    The status bar shall display configuration status:
 
-   - "Rigr: Ready (N objects)" when configuration is loaded successfully
-   - "Rigr: Config Error" when parsing failed (clickable to view error)
+   - "Precept: Ready (N objects)" when configuration is loaded successfully
+   - "Precept: Config Error" when parsing failed (clickable to view error)
 
 .. item:: Configuration change notification
    :id: 00030

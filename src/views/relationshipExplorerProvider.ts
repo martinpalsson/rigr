@@ -12,7 +12,7 @@
 
 import * as vscode from 'vscode';
 import { IndexBuilder } from '../indexing/indexBuilder';
-import { RigrConfig, RequirementObject } from '../types';
+import { PreceptConfig, RequirementObject } from '../types';
 
 /**
  * Direction icons for relationship display
@@ -135,13 +135,13 @@ export class RelationshipTreeItem extends vscode.TreeItem {
  */
 export class RelationshipExplorerProvider implements vscode.TreeDataProvider<RelationshipTreeItem> {
   private indexBuilder: IndexBuilder;
-  private config: RigrConfig;
+  private config: PreceptConfig;
   private _onDidChangeTreeData = new vscode.EventEmitter<RelationshipTreeItem | undefined | null | void>();
   readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
   private selectedRequirementId: string | null = null;
 
-  constructor(indexBuilder: IndexBuilder, config: RigrConfig) {
+  constructor(indexBuilder: IndexBuilder, config: PreceptConfig) {
     this.indexBuilder = indexBuilder;
     this.config = config;
   }
@@ -149,7 +149,7 @@ export class RelationshipExplorerProvider implements vscode.TreeDataProvider<Rel
   /**
    * Update configuration
    */
-  public updateConfig(config: RigrConfig): void {
+  public updateConfig(config: PreceptConfig): void {
     this.config = config;
     this.refresh();
   }
@@ -406,7 +406,7 @@ export class RelationshipExplorerProvider implements vscode.TreeDataProvider<Rel
 export function registerRelationshipExplorer(
   context: vscode.ExtensionContext,
   indexBuilder: IndexBuilder,
-  config: RigrConfig
+  config: PreceptConfig
 ): RelationshipExplorerProvider {
   const provider = new RelationshipExplorerProvider(indexBuilder, config);
 

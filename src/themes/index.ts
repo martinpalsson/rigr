@@ -1,7 +1,7 @@
 /**
- * Selectable HTML themes for Rigr output
+ * Selectable HTML themes for Precept output
  *
- * Each theme defines colour values for CSS custom properties (--rigr-*).
+ * Each theme defines colour values for CSS custom properties (--precept-*).
  * The base layout CSS stays the same — only colours, typography, and
  * minor accents change per theme.
  */
@@ -29,7 +29,7 @@ export interface ThemeColors {
   linkColor: string;
   linkHover: string;
 
-  /* Rigr ID pill */
+  /* Precept ID pill */
   idColor: string;
   idBg: string;
 
@@ -285,28 +285,28 @@ export function getTheme(name: string): ThemeDefinition {
 }
 
 /**
- * Generate a CSS `:root { --rigr-*: ...; }` block for a given mode.
+ * Generate a CSS `:root { --precept-*: ...; }` block for a given mode.
  */
 export function generateThemeVars(theme: ThemeDefinition, mode: 'light' | 'dark'): string {
   const c = theme[mode];
   return `:root {
-  --rigr-sidebar-bg: ${c.sidebarBg};
-  --rigr-sidebar-text: ${c.sidebarText};
-  --rigr-sidebar-active-bg: ${c.sidebarActiveBg};
-  --rigr-sidebar-active-text: ${c.sidebarActiveText};
-  --rigr-sidebar-border: ${c.sidebarBorder};
-  --rigr-page-bg: ${c.pageBg};
-  --rigr-text-primary: ${c.textPrimary};
-  --rigr-text-secondary: ${c.textSecondary};
-  --rigr-border-color: ${c.borderColor};
-  --rigr-bg-light: ${c.bgLight};
-  --rigr-bg-header: ${c.bgHeader};
-  --rigr-bg-content: ${c.bgContent};
-  --rigr-link-color: ${c.linkColor};
-  --rigr-link-hover: ${c.linkHover};
-  --rigr-id-color: ${c.idColor};
-  --rigr-id-bg: ${c.idBg};
-  --rigr-code-block-bg: ${c.codeBlockBg};
+  --precept-sidebar-bg: ${c.sidebarBg};
+  --precept-sidebar-text: ${c.sidebarText};
+  --precept-sidebar-active-bg: ${c.sidebarActiveBg};
+  --precept-sidebar-active-text: ${c.sidebarActiveText};
+  --precept-sidebar-border: ${c.sidebarBorder};
+  --precept-page-bg: ${c.pageBg};
+  --precept-text-primary: ${c.textPrimary};
+  --precept-text-secondary: ${c.textSecondary};
+  --precept-border-color: ${c.borderColor};
+  --precept-bg-light: ${c.bgLight};
+  --precept-bg-header: ${c.bgHeader};
+  --precept-bg-content: ${c.bgContent};
+  --precept-link-color: ${c.linkColor};
+  --precept-link-hover: ${c.linkHover};
+  --precept-id-color: ${c.idColor};
+  --precept-id-bg: ${c.idBg};
+  --precept-code-block-bg: ${c.codeBlockBg};
 }`;
 }
 

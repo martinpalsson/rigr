@@ -4,7 +4,7 @@
  * Main orchestrator that runs all deep validation checks and generates comprehensive report
  */
 
-import { RequirementObject, RigrConfig } from '../types';
+import { RequirementObject, PreceptConfig } from '../types';
 import {
   DeepValidationReport,
   DeepValidationConfig,
@@ -29,9 +29,9 @@ import { generateGapRecommendations } from './gapAnalyzer';
  */
 export async function runDeepValidation(
   requirements: RequirementObject[],
-  rigrConfig?: RigrConfig
+  preceptConfig?: PreceptConfig
 ): Promise<DeepValidationReport> {
-  const config = getDeepValidationConfig(rigrConfig);
+  const config = getDeepValidationConfig(preceptConfig);
   const timestamp = new Date();
   
   // Run all validation checks
@@ -272,7 +272,7 @@ export function exportReportAsText(report: DeepValidationReport): string {
   const lines: string[] = [];
   
   lines.push('═══════════════════════════════════════════════════════════');
-  lines.push('RIGR DEEP VALIDATION REPORT');
+  lines.push('PRECEPT DEEP VALIDATION REPORT');
   lines.push('═══════════════════════════════════════════════════════════');
   lines.push(`Generated: ${report.timestamp.toISOString()}`);
   lines.push('');

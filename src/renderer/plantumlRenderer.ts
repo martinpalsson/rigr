@@ -151,7 +151,7 @@ export function plantUmlFallbackHtml(source: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
   return [
-    '<div class="rigr-graphic-uml rigr-plantuml-fallback">',
+    '<div class="precept-graphic-uml precept-plantuml-fallback">',
     '<p class="plantuml-notice"><em>PlantUML diagram (source shown — install PlantUML for rendered output)</em></p>',
     `<pre class="plantuml-source"><code>${escaped}</code></pre>`,
     '</div>',

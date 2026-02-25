@@ -12,7 +12,7 @@
  * - DV-010: Gap analysis with recommendations
  */
 
-import { RequirementObject, RigrConfig, LinkType } from '../types';
+import { RequirementObject, PreceptConfig, LinkType } from '../types';
 
 /**
  * Severity levels for validation issues
@@ -262,10 +262,10 @@ export const DEFAULT_DEEP_VALIDATION_CONFIG: DeepValidationConfig = {
 };
 
 /**
- * Extract configuration from Rigr config or use defaults
+ * Extract configuration from Precept config or use defaults
  */
-export function getDeepValidationConfig(rigrConfig?: RigrConfig): DeepValidationConfig {
-  // In future, parse from rigrConfig.extra.rigr_validation_thresholds
+export function getDeepValidationConfig(preceptConfig?: PreceptConfig): DeepValidationConfig {
+  // In future, parse from preceptConfig.extra.precept_validation_thresholds
   // For now, use defaults
   return DEFAULT_DEEP_VALIDATION_CONFIG;
 }
