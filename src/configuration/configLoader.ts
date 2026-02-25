@@ -51,6 +51,17 @@ export async function findRigrJsonPath(workspaceRoot: string): Promise<string | 
 }
 
 /**
+ * Ensure the built-in 'references' link type is present.
+ * This is used internally for :termref:, :paramval:, and :item: inline refs.
+ */
+function ensureReferencesLinkType(linkTypes: LinkType[]): LinkType[] {
+  if (linkTypes.some(lt => lt.option === 'references')) {
+    return linkTypes;
+  }
+  return [...linkTypes, { option: 'references', incoming: 'referenced_by', outgoing: 'references' }];
+}
+
+/**
  * Parse raw config JSON into typed config
  */
 function parseRawConfig(raw: {
@@ -117,7 +128,7 @@ function parseRawConfig(raw: {
     objectTypes: objectTypes.length > 0 ? objectTypes : DEFAULT_CONFIG.objectTypes,
     levels: levels.length > 0 ? levels : DEFAULT_CONFIG.levels,
     idConfig,
-    linkTypes: linkTypes.length > 0 ? linkTypes : DEFAULT_CONFIG.linkTypes,
+    linkTypes: ensureReferencesLinkType(linkTypes.length > 0 ? linkTypes : DEFAULT_CONFIG.linkTypes),
     statuses: statuses.length > 0 ? statuses : DEFAULT_CONFIG.statuses,
     customFields,
     id_regex,

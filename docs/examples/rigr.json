@@ -37,7 +37,8 @@
     { "option": "tests", "incoming": "tested_by", "outgoing": "tests", "style": "#AA0000" },
     { "option": "links", "incoming": "linked_from", "outgoing": "links_to" },
     { "option": "depends_on", "incoming": "blocks", "outgoing": "depends_on" },
-    { "option": "justifies", "incoming": "justified_by", "outgoing": "justifies", "style": "#FF6600" }
+    { "option": "justifies", "incoming": "justified_by", "outgoing": "justifies", "style": "#FF6600" },
+    { "option": "references", "incoming": "referenced_by", "outgoing": "references" }
   ],
 
   "statuses": [
