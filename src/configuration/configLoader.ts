@@ -1,13 +1,11 @@
 /**
- * Configuration loader for Rigr conf.py
- * Extracts requirements configuration using Python execution
+ * Configuration loader for Rigr
+ * Loads requirements configuration from rigr.json
  */
 
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { exec } from 'child_process';
-import { promisify } from 'util';
 import {
   RigrConfig,
   ObjectType,
@@ -22,68 +20,26 @@ import {
 import { DEFAULT_CONFIG, buildIdRegex } from './defaults';
 import { getSettings } from './settingsManager';
 
-const execAsync = promisify(exec);
-
 /**
- * Python script to extract requirements configuration as JSON
+ * Locate rigr.json file in the workspace
  */
-const PYTHON_EXTRACT_SCRIPT = `
-import sys
-import json
-import os
-
-# Add the config directory to path
-conf_dir = sys.argv[1] if len(sys.argv) > 1 else '.'
-sys.path.insert(0, conf_dir)
-
-# Also add parent directory in case conf.py imports from there
-parent_dir = os.path.dirname(conf_dir)
-if parent_dir:
-    sys.path.insert(0, parent_dir)
-
-try:
-    import conf
-
-    # Rigr configuration
-    result = {
-        'rigr_object_types': getattr(conf, 'rigr_object_types', []),
-        'rigr_levels': getattr(conf, 'rigr_levels', []),
-        'rigr_id_config': getattr(conf, 'rigr_id_config', None),
-        'rigr_link_types': getattr(conf, 'rigr_link_types', []),
-        'rigr_statuses': getattr(conf, 'rigr_statuses', []),
-        'rigr_custom_fields': getattr(conf, 'rigr_custom_fields', {}),
-        'rigr_id_regex': getattr(conf, 'rigr_id_regex', None),
-        'rigr_relationships': getattr(conf, 'rigr_relationships', None),
-        # Legacy support
-        'rigr_id_prefixes': getattr(conf, 'rigr_id_prefixes', []),
-    }
-
-    print(json.dumps(result))
-except Exception as e:
-    print(json.dumps({'error': str(e)}), file=sys.stderr)
-    sys.exit(1)
-`;
-
-/**
- * Locate conf.py file in the workspace
- */
-export async function findConfPyPath(workspaceRoot: string): Promise<string | null> {
+export async function findRigrJsonPath(workspaceRoot: string): Promise<string | null> {
   const possiblePaths = [
-    path.join(workspaceRoot, 'docs', 'conf.py'),
-    path.join(workspaceRoot, 'doc', 'conf.py'),
-    path.join(workspaceRoot, 'source', 'conf.py'),
-    path.join(workspaceRoot, 'conf.py'),
+    path.join(workspaceRoot, 'docs', 'rigr.json'),
+    path.join(workspaceRoot, 'doc', 'rigr.json'),
+    path.join(workspaceRoot, 'source', 'rigr.json'),
+    path.join(workspaceRoot, 'rigr.json'),
   ];
 
-  for (const confPath of possiblePaths) {
-    if (fs.existsSync(confPath)) {
-      return confPath;
+  for (const jsonPath of possiblePaths) {
+    if (fs.existsSync(jsonPath)) {
+      return jsonPath;
     }
   }
 
-  // Search for conf.py in subdirectories (limited depth)
+  // Search for rigr.json in subdirectories (limited depth)
   try {
-    const files = await vscode.workspace.findFiles('**/conf.py', '**/node_modules/**', 10);
+    const files = await vscode.workspace.findFiles('**/rigr.json', '**/node_modules/**', 10);
     if (files.length > 0) {
       return files[0].fsPath;
     }
@@ -95,34 +51,33 @@ export async function findConfPyPath(workspaceRoot: string): Promise<string | nu
 }
 
 /**
- * Parse raw config from Python output into typed config
+ * Parse raw config JSON into typed config
  */
 function parseRawConfig(raw: {
-  rigr_object_types?: Array<Record<string, unknown>>;
-  rigr_levels?: Array<Record<string, unknown>>;
-  rigr_id_config?: Record<string, unknown> | null;
-  rigr_link_types?: Array<Record<string, unknown>>;
-  rigr_statuses?: Array<Record<string, unknown>>;
-  rigr_custom_fields?: Record<string, Array<Record<string, unknown>>>;
-  rigr_id_regex?: string;
-  rigr_relationships?: Record<string, string>;
-  rigr_id_prefixes?: Array<Record<string, unknown>>; // Legacy
+  objectTypes?: Array<Record<string, unknown>>;
+  levels?: Array<Record<string, unknown>>;
+  idConfig?: Record<string, unknown> | null;
+  linkTypes?: Array<Record<string, unknown>>;
+  statuses?: Array<Record<string, unknown>>;
+  customFields?: Record<string, Array<Record<string, unknown>>>;
+  extraOptions?: string[];
+  defaultStatus?: string;
+  idRegex?: string;
+  relationships?: Record<string, string>;
 }): RigrConfig {
-  const objectTypes: ObjectType[] = (raw.rigr_object_types || []).map((t) => ({
+  const objectTypes: ObjectType[] = (raw.objectTypes || []).map((t) => ({
     type: String(t.type || ''),
     title: String(t.title || t.type || ''),
     color: t.color ? String(t.color) : undefined,
     style: t.style ? String(t.style) : undefined,
   })).filter(t => t.type);
 
-  // Parse levels from rigr_levels
-  const levels: Level[] = (raw.rigr_levels || []).map((l) => ({
+  const levels: Level[] = (raw.levels || []).map((l) => ({
     level: String(l.level || ''),
     title: String(l.title || l.level || ''),
   })).filter(l => l.level);
 
-  // Parse ID config
-  const rawIdConfig = raw.rigr_id_config;
+  const rawIdConfig = raw.idConfig;
   const idConfig: IdConfig = rawIdConfig ? {
     prefix: String(rawIdConfig.prefix || ''),
     separator: String(rawIdConfig.separator || ''),
@@ -130,22 +85,22 @@ function parseRawConfig(raw: {
     start: Number(rawIdConfig.start) || 1,
   } : DEFAULT_CONFIG.idConfig;
 
-  const linkTypes: LinkType[] = (raw.rigr_link_types || []).map((l) => ({
+  const linkTypes: LinkType[] = (raw.linkTypes || []).map((l) => ({
     option: String(l.option || ''),
     incoming: String(l.incoming || l.option || ''),
     outgoing: String(l.outgoing || l.option || ''),
     style: l.style ? String(l.style) : undefined,
   })).filter(l => l.option);
 
-  const statuses: Status[] = (raw.rigr_statuses || []).map((s) => ({
+  const statuses: Status[] = (raw.statuses || []).map((s) => ({
     status: String(s.status || ''),
     color: s.color ? String(s.color) : undefined,
   })).filter(s => s.status);
 
   // Parse custom fields
   const customFields: CustomFields = {};
-  if (raw.rigr_custom_fields && typeof raw.rigr_custom_fields === 'object') {
-    for (const [fieldName, values] of Object.entries(raw.rigr_custom_fields)) {
+  if (raw.customFields && typeof raw.customFields === 'object') {
+    for (const [fieldName, values] of Object.entries(raw.customFields)) {
       if (Array.isArray(values)) {
         customFields[fieldName] = values.map((v): CustomFieldValue => ({
           value: String(v.value || ''),
@@ -166,102 +121,33 @@ function parseRawConfig(raw: {
     statuses: statuses.length > 0 ? statuses : DEFAULT_CONFIG.statuses,
     customFields,
     id_regex,
-    traceability_item_id_regex: raw.rigr_id_regex,
-    traceability_relationships: raw.rigr_relationships,
+    traceability_item_id_regex: raw.idRegex,
+    traceability_relationships: raw.relationships,
   };
 }
 
 /**
- * Load configuration from conf.py using Python
+ * Load configuration from rigr.json
  */
-export async function loadConfigFromConfPy(confPyPath: string): Promise<ConfigLoadResult> {
-  const confDir = path.dirname(confPyPath);
-
+export async function loadConfigFromJson(jsonPath: string): Promise<ConfigLoadResult> {
   try {
-    // Write temp script file
-    const tempScriptPath = path.join(confDir, '__extract_config.py');
-    fs.writeFileSync(tempScriptPath, PYTHON_EXTRACT_SCRIPT);
+    const content = await fs.promises.readFile(jsonPath, 'utf-8');
+    const rawConfig = JSON.parse(content);
+    const config = parseRawConfig(rawConfig);
+    const theme = typeof rawConfig.theme === 'string' ? rawConfig.theme : undefined;
 
-    try {
-      // Execute Python to extract config
-      const { stdout, stderr } = await execAsync(
-        `python3 "${tempScriptPath}" "${confDir}"`,
-        {
-          cwd: confDir,
-          timeout: 10000, // 10 second timeout
-        }
-      );
-
-      if (stderr && stderr.includes('error')) {
-        return {
-          success: false,
-          error: `Python error: ${stderr}`,
-          source: 'conf.py',
-        };
-      }
-
-      const rawConfig = JSON.parse(stdout.trim());
-
-      if (rawConfig.error) {
-        return {
-          success: false,
-          error: rawConfig.error,
-          source: 'conf.py',
-        };
-      }
-
-      const config = parseRawConfig(rawConfig);
-
-      return {
-        success: true,
-        config,
-        source: 'conf.py',
-      };
-    } finally {
-      // Clean up temp script
-      try {
-        fs.unlinkSync(tempScriptPath);
-      } catch {
-        // Ignore cleanup errors
-      }
-    }
+    return {
+      success: true,
+      config,
+      source: 'rigr.json',
+      theme,
+    };
   } catch (error) {
-    // Try python instead of python3
-    try {
-      const tempScriptPath = path.join(confDir, '__extract_config.py');
-      fs.writeFileSync(tempScriptPath, PYTHON_EXTRACT_SCRIPT);
-
-      try {
-        const { stdout } = await execAsync(
-          `python "${tempScriptPath}" "${confDir}"`,
-          {
-            cwd: confDir,
-            timeout: 10000,
-          }
-        );
-
-        const rawConfig = JSON.parse(stdout.trim());
-        const config = parseRawConfig(rawConfig);
-
-        return {
-          success: true,
-          config,
-          source: 'conf.py',
-        };
-      } finally {
-        try {
-          fs.unlinkSync(tempScriptPath);
-        } catch {
-          // Ignore
-        }
-      }
-    } catch {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : String(error),
-        source: 'conf.py',
-      };
-    }
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+      source: 'rigr.json',
+    };
   }
 }
 
@@ -293,7 +179,7 @@ export function loadConfigFromSettings(): ConfigLoadResult {
 
 /**
  * Main configuration loading function
- * Tries sources in order: VS Code settings (if override enabled) -> conf.py -> defaults
+ * Tries sources in order: VS Code settings (if override enabled) -> rigr.json -> defaults
  */
 export async function loadConfiguration(workspaceRoot: string): Promise<ConfigLoadResult> {
   // Check if settings override is enabled
@@ -305,15 +191,15 @@ export async function loadConfiguration(workspaceRoot: string): Promise<ConfigLo
     }
   }
 
-  // Try to find and load conf.py
-  const confPyPath = await findConfPyPath(workspaceRoot);
-  if (confPyPath) {
-    const confPyResult = await loadConfigFromConfPy(confPyPath);
-    if (confPyResult.success) {
-      return confPyResult;
+  // Try to find and load rigr.json
+  const jsonPath = await findRigrJsonPath(workspaceRoot);
+  if (jsonPath) {
+    const jsonResult = await loadConfigFromJson(jsonPath);
+    if (jsonResult.success) {
+      return jsonResult; // includes theme if present
     }
     // Log error but continue to defaults
-    console.warn(`Failed to load conf.py: ${confPyResult.error}`);
+    console.warn(`Failed to load rigr.json: ${jsonResult.error}`);
   }
 
   // Fall back to defaults
@@ -325,14 +211,14 @@ export async function loadConfiguration(workspaceRoot: string): Promise<ConfigLo
 }
 
 /**
- * Create a file watcher for conf.py changes
+ * Create a file watcher for rigr.json changes
  */
-export function createConfPyWatcher(
+export function createConfigWatcher(
   workspaceRoot: string,
   onConfigChange: () => void
 ): vscode.Disposable {
   const watcher = vscode.workspace.createFileSystemWatcher(
-    new vscode.RelativePattern(workspaceRoot, '**/conf.py')
+    new vscode.RelativePattern(workspaceRoot, '**/rigr.json')
   );
 
   const disposables = [
@@ -351,8 +237,9 @@ export function createConfPyWatcher(
 export class ConfigurationManager {
   private static instance: ConfigurationManager;
   private config: RigrConfig = DEFAULT_CONFIG;
-  private configSource: 'conf.py' | 'settings' | 'defaults' = 'defaults';
-  private confPyPath: string | null = null;
+  private configSource: 'rigr.json' | 'settings' | 'defaults' = 'defaults';
+  private rigrJsonPath: string | null = null;
+  private themeName: string = 'default';
   private disposables: vscode.Disposable[] = [];
   private onConfigChangeEmitter = new vscode.EventEmitter<RigrConfig>();
 
@@ -374,9 +261,9 @@ export class ConfigurationManager {
     // Load initial configuration
     await this.reload(workspaceRoot);
 
-    // Set up conf.py watcher
+    // Set up rigr.json watcher
     this.disposables.push(
-      createConfPyWatcher(workspaceRoot, () => this.reload(workspaceRoot))
+      createConfigWatcher(workspaceRoot, () => this.reload(workspaceRoot))
     );
 
     // Set up settings change listener
@@ -398,6 +285,7 @@ export class ConfigurationManager {
     if (result.success && result.config) {
       this.config = result.config;
       this.configSource = result.source;
+      this.themeName = result.theme || 'default';
       this.onConfigChangeEmitter.fire(this.config);
     }
   }
@@ -412,15 +300,22 @@ export class ConfigurationManager {
   /**
    * Get configuration source
    */
-  public getConfigSource(): 'conf.py' | 'settings' | 'defaults' {
+  public getConfigSource(): 'rigr.json' | 'settings' | 'defaults' {
     return this.configSource;
   }
 
   /**
-   * Get conf.py path if found
+   * Get the selected theme name
    */
-  public getConfPyPath(): string | null {
-    return this.confPyPath;
+  public getThemeName(): string {
+    return this.themeName;
+  }
+
+  /**
+   * Get rigr.json path if found
+   */
+  public getRigrJsonPath(): string | null {
+    return this.rigrJsonPath;
   }
 
   /**

@@ -23,7 +23,7 @@
   "activationEvents": [
     "onLanguage:restructuredtext",
     "workspaceContains:**/*.rst",
-    "workspaceContains:**/conf.py"
+    "workspaceContains:**/rigr.json"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -75,6 +75,11 @@
       {
         "command": "requirements.viewDocumentation",
         "title": "Rigr: View Documentation"
+      },
+      {
+        "command": "requirements.openPreview",
+        "title": "Rigr: Open RST Preview",
+        "icon": "$(open-preview)"
       }
     ],
     "configuration": {
@@ -107,7 +112,11 @@
         },
         "requirements.treeView.groupBy": {
           "type": "string",
-          "enum": ["type", "file", "status"],
+          "enum": [
+            "type",
+            "file",
+            "status"
+          ],
           "default": "type",
           "description": "Group requirements in tree view by"
         },
@@ -126,26 +135,43 @@
           "items": {
             "type": "string"
           },
-          "default": ["**/build/**", "**/_build/**"],
+          "default": [
+            "**/build/**",
+            "**/_build/**"
+          ],
           "description": "Glob patterns to exclude from indexing"
         },
         "requirements.config.overrideSphinxConfig": {
           "type": "boolean",
           "default": false,
-          "description": "Override configuration from conf.py with custom settings"
+          "description": "Override configuration from rigr.json with custom settings"
         },
         "requirements.config.customTypes": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "directive": { "type": "string" },
-              "title": { "type": "string" },
-              "prefix": { "type": "string" },
-              "color": { "type": "string" },
-              "style": { "type": "string" }
+              "directive": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "prefix": {
+                "type": "string"
+              },
+              "color": {
+                "type": "string"
+              },
+              "style": {
+                "type": "string"
+              }
             },
-            "required": ["directive", "title", "prefix"]
+            "required": [
+              "directive",
+              "title",
+              "prefix"
+            ]
           },
           "default": [],
           "description": "Custom requirement types (only used if overrideSphinxConfig is true)"
@@ -175,6 +201,13 @@
       }
     ],
     "menus": {
+      "editor/title": [
+        {
+          "command": "requirements.openPreview",
+          "when": "resourceLangId == restructuredtext",
+          "group": "navigation"
+        }
+      ],
       "view/title": [
         {
           "command": "requirements.refreshTreeView",
@@ -201,8 +234,14 @@
     "languages": [
       {
         "id": "restructuredtext",
-        "aliases": ["reStructuredText", "RST"],
-        "extensions": [".rst", ".rest"],
+        "aliases": [
+          "reStructuredText",
+          "RST"
+        ],
+        "extensions": [
+          ".rst",
+          ".rest"
+        ],
         "configuration": "./language-configuration.json"
       }
     ],
@@ -223,6 +262,7 @@
     "test:unit": "jest"
   },
   "devDependencies": {
+    "@types/jest": "^29.0.0",
     "@types/node": "^18.x",
     "@types/vscode": "^1.80.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -230,7 +270,6 @@
     "@vscode/test-electron": "^2.3.0",
     "eslint": "^8.0.0",
     "jest": "^29.0.0",
-    "@types/jest": "^29.0.0",
     "ts-jest": "^29.0.0",
     "typescript": "^5.0.0"
   },
@@ -238,5 +277,8 @@
     "type": "git",
     "url": "https://github.com/martinpalsson/rigr"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "highlight.js": "^11.11.1"
+  }
 }

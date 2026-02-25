@@ -2,33 +2,26 @@
 
 This directory contains example requirements documentation demonstrating the Rigr format.
 
+## Getting Started
+
+1. Open this folder in VS Code with the Rigr extension installed
+2. Open any `.rst` file and use **Rigr: Open RST Preview** (or click the preview icon in the editor toolbar) for live preview
+3. Use **Rigr: Build Documentation** to generate a static HTML site in `_build/html/`
+
 ## Building HTML Documentation
 
-```bash
-# Create virtual environment (first time only)
-python3 -m venv venv
-
-# Activate virtual environment
-source venv/bin/activate  # Linux/macOS
-# or: venv\Scripts\activate  # Windows
-
-# Install dependencies
-pip install -r python-dependencies.txt
-
-# Build HTML
-make html
-
-# Open: _build/html/index.html
-```
+Use the VS Code command palette:
+- **Rigr: Build Documentation** - generates static HTML in `_build/html/`
+- **Rigr: View Documentation** - opens the built HTML in your browser
 
 ## Structure
 
-- **conf.py** - Configuration file defining object types and ID prefixes
+- **rigr.json** - Configuration file defining object types, levels, and link types
 - **requirements/** - Example RST files with requirements
   - **index.rst** - Main index and traceability matrices
-  - **stakeholder.rst** - Stakeholder requirements (STKxxx)
-  - **system.rst** - System requirements (SYSxxx)
-  - **design.rst** - Design specifications and test cases (DSGxxx, TSTxxx)
+  - **architecture.rst** - Architecture requirements
+  - **configuration.rst** - Configuration requirements
+  - And more...
 
 ## Format
 
@@ -36,38 +29,27 @@ All requirements use the unified `.. item::` directive with a `:type:` field:
 
 ```rst
 .. item:: Title of the requirement
-   :id: STK001
+   :id: 0001
    :type: requirement
-   :status: approved
-   :priority: high
-   
+   :level: stakeholder
+   :status: draft
+
    Detailed description of the requirement.
 ```
 
 ### Object Types
 
-- **requirement** - Requirements at any level (STK, SYS)
-- **specification** - Technical design specifications (DSG)
-- **parameter** - Test cases and parameters (TST)
-- **rationale** - Justification and reasoning (RAT)
-- **information** - Supporting information (INFO)
+- **requirement** - Requirements at any level
+- **specification** - Technical design specifications
+- **parameter** - Parameters with values
+- **rationale** - Justification and reasoning
+- **information** - Supporting information
+- **term** - Terminology definitions
 
-### ID Prefixes
+### Link Types
 
-- **STK** - Stakeholder requirements
-- **SYS** - System requirements
-- **DSG** - Design specifications
-- **TST** - Test cases
-
-## Note about Esbonio Errors
-
-If you have the Esbonio (Sphinx language server) extension installed, you may see errors about:
-- "Could not import extension rigr"
-- Unknown directive types
-
-**This is expected and normal.** Rigr is a standalone VS Code extension that provides its own requirements management capabilities. You don't need any additional Sphinx extensions installed to use Rigr. The example files are in RST format which works standalone.
-
-To eliminate the errors, you can either:
-1. Ignore them (they won't affect Rigr functionality)
-2. Disable the Esbonio extension for this workspace
-3. Install additional Sphinx extensions if you want to build Sphinx docs
+- `:satisfies:` - Stakeholder to system traceability
+- `:implements:` - System to design traceability
+- `:tests:` - Design to test traceability
+- `:links:` - General links
+- `:depends_on:` - Dependency tracking

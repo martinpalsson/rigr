@@ -1,0 +1,86 @@
+{
+  "project": "Rigr Requirements Management",
+  "version": "0.1",
+  "theme": "readthedocs",
+
+  "objectTypes": [
+    { "type": "requirement", "title": "Requirement" },
+    { "type": "specification", "title": "Specification" },
+    { "type": "rationale", "title": "Rationale" },
+    { "type": "information", "title": "Information" },
+    { "type": "parameter", "title": "Parameter" },
+    { "type": "term", "title": "Term" },
+    { "type": "graphic", "title": "Graphic" },
+    { "type": "code", "title": "Code" },
+    { "type": "design_element", "title": "Design Element" }
+  ],
+
+  "levels": [
+    { "level": "stakeholder", "title": "Stakeholder" },
+    { "level": "system", "title": "System" },
+    { "level": "component", "title": "Component" },
+    { "level": "software", "title": "Software" },
+    { "level": "hardware", "title": "Hardware" }
+  ],
+
+  "idConfig": {
+    "prefix": "",
+    "separator": "",
+    "padding": 4,
+    "start": 1
+  },
+
+  "linkTypes": [
+    { "option": "satisfies", "incoming": "satisfied_by", "outgoing": "satisfies", "style": "#0000AA" },
+    { "option": "implements", "incoming": "implemented_by", "outgoing": "implements", "style": "#00AA00" },
+    { "option": "derives_from", "incoming": "derives_to", "outgoing": "derives_from" },
+    { "option": "tests", "incoming": "tested_by", "outgoing": "tests", "style": "#AA0000" },
+    { "option": "links", "incoming": "linked_from", "outgoing": "links_to" },
+    { "option": "depends_on", "incoming": "blocks", "outgoing": "depends_on" },
+    { "option": "justifies", "incoming": "justified_by", "outgoing": "justifies", "style": "#FF6600" }
+  ],
+
+  "statuses": [
+    { "status": "draft", "color": "#FFEB3B" },
+    { "status": "review", "color": "#FF9800" },
+    { "status": "approved", "color": "#4CAF50" },
+    { "status": "implemented", "color": "#2196F3" },
+    { "status": "verified", "color": "#9C27B0" },
+    { "status": "deprecated", "color": "#9E9E9E" },
+    { "status": "rejected", "color": "#F44336" }
+  ],
+
+  "defaultStatus": "draft",
+
+  "extraOptions": [
+    "author",
+    "version",
+    "baseline"
+  ],
+
+  "customFields": {
+    "product": [
+      { "value": "widget-pro", "title": "Widget Pro" },
+      { "value": "widget-lite", "title": "Widget Lite" },
+      { "value": "platform", "title": "Platform Core" }
+    ],
+    "priority": [
+      { "value": "critical", "title": "Critical" },
+      { "value": "high", "title": "High" },
+      { "value": "medium", "title": "Medium" },
+      { "value": "low", "title": "Low" }
+    ],
+    "complexity": [
+      { "value": "trivial", "title": "Trivial" },
+      { "value": "simple", "title": "Simple" },
+      { "value": "moderate", "title": "Moderate" },
+      { "value": "complex", "title": "Complex" }
+    ]
+  },
+
+  "plantuml": {
+    "mode": "local",
+    "command": "plantuml",
+    "server": "https://www.plantuml.com/plantuml/svg/"
+  }
+}

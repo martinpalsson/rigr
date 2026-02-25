@@ -1,5 +1,5 @@
 /**
- * Default configuration when conf.py is not found or parsing fails
+ * Default configuration when rigr.json is not found or parsing fails
  */
 
 import { RigrConfig, ObjectType, Level, IdConfig, LinkType, Status, CustomFields } from '../types';
