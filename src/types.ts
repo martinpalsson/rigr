@@ -3,7 +3,7 @@
  */
 
 /**
- * Object type definition from rigr_object_types in conf.py
+ * Object type definition from rigr_object_types in rigr.json
  * Defines the type/nature of an object (requirement, rationale, information, parameter, etc.)
  */
 export interface ObjectType {
@@ -14,7 +14,7 @@ export interface ObjectType {
 }
 
 /**
- * Level definition from rigr_levels in conf.py
+ * Level definition from rigr_levels in rigr.json
  * Defines abstraction tiers in the requirements hierarchy (stakeholder, system, component, etc.)
  */
 export interface Level {
@@ -23,7 +23,7 @@ export interface Level {
 }
 
 /**
- * ID configuration from rigr_id_config in conf.py
+ * ID configuration from rigr_id_config in rigr.json
  * Controls how IDs are generated and formatted
  */
 export interface IdConfig {
@@ -42,7 +42,7 @@ export interface IdPrefix {
 }
 
 /**
- * Link type definition from link types configuration in conf.py
+ * Link type definition from link types configuration in rigr.json
  */
 export interface LinkType {
   option: string;     // Forward link name (e.g., "satisfies")
@@ -52,7 +52,7 @@ export interface LinkType {
 }
 
 /**
- * Status definition from statuses configuration in conf.py
+ * Status definition from statuses configuration in rigr.json
  */
 export interface Status {
   status: string;     // Status name (e.g., "draft", "approved")
@@ -60,7 +60,7 @@ export interface Status {
 }
 
 /**
- * Custom field value definition from rigr_custom_fields in conf.py
+ * Custom field value definition from rigr_custom_fields in rigr.json
  */
 export interface CustomFieldValue {
   value: string;      // The value used in RST (e.g., "widget-pro")
@@ -73,7 +73,7 @@ export interface CustomFieldValue {
 export type CustomFields = Record<string, CustomFieldValue[]>;
 
 /**
- * Complete Rigr configuration loaded from conf.py
+ * Complete Rigr configuration
  */
 export interface RigrConfig {
   objectTypes: ObjectType[];    // Customizable object types (requirement, rationale, etc.)
@@ -261,5 +261,6 @@ export interface ConfigLoadResult {
   success: boolean;
   config?: RigrConfig;
   error?: string;
-  source: 'conf.py' | 'settings' | 'defaults';
+  source: 'rigr.json' | 'settings' | 'defaults';
+  theme?: string;
 }

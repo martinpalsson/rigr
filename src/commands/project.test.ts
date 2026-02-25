@@ -2,7 +2,7 @@
  * Unit tests for Project Command templates
  */
 
-import { CONF_PY_TEMPLATE, SAMPLE_RST_TEMPLATE } from './templates';
+import { RIGR_JSON_TEMPLATE, SAMPLE_RST_TEMPLATE } from './templates';
 import { parseRstFile } from '../indexing/rstParser';
 import { DEFAULT_CONFIG } from '../configuration/defaults';
 import { RigrConfig } from '../types';
@@ -37,35 +37,48 @@ const projectConfig: RigrConfig = {
 };
 
 describe('Project Templates', () => {
-  describe('CONF_PY_TEMPLATE', () => {
+  describe('RIGR_JSON_TEMPLATE', () => {
+    it('should be valid JSON', () => {
+      expect(() => JSON.parse(RIGR_JSON_TEMPLATE)).not.toThrow();
+    });
+
     it('should contain all required object types', () => {
-      expect(CONF_PY_TEMPLATE).toContain('"type": "requirement"');
-      expect(CONF_PY_TEMPLATE).toContain('"type": "design_element"');
-      expect(CONF_PY_TEMPLATE).toContain('"type": "rationale"');
+      const config = JSON.parse(RIGR_JSON_TEMPLATE);
+      const types = config.objectTypes.map((t: { type: string }) => t.type);
+      expect(types).toContain('requirement');
+      expect(types).toContain('design_element');
+      expect(types).toContain('rationale');
     });
 
     it('should contain all required levels', () => {
-      expect(CONF_PY_TEMPLATE).toContain('"level": "stakeholder"');
-      expect(CONF_PY_TEMPLATE).toContain('"level": "system"');
-      expect(CONF_PY_TEMPLATE).toContain('"level": "component"');
+      const config = JSON.parse(RIGR_JSON_TEMPLATE);
+      const levels = config.levels.map((l: { level: string }) => l.level);
+      expect(levels).toContain('stakeholder');
+      expect(levels).toContain('system');
+      expect(levels).toContain('component');
     });
 
     it('should contain ID configuration', () => {
-      expect(CONF_PY_TEMPLATE).toContain('rigr_id_config');
-      expect(CONF_PY_TEMPLATE).toContain('"padding": 4');
-      expect(CONF_PY_TEMPLATE).toContain('"start": 1');
+      const config = JSON.parse(RIGR_JSON_TEMPLATE);
+      expect(config.idConfig).toBeDefined();
+      expect(config.idConfig.padding).toBe(4);
+      expect(config.idConfig.start).toBe(1);
     });
 
     it('should contain all required link types', () => {
-      expect(CONF_PY_TEMPLATE).toContain('"option": "satisfies"');
-      expect(CONF_PY_TEMPLATE).toContain('"option": "implements"');
-      expect(CONF_PY_TEMPLATE).toContain('"option": "derives_from"');
+      const config = JSON.parse(RIGR_JSON_TEMPLATE);
+      const options = config.linkTypes.map((l: { option: string }) => l.option);
+      expect(options).toContain('satisfies');
+      expect(options).toContain('implements');
+      expect(options).toContain('derives_from');
     });
 
     it('should contain all required statuses', () => {
-      expect(CONF_PY_TEMPLATE).toContain('"status": "draft"');
-      expect(CONF_PY_TEMPLATE).toContain('"status": "approved"');
-      expect(CONF_PY_TEMPLATE).toContain('"status": "implemented"');
+      const config = JSON.parse(RIGR_JSON_TEMPLATE);
+      const statuses = config.statuses.map((s: { status: string }) => s.status);
+      expect(statuses).toContain('draft');
+      expect(statuses).toContain('approved');
+      expect(statuses).toContain('implemented');
     });
   });
 

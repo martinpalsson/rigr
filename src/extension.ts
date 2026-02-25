@@ -36,6 +36,7 @@ import {
   registerCreateProjectCommand,
   registerDocumentationCommands,
 } from './commands';
+import { RstPreviewProvider } from './preview';
 import { RigrConfig } from './types';
 import { DEFAULT_CONFIG } from './configuration/defaults';
 
@@ -53,6 +54,7 @@ let diagnosticProvider: RequirementDiagnosticProvider;
 let codeActionProvider: RequirementCodeActionProvider;
 let treeViewProvider: RequirementTreeDataProvider;
 let relationshipExplorerProvider: RelationshipExplorerProvider;
+let previewProvider: RstPreviewProvider;
 
 /**
  * Update status bar with current state
@@ -103,6 +105,9 @@ function updateProvidersConfig(config: RigrConfig): void {
   }
   if (relationshipExplorerProvider) {
     relationshipExplorerProvider.updateConfig(config);
+  }
+  if (previewProvider) {
+    previewProvider.updateConfig(config);
   }
   if (indexBuilder) {
     indexBuilder.updateConfig(config);
@@ -212,6 +217,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const docCommands = registerDocumentationCommands(context);
   docCommands.forEach(cmd => context.subscriptions.push(cmd));
 
+  // Register RST preview (pass theme from initial config load)
+  const initialTheme = configManager.getThemeName();
+  previewProvider = new RstPreviewProvider(config, indexBuilder, initialTheme);
+  context.subscriptions.push(previewProvider);
+  context.subscriptions.push(
+    vscode.commands.registerCommand('requirements.openPreview', () => {
+      previewProvider.open();
+    })
+  );
+
   // Register reload configuration command
   context.subscriptions.push(
     vscode.commands.registerCommand('requirements.reloadConfiguration', async () => {
@@ -262,6 +277,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     configManager.onConfigChange((newConfig) => {
       config = newConfig;
       updateProvidersConfig(config);
+      // Update preview theme from config manager
+      if (previewProvider) {
+        previewProvider.updateTheme(configManager.getThemeName());
+      }
       updateStatusBar(config, configManager.getConfigSource(), indexBuilder.getCount());
     })
   );

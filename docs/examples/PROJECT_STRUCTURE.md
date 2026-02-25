@@ -7,23 +7,25 @@ This document shows the recommended project structure for a requirements managem
 ```
 my-project/
 ├── docs/                          # Documentation root
-│   ├── conf.py                    # Sphinx configuration (copy from examples/)
+│   ├── rigr.json                  # Rigr configuration
 │   ├── index.rst                  # Documentation home page
-│   ├── Makefile                   # Build documentation
 │   │
 │   ├── requirements/              # Requirements documents
 │   │   ├── index.rst              # Requirements overview
-│   │   ├── stakeholder.rst        # Stakeholder requirements (STK_xxx)
-│   │   ├── system.rst             # System requirements (SYS_xxx)
-│   │   └── design.rst             # Design specifications (SPEC_xxx)
+│   │   ├── stakeholder.rst        # Stakeholder requirements
+│   │   ├── system.rst             # System requirements
+│   │   └── design.rst             # Design specifications
 │   │
 │   ├── tests/                     # Test documentation
 │   │   ├── index.rst              # Test overview
-│   │   └── test_cases.rst         # Test cases (TEST_xxx)
+│   │   └── test_cases.rst         # Test cases
 │   │
 │   ├── releases/                  # Generated release reports
 │   │   ├── release-v1.0.0.md
 │   │   └── release-v1.1.0.md
+│   │
+│   ├── _static/                   # Static assets (CSS, JS)
+│   ├── images/                    # Images and diagrams
 │   │
 │   └── _build/                    # Built documentation (gitignored)
 │
@@ -48,7 +50,7 @@ For projects following automotive standards (ISO 26262, ASPICE):
 ```
 automotive-project/
 ├── docs/
-│   ├── conf.py
+│   ├── rigr.json
 │   │
 │   ├── srs/                       # Software Requirements Specification
 │   │   ├── index.rst
@@ -127,40 +129,20 @@ Create `.vscode/settings.json`:
 Add to your `.gitignore`:
 
 ```gitignore
-# Sphinx build output
-docs/_build/
+# Build output
+_build/
 
 # VS Code requirements cache
 .vscode/requirements-index.json
-
-# Python cache
-__pycache__/
-*.pyc
 ```
 
 ## Building Documentation
 
-### With Make (Linux/macOS)
+Use the VS Code command palette:
 
-```bash
-cd docs
-make html
-```
-
-### With sphinx-build
-
-```bash
-sphinx-build -b html docs docs/_build/html
-```
-
-### View Documentation
-
-```bash
-# Open in browser
-open docs/_build/html/index.html  # macOS
-xdg-open docs/_build/html/index.html  # Linux
-start docs/_build/html/index.html  # Windows
-```
+- **Rigr: Build Documentation** - generates static HTML in `_build/html/`
+- **Rigr: View Documentation** - opens the built docs in your browser
+- **Rigr: Open RST Preview** - live preview in VS Code
 
 ## Tips
 
