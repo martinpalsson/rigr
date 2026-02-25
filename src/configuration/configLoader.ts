@@ -146,12 +146,14 @@ export async function loadConfigFromJson(jsonPath: string): Promise<ConfigLoadRe
     const rawConfig = JSON.parse(content);
     const config = parseRawConfig(rawConfig);
     const theme = typeof rawConfig.theme === 'string' ? rawConfig.theme : undefined;
+    const mobileBreakpoint = typeof rawConfig.mobileBreakpoint === 'number' ? rawConfig.mobileBreakpoint : undefined;
 
     return {
       success: true,
       config,
       source: 'precept.json',
       theme,
+      mobileBreakpoint,
     };
   } catch (error) {
     return {

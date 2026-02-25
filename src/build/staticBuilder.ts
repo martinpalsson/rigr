@@ -28,6 +28,8 @@ export interface BuildOptions {
   projectName?: string;
   /** Theme name (default: 'default') */
   theme?: string;
+  /** Mobile breakpoint in pixels for sidebar hamburger menu */
+  mobileBreakpoint?: number;
   /** Progress callback: (current, total, fileName) */
   onProgress?: (current: number, total: number, fileName: string) => void;
 }
@@ -50,6 +52,7 @@ export function buildStaticSite(options: BuildOptions): BuildResult {
     index,
     projectName = 'Documentation',
     theme = 'default',
+    mobileBreakpoint,
     onProgress,
   } = options;
 
@@ -79,7 +82,7 @@ export function buildStaticSite(options: BuildOptions): BuildResult {
 
   // Copy static assets
   try {
-    copyStaticAssets(outputDir, theme);
+    copyStaticAssets(outputDir, theme, mobileBreakpoint);
     copyImages(sourceDir, outputDir);
   } catch (err) {
     errors.push(`Asset copy failed: ${err instanceof Error ? err.message : String(err)}`);

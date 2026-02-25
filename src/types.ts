@@ -263,4 +263,6 @@ export interface ConfigLoadResult {
   error?: string;
   source: 'precept.json' | 'settings' | 'defaults';
   theme?: string;
+  /** Mobile breakpoint in pixels for sidebar hamburger menu (default: 1000) */
+  mobileBreakpoint?: number;
 }

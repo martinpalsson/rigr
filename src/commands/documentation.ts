@@ -74,12 +74,14 @@ export async function buildDocumentation(workspaceRoot: string, indexBuilder?: I
   // Load config
   let config = DEFAULT_CONFIG;
   let theme = 'default';
+  let mobileBreakpoint: number | undefined;
   if (jsonPath) {
     try {
       const result = await loadConfigFromJson(jsonPath);
       if (result.success && result.config) {
         config = result.config;
         theme = result.theme || 'default';
+        mobileBreakpoint = result.mobileBreakpoint;
       }
     } catch {
       channel.appendLine('Warning: Failed to load config, using defaults.');
@@ -105,6 +107,7 @@ export async function buildDocumentation(workspaceRoot: string, indexBuilder?: I
     index: indexBuilder?.getIndex(),
     projectName: 'Documentation',
     theme,
+    mobileBreakpoint,
     onProgress: (current, total, fileName) => {
       channel.appendLine(`  [${current}/${total}] ${fileName}`);
     },

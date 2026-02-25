@@ -39,6 +39,7 @@ export function renderPage(ctx: PageTemplateContext): string {
 </head>
 <body>
 <div class="precept-page">
+  <button class="precept-hamburger" aria-label="Toggle navigation">&#9776;</button>
   <nav class="precept-sidebar">
     <div class="precept-sidebar-header">
       <h2>${escapeHtml(ctx.projectName)}</h2>
@@ -50,6 +51,22 @@ export function renderPage(ctx: PageTemplateContext): string {
     ${navHtml}
   </main>
 </div>
+<script>
+(function() {
+  var btn = document.querySelector('.precept-hamburger');
+  var sidebar = document.querySelector('.precept-sidebar');
+  if (btn && sidebar) {
+    btn.addEventListener('click', function() {
+      sidebar.classList.toggle('open');
+    });
+    sidebar.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        sidebar.classList.remove('open');
+      }
+    });
+  }
+})();
+</script>
 <script src="${escapeAttr(ctx.jsPath)}"></script>
 </body>
 </html>`;
@@ -99,10 +116,14 @@ function escapeAttr(text: string): string {
     .replace(/>/g, '&gt;');
 }
 
+/** Default mobile breakpoint in pixels */
+export const DEFAULT_MOBILE_BREAKPOINT = 1000;
+
 /**
- * CSS for static HTML builds (page layout: sidebar + main).
+ * Generate CSS for static HTML builds (page layout: sidebar + main).
  */
-export const STATIC_PAGE_CSS = `
+export function generateStaticPageCss(mobileBreakpoint: number = DEFAULT_MOBILE_BREAKPOINT): string {
+  return `
 /* Page layout */
 body {
   margin: 0;
@@ -196,15 +217,44 @@ a:hover { color: var(--precept-link-hover); text-decoration: underline; }
   text-decoration: underline;
 }
 
-@media (max-width: 768px) {
+.precept-hamburger {
+  display: none;
+}
+
+@media (max-width: ${mobileBreakpoint}px) {
   .precept-page { flex-direction: column; }
   .precept-sidebar {
-    width: 100%;
-    height: auto;
-    position: static;
-    border-right: none;
-    border-bottom: 1px solid var(--precept-sidebar-border);
+    display: none;
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    border-right: 1px solid var(--precept-sidebar-border);
+    background: var(--precept-sidebar-bg);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
   }
-  .precept-main { max-width: 100%; }
+  .precept-sidebar.open {
+    display: block;
+    overflow-y: auto;
+  }
+  .precept-hamburger {
+    display: block;
+    position: fixed;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 101;
+    background: var(--precept-sidebar-bg);
+    border: 1px solid var(--precept-sidebar-border);
+    border-radius: 4px;
+    font-size: 1.4em;
+    padding: 0.15em 0.4em;
+    cursor: pointer;
+    color: var(--precept-sidebar-text);
+    line-height: 1;
+  }
+  .precept-main { max-width: 100%; padding-top: 3em; }
 }
 `;
+}

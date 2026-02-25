@@ -7,7 +7,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { PRECEPT_CSS_TEMPLATE, PRECEPT_JS_TEMPLATE } from '../commands/templates';
-import { STATIC_PAGE_CSS } from './templateEngine';
+import { generateStaticPageCss } from './templateEngine';
 import { generateStaticThemeCss } from '../themes';
 
 /**
@@ -16,13 +16,14 @@ import { generateStaticThemeCss } from '../themes';
  * Creates `_static/` with CSS and JS files.
  * Prepends theme CSS custom properties (light + dark media query).
  */
-export function copyStaticAssets(outputDir: string, themeName: string = 'default'): void {
+export function copyStaticAssets(outputDir: string, themeName: string = 'default', mobileBreakpoint?: number): void {
   const staticDir = path.join(outputDir, '_static');
   mkdirSync(staticDir);
 
   // Combined CSS: theme vars + page layout + precept component styles
   const themeCss = generateStaticThemeCss(themeName);
-  const combinedCss = `${themeCss}\n\n${STATIC_PAGE_CSS}\n\n${PRECEPT_CSS_TEMPLATE}`;
+  const pageCss = generateStaticPageCss(mobileBreakpoint);
+  const combinedCss = `${themeCss}\n\n${pageCss}\n\n${PRECEPT_CSS_TEMPLATE}`;
   fs.writeFileSync(path.join(staticDir, 'precept.css'), combinedCss, 'utf-8');
 
   // JavaScript
